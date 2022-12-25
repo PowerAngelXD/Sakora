@@ -1,0 +1,19 @@
+Notes on syntax description format:
+
+ListLiteralExpression => '[' ($WholeExpression ',')* ']'
+StructLiteralExpression => '{' ($BasicExpression ':' $WholeExpression)* '}'
+TupleLiteralExpression => '(' ($WholeExpression ',')*
+
+BasicOp => '.'
+MulOp => '*' | '/'
+AddOp => '+' | '-'
+CompareOp => '==' | '!=' | '<=' | '>=' | '<' | '>'
+BooleanOp => '||' | '&&' | '!'
+
+BasicExpression => $Token ($BasicOp $Token)* | '(' $WholeExpression ')' | $ListLiteralExpression | $StructLiteralExpression | $TupleLiteralExpression
+MulExpression => $BasicExpression ($MulOp $BasicExpression)*
+AddExpression => $MulExpression ($AddOp $MulExpression)*
+CompareExpression => $AddExpression ($CompareOp $AddExpression)*
+BooleanExpression => $CompareExpression ($BooleanOp $CompareExpression)*
+
+WholeExpression => $AddExpression | $BooleanExpression
