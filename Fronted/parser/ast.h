@@ -44,7 +44,7 @@ namespace parser {
         NodeKind kind;
         lexer::Token token = {lexer::NullToken, "Null", -1, -1};
 
-        std::vector<Node> childs;
+        std::vector<Node> subs;
 
         explicit Node(NodeKind k);
         explicit Node(lexer::Token tok);

@@ -6,10 +6,10 @@
 
 #include <utility>
 
-parser::Node::Node(NodeKind k): kind(k), childs() {}
-parser::Node::Node(lexer::Token tok): token(std::move(tok)), childs() {}
-parser::Node::Node(NodeKind k, lexer::Token tok): kind(k), token(std::move(tok)), childs() {}
+parser::Node::Node(NodeKind k): kind(k), subs() {}
+parser::Node::Node(lexer::Token tok): token(std::move(tok)), subs() {}
+parser::Node::Node(NodeKind k, lexer::Token tok): kind(k), token(std::move(tok)), subs() {}
 
 parser::Node& parser::Node::operator[](size_t index) {
-    return this->childs[index];
+    return this->subs[index];
 }
