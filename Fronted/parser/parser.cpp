@@ -28,7 +28,7 @@ bool parser::Parser::isMulExpressionNode() {
     return isBasicExpressionNode();
 }
 bool parser::Parser::isMulOpNode() {
-    return peek().content == "*" || peek().content == "/";
+    return peek().content == "*" || peek().content == "/" || peek().content == "%";
 }
 bool parser::Parser::isAddExpressionNode() {
     return isMulExpressionNode();
@@ -75,13 +75,17 @@ parser::Node parser::Parser::parseBasicExpressionNode() {
      // checker part
     if (!isBasicExpressionNode()) {exit(6);}
     // definition part
-    Node node(NodeKind::BasicExpression, eat()); // eat head
-    node.childs.emplace_back(NodeKind::BasicExpression); // factors => childs[0]
-    node.childs.emplace_back(NodeKind::BasicOp); // ops => childs[1]
+    Node node(NodeKind::BasicExpression); // eat head
+    node.subs.emplace_back(NodeKind::BasicExpression); // head => subs[0]
+    node.subs.emplace_back(NodeKind::BasicOp); // ops => subs[1]
+    node.subs.emplace_back(NodeKind::BasicExpression); // factors => subs[2]
+
+    node[Marker::head].subs.emplace_back(NodeKind::BasicExpression); // gen head
+    node[Marker::head][0].token = eat();
     // generation part
     while (isBasicOpNode()) {
-        node[1].childs.emplace_back(parseBasicOpNode());
-        node[0].childs.emplace_back(NodeKind::BasicExpression, eat());
+        node[Marker::ops].subs.emplace_back(parseBasicOpNode());
+        node[Marker::factors].subs.emplace_back(NodeKind::BasicExpression, eat());
     }
 
     return node;
@@ -101,14 +105,14 @@ parser::Node parser::Parser::parseMulExpressionNode() {
      */
      if (!isMulExpressionNode()) {exit(6);}
      Node node(NodeKind::MulExpression);
-     node.childs.emplace_back(NodeKind::BasicExpression); // head => childs[0]
-     node.childs.emplace_back(NodeKind::MulOp); // ops => childs[1]
-     node.childs.emplace_back(NodeKind::BasicExpression); // factors => childs[2]
+     node.subs.emplace_back(NodeKind::BasicExpression); // head => subs[0]
+     node.subs.emplace_back(NodeKind::MulOp); // ops => subs[1]
+     node.subs.emplace_back(NodeKind::BasicExpression); // factors => subs[2]
 
-     node.childs[0].childs.push_back(parseBasicExpressionNode());
+     node[Marker::head].subs.push_back(parseBasicExpressionNode());
      while (isMulOpNode()) {
-         node[1].childs.push_back(parseMulOpNode());
-         node[2].childs.push_back(parseBasicExpressionNode());
+         node[Marker::ops].subs.push_back(parseMulOpNode());
+         node[Marker::factors].subs.push_back(parseBasicExpressionNode());
      }
 
      return node;
@@ -129,14 +133,14 @@ parser::Node parser::Parser::parseAddExpressionNode() {
     if (!isAddExpressionNode()) {exit(6);}
 
     Node node(NodeKind::AddExpression);
-    node.childs.emplace_back(NodeKind::MulExpression); // head => childs[0]
-    node.childs.emplace_back(NodeKind::AddOp); // ops => childs[1]
-    node.childs.emplace_back(NodeKind::MulExpression); // factors => childs[2]
+    node.subs.emplace_back(NodeKind::MulExpression); // head => subs[0]
+    node.subs.emplace_back(NodeKind::AddOp); // ops => subs[1]
+    node.subs.emplace_back(NodeKind::MulExpression); // factors => subs[2]
 
-    node.childs[0].childs.push_back(parseMulExpressionNode());
+    node[Marker::head].subs.push_back(parseMulExpressionNode());
     while (isAddOpNode()) {
-        node[1].childs.push_back(parseAddOpNode());
-        node[2].childs.push_back(parseMulExpressionNode());
+        node[Marker::ops].subs.push_back(parseAddOpNode());
+        node[Marker::factors].subs.push_back(parseMulExpressionNode());
     }
 
     return node;

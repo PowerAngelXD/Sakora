@@ -7,6 +7,10 @@
 #include "ast.h"
 
 namespace parser {
+    enum Marker {
+        head = 0, ops, factors
+    };
+
     class Parser {
         std::vector<lexer::Token> token_group;
         size_t pos = 0;
