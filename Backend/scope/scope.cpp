@@ -36,11 +36,13 @@ std::string Space::getIdent() {
 
 template<typename T>
 void Space::createMember(std::string name, T val) {
+    if (findMember(name)) { exit(6); } // TODO: WILL ERROR
     space[deepC].members.insert(Member(name, Val(val)));
 }
 
 template<typename T>
 void Space::createMemberWithType(std::string name, T val, type::Type t) {
+    if (findMember(name)) { exit(6); } // TODO: WILL ERROR
     space[deepC].members.insert(Member(name, Val(val, t)));
 }
 
