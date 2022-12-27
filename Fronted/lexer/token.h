@@ -20,25 +20,44 @@ namespace lexer {
                                         ']', '{', '}'};
     bool is_symbol_char(char ch);
 
+    // Enumeration of token kinds
     enum TokenKind {
-        Number, String, Ident,
-        Keyword, Symbol, Eof, NullToken
+        Number,   // number literal
+        String,   // string literal
+        Ident,    // identifier
+        Keyword,  // keyword
+        Symbol,   // symbol
+        Eof,      // end of file
+        NullToken // null token
     };
+
+    // Convert a TokenKind to a string
     std::string kind_to_string(TokenKind kind);
 
+    // Struct representing a token
     struct Token {
-        TokenKind kind = TokenKind::NullToken;
-        std::string content = "NullToken";
-        int line = 1;
-        int column = 1;
+        TokenKind kind = TokenKind::NullToken; // kind of the token
+        std::string content = "NullToken";      // content of the token
+        int line = 1;                           // line number of the token in the source code
+        int column = 1;                         // column number of the token in the source code
 
+        // Constructor
+
+        // construct with kind, content, line number, and column number
         Token(TokenKind k, std::string c, int ln, int col);
-        Token()=default;
+        Token() = default;
+
+        // Comparison operators
+
+        // check if two tokens are equal
         bool operator ==(const Token& tok) const;
+        // check if two tokens are not equal
         bool operator !=(const Token& tok) const;
 
+        // Convert the token to a string
         [[nodiscard]] std::string to_string() const;
     };
+
     static Token null_token = {TokenKind::NullToken, "NullToken", -1, -1};
 
     typedef std::vector<Token> TokenGroup;

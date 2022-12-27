@@ -9,36 +9,54 @@
 #include <map>
 
 namespace storage {
+    // Type alias for a member of a scope (pair of a string and a Val)
     typedef std::pair<std::string, Val> Member;
+
+    // Struct representing a scope
     struct Scope {
-        std::string ident; // identifier of Scope
+        // identifier of the scope
+        std::string ident;
+        // map of members (string to Val)
         std::map<std::string, Val> members;
 
-        Scope()=default;
+        // Constructors
+        Scope() = default;
+        // construct with identifier
         Scope(std::string i);
     };
 
+    // Class representing a space (collection of scopes)
     class Space {
+        // scopes
         std::vector<Scope> space;
+        // depth counter (index of current scope in the vector)
         size_t deepC = 0;
     public:
+        // Constructor
         Space();
 
-        // ScopeManager
-        void createScope(std::string i);
-        void addScope(Scope s);
-        void deleteScope();     // Always delete from the current value of the depth counter
-        std::string getIdent(); // Always obtain the identifier of the scope currently pointed by the depth counter
-        // ValueManager (Current Scope)
+        // Scope management
+        void createScope(std::string i);      // create a new scope with the given identifier
+        void addScope(Scope s);               // add a scope to the vector
+        void deleteScope();                   // delete the current scope (pointed by the depth counter)
+        std::string getIdent();               // get the identifier of the current scope (pointed by the depth counter)
+
+        // Value management (for the current scope)
+
+        // create a member with the given name and value
         template<typename T>
         void createMember(std::string name, T val);
 
+        // create a member with the given name, value, and type
         template<typename T>
         void createMemberWithType(std::string name, T val, type::Type t);
 
+        // delete the member with the given name
         void deleteMember(std::string name);
+        // check if the current scope has a member with the given name
         bool findMember(std::string name);
     };
+
 }
 
 

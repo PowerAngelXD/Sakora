@@ -9,10 +9,11 @@
 
 namespace visitor {
     enum CodeKind {
-        push_float, push_double, push_i16, push_i32, push_i64, push_bool, push_str,
+        push_float, push_double, push_i16, push_i32, push_i64, push_bool, push_str, push_iden,
         // calc
-        add, sub, mul, div
+        add, sub, mul, div, gmem, mod
     };
+    std::string kind_to_string(CodeKind k);
 
     struct Code {
         CodeKind kind;
@@ -24,9 +25,20 @@ namespace visitor {
     };
 
     class Visitor {
+        // visiting source
         parser::Node source;
+    public:
         std::vector<Code> out;
         std::vector<std::string> constantPool;
+
+        Visitor(parser::Node src);
+
+        // Expression Visitor
+        void visitValToken(const parser::Node& node);
+        void visitBasicOp(const parser::Node& node); void visitBasicExpression(parser::Node node);
+        void visitMulOp(const parser::Node& node); void visitMulExpression(parser::Node node);
+        void visitAddOp(const parser::Node& node); void visitAddExpression(parser::Node node);
+        //
     };
 }
 

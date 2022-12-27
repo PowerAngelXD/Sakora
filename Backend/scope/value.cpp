@@ -377,7 +377,7 @@ Val Val::operator== (Val v) {
                 case type::Int64: return {float_equ(*(float*)this->val_ptr, static_cast<float>(*(long long*)v.val_ptr)))};
                 case type::Float: return {float_equ(*(float*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(float*)this->val_ptr, *(double*)v.val_ptr))};
-                case type::Boolean: return {static_cast<bool>(*(float*)this->val_ptr) == *(bool*)v.val_ptr};
+                case type::Boolean: return {float_equ(*(float*)this->val_ptr, *(bool*)v.val_ptr))};
                 case type::String: case type::Object: break;
             }
             break;
@@ -388,7 +388,7 @@ Val Val::operator== (Val v) {
                 case type::Int64: return {float_equ(*(double*)this->val_ptr, static_cast<float>(*(long long*)v.val_ptr)))};
                 case type::Float: return {float_equ(*(double*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(double*)this->val_ptr, *(double*)v.val_ptr))};
-                case type::Boolean: return {static_cast<bool>(*(double*)this->val_ptr) == *(bool*)v.val_ptr};
+                case type::Boolean: return {float_equ(*(double*)this->val_ptr, *(bool*)v.val_ptr))};
                 case type::String: case type::Object: break;
             }
             break;
@@ -451,7 +451,7 @@ Val Val::operator!= (Val v) {
                 case type::Int64: return {!float_equ(*(float*)this->val_ptr, static_cast<float>(*(long long*)v.val_ptr)))};
                 case type::Float: return {!float_equ(*(float*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(float*)this->val_ptr, *(double*)v.val_ptr))};
-                case type::Boolean: return {static_cast<bool>(*(float*)this->val_ptr) != *(bool*)v.val_ptr};
+                case type::Boolean: return {!float_equ(*(float*)this->val_ptr, *(bool*)v.val_ptr))};
                 case type::String: case type::Object: break;
             }
             break;
@@ -462,7 +462,7 @@ Val Val::operator!= (Val v) {
                 case type::Int64: return {!float_equ(*(double*)this->val_ptr, static_cast<float>(*(long long*)v.val_ptr)))};
                 case type::Float: return {!float_equ(*(double*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(double*)this->val_ptr, *(double*)v.val_ptr))};
-                case type::Boolean: return {static_cast<bool>(*(double*)this->val_ptr) != *(bool*)v.val_ptr};
+                case type::Boolean: return {!float_equ(*(double*)this->val_ptr, *(bool*)v.val_ptr))};
                 case type::String: case type::Object: break;
             }
             break;
@@ -725,8 +725,21 @@ Val Val::operator! () {
             return {!(*(bool*)this->val_ptr)};
         case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: break;
     }
+    return {0};
 }
 
 type::BasicType Val::getBasicType() const { return val_type.basic; }
 void* Val::val() { return val_ptr; }
 type::Type Val::getType() const { return val_type; }
+void Val::freeVal() {
+    switch (val_type.basic) {
+        case type::Int16: delete (short*)val_ptr; break;
+        case type::Int32: delete (int*)val_ptr; break;
+        case type::Int64: delete (long long*)val_ptr; break;
+        case type::Float: delete (float*)val_ptr; break;
+        case type::Double: delete (double*)val_ptr; break;
+        case type::Boolean: delete (bool*)val_ptr; break;
+        case type::String: delete (std::string*)val_ptr; break;
+        case type::Object: break;
+    }
+}
