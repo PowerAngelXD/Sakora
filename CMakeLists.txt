@@ -11,7 +11,8 @@ file(GLOB SRC_FILES
         "Fronted/parser/*.h", "Fronted/parser/*.cpp",
         "Backend/visitor/*.h", "Backend/visitor/*.cpp",
         "Backend/type/*.h", "Backend/type/*.cpp",
-        "Backend/scope/*.h", "Backend/scope/*.cpp"
+        "Backend/scope/*.h", "Backend/scope/*.cpp",
+        "Backend/object/*.h", "Backend/object/*.cpp"
         )
 
         
