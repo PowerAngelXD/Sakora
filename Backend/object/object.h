@@ -129,14 +129,31 @@ namespace type {
         // Enum value indicating the type of this object (function object, struct object, or implement object)
         ObjectKind kind;
 
-        // Constructor to create an Object representing a function object with the given identifier, code queue, and return type
+        /**
+         * @brief Construct an object with the given identifier, code vector, and return type.
+         * @param ident The identifier of the object.
+         * @param cs The code vector of the object.
+         * @param ret The return type of the object.
+        */
         Object(std::string ident, std::vector<visitor::Code> cs, type::Type ret);
-        // Constructor to create an Object representing a struct object with the given identifier and map of members
+        /**
+         * @brief Construct an object with the given identifier and member map.
+         * @param ident The identifier of the object.
+         * @param mems The map of members (string to Val).
+        */
         Object(std::string ident, std::map<std::string, storage::Val> mems);
-        // Constructor to create an Object representing an implement object with the given identifier and pointer to the associated StructObject
+        /**
+         * @brief Construct an object with the given identifier and father.
+         * @param ident The identifier of the object.
+         * @param f The father of the object.
+        */
         Object(std::string ident, StructObject* f);
-        // Constructor to create an Object with the given identifier and no associated object (used for ObjectKind values other than FuncObj, StructObj, and ImplementObj)
+        /**
+         * @brief Construct an object with the given identifier.
+         * @param ident The identifier of the object.
+        */
         explicit Object(std::string ident);
+
     };
 }
 
