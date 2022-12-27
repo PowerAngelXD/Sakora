@@ -2,12 +2,18 @@
 
 
 int main() {
-    lexer::Lexer lex("1+3*4");
+    lexer::Lexer lex("1+5*4+3-a.b");
     lex.generate();
 
     parser::Parser p(lex.out);
     auto node = p.parseAddExpressionNode();
 
-    std::cout<<node.kind<<std::endl;
+    visitor::Visitor vr(node);
+    vr.visitAddExpression(node);
+
+    for(auto c: vr.out) {
+        std::cout<<visitor::kind_to_string(c.kind)<<" ";
+        std::cout<<c.val<<std::endl;
+    }
     return 0;
 }
