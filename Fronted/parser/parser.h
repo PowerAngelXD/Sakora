@@ -5,6 +5,7 @@
 #ifndef SAKORA_PARSER_H
 #define SAKORA_PARSER_H
 #include "ast.h"
+#include "../../error/parser_error.h"
 
 namespace parser {
     enum Marker {

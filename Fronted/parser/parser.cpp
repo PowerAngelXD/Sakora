@@ -73,7 +73,9 @@ parser::Node parser::Parser::parseBasicExpressionNode() {
      * }
      */
      // checker part
-    if (!isBasicExpressionNode()) {exit(6);}
+    if (!isBasicExpressionNode()) {
+        throw parser_error::UnexpectedTokenError("<Token>", token_group[pos].line, token_group[pos].column);
+    }
     // definition part
     Node node(NodeKind::BasicExpression); // eat head
     node.subs.emplace_back(NodeKind::BasicExpression); // head => subs[0]
@@ -91,7 +93,9 @@ parser::Node parser::Parser::parseBasicExpressionNode() {
     return node;
 }
 parser::Node parser::Parser::parseBasicOpNode() {
-    if (!isBasicOpNode()) {exit(6);} // TODO: WILL ERROR
+    if (!isBasicOpNode()) {
+        throw parser_error::UnexpectedTokenError("'.'", token_group[pos].line, token_group[pos].column);
+    }
 
     return {NodeKind::BasicOp, eat()};
 }
@@ -103,7 +107,9 @@ parser::Node parser::Parser::parseMulExpressionNode() {
      *      vector<BasicExpressionNode> factors;
      * }
      */
-     if (!isMulExpressionNode()) {exit(6);}
+     if (!isMulExpressionNode()) {
+         throw parser_error::UnexpectedTokenError("PrimaryExpression", token_group[pos].line, token_group[pos].column);
+     }
      Node node(NodeKind::MulExpression);
      node.subs.emplace_back(NodeKind::BasicExpression); // head => subs[0]
      node.subs.emplace_back(NodeKind::MulOp); // ops => subs[1]
@@ -118,7 +124,9 @@ parser::Node parser::Parser::parseMulExpressionNode() {
      return node;
 }
 parser::Node parser::Parser::parseMulOpNode() {
-    if (!isMulOpNode()) {exit(6);}
+    if (!isMulOpNode()) {
+        throw parser_error::UnexpectedTokenError("'*', '/' or '%'", token_group[pos].line, token_group[pos].column);
+    }
 
     return {NodeKind::MulOp, eat()};
 }
@@ -130,7 +138,9 @@ parser::Node parser::Parser::parseAddExpressionNode() {
      *      vector<MulExpressionNode> factors;
      * }
      */
-    if (!isAddExpressionNode()) {exit(6);}
+    if (!isAddExpressionNode()) {
+        throw parser_error::UnexpectedTokenError("Mul Expression", token_group[pos].line, token_group[pos].column);
+    }
 
     Node node(NodeKind::AddExpression);
     node.subs.emplace_back(NodeKind::MulExpression); // head => subs[0]
@@ -146,7 +156,9 @@ parser::Node parser::Parser::parseAddExpressionNode() {
     return node;
 }
 parser::Node parser::Parser::parseAddOpNode() {
-    if (!isAddOpNode()) {exit(6);}
+    if (!isAddOpNode()) {
+        throw parser_error::UnexpectedTokenError("'+' or '-'", token_group[pos].line, token_group[pos].column);
+    }
 
     return {NodeKind::AddOp, eat()};
 }

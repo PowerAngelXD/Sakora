@@ -6,6 +6,7 @@
 #define SAKORA_SCOPE_H
 
 #include "value.h"
+#include "../../error/storage_error.h"
 #include <map>
 
 namespace storage {
@@ -45,16 +46,18 @@ namespace storage {
 
         // create a member with the given name and value
         template<typename T>
-        void createMember(std::string name, T val);
+        void createMember(std::string name, T val, int ln = -1, int col = -1);
 
         // create a member with the given name, value, and type
         template<typename T>
-        void createMemberWithType(std::string name, T val, type::Type t);
+        void createMemberWithType(std::string name, T val, type::Type t, int ln = -1, int col = -1);
 
-        // delete the member with the given name
-        void deleteMember(std::string name);
         // check if the current scope has a member with the given name
-        bool findMember(std::string name);
+        bool findMember(const std::string& name);
+        // delete the member with the given name
+        void deleteMember(const std::string& name, int ln = -1, int col = -1);
+        // get value by given name
+        Val &get(const std::string& name, int ln = -1, int col = -1);
     };
 
 }
