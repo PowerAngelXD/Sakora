@@ -51,13 +51,16 @@ void Space::createMemberWithType(std::string name, T val, type::Type t, int ln, 
 }
 
 void Space::deleteMember(const std::string& name, int ln, int col) {
-    if (space[deepC].members.find(name) != space[deepC].members.end())
+    if (space[deepC].members.find(name) != space[deepC].members.end()) {
+        space[deepC].members[name].freeVal();
         space[deepC].members.erase(name);
+    }
     else {
         auto temp = static_cast<int>(deepC);
         while (temp > 0) {
             temp --;
             if (space[static_cast<size_t>(temp)].members.find(name) != space[static_cast<size_t>(temp)].members.end()) {
+                space[deepC].members[name].freeVal();
                 space[static_cast<size_t>(temp)].members.erase(name);
                 return ;
             }

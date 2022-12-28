@@ -5,7 +5,7 @@
 #ifndef SAKORA_SCOPE_H
 #define SAKORA_SCOPE_H
 
-#include "value.h"
+#include "identifier.h"
 #include "../../error/storage_error.h"
 #include <map>
 
