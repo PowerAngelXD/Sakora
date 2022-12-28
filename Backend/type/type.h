@@ -20,22 +20,17 @@ namespace type {
         Object   // object
     };
 
-    // Enumeration representing ownership of an object
-    enum OwnKind {
-        Ref, // reference
-        Own  // owned object
-    };
-
-    // Enumeration of modifiers
-    enum Modifier {
-        Const,    // constant value
-        Dynamic,  // dynamically allocated object
-        Static    // statically allocated object
+    // Determines how values are stored, referenced or valued
+    enum StorageKind {
+        // The `Val` enumerator represents the value storage kind, which means that the value is stored directly in the enumeration.
+        Val,
+        // The `Ref` enumerator represents the reference storage kind, which means that the value is stored in a separate location and the enumeration holds a reference to it.
+        Ref,
     };
 
     // Enumeration representing the structure of an object
     enum Structure {
-        Normal, // normal object
+        Normal, // normal value
         List,   // list
         Struct, // struct
         Tuple   // tuple
@@ -44,16 +39,14 @@ namespace type {
     // Struct representing a data type
     struct Type {
         BasicType basic;       // basic type of the object
-        OwnKind ownership;     // ownership of the object
-        Modifier mod;          // modifier of the object
+        StorageKind ownership;     // ownership of the object
         Structure st;          // structure of the object
 
         // Constructors
         Type() = default;                      // default constructor
         Type(BasicType b);                     // construct with basic type
-        Type(BasicType basic, OwnKind ok);     // construct with basic type and ownership
-        Type(BasicType basic, OwnKind ok, Modifier m); // construct with basic type, ownership, and modifier
-        Type(BasicType basic, OwnKind ok, Modifier m, Structure s); // construct with basic type, ownership, modifier, and structure
+        Type(BasicType basic, StorageKind ok);     // construct with basic type and ownership
+        Type(BasicType basic, StorageKind ok, Structure s); // construct with basic type, ownership, modifier, and structure
     };
 
 }
