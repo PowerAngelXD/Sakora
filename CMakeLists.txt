@@ -12,7 +12,8 @@ file(GLOB SRC_FILES
         "Backend/visitor/*.h", "Backend/visitor/*.cpp",
         "Backend/type/*.h", "Backend/type/*.cpp",
         "Backend/scope/*.h", "Backend/scope/*.cpp",
-        "Backend/object/*.h", "Backend/object/*.cpp"
+        "Backend/object/*.h", "Backend/object/*.cpp",
+        "sakVM/core/*.h", "sakVM/core/*.cpp"
         )
 
         
