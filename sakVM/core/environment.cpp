@@ -4,9 +4,11 @@
 
 #include "environment.h"
 
+#include <utility>
+
 using namespace sakVM_core;
 
-Environment::Environment(int ln, int col): runtime(), line(ln), column(col) {}
+Environment::Environment(std::vector<std::string> cp, int ln, int col): runtime(), constantPool(std::move(cp)), line(ln), column(col) {}
 
 void Environment::push(storage::Val val) {
     runtime.push(val);

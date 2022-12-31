@@ -18,13 +18,20 @@ namespace sakVM_core {
         storage::Space space;
         // A stack used to store temporary values during program execution.
         std::stack<storage::Val> runtime;
+        // Constant pool
+        std::vector<std::string> constantPool;
         // The current line in the source code.
         int line;
         // The current column in the source code.
         int column;
     public:
+        Environment()=default;
         // Constructs a new environment with the given line and column information.
-        Environment(int ln, int col);
+        Environment(std::vector<std::string> cp, int ln, int col);
+
+
+        // Get the string of a specific index
+        std::string getConstant(size_t index);
 
         // Pushes a value onto the runtime stack.
         void push(storage::Val val);
