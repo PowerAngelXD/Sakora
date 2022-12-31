@@ -34,6 +34,8 @@ void Space::addScope(Scope s) {
     deepC ++;
 }
 void Space::deleteScope() {
+    if (deepC == 0) return;
+
     space.pop_back();
     deepC --;
 }
