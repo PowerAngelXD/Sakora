@@ -34,7 +34,7 @@ namespace type {
     public:
         FunctionObject()=default;
         // Constructor to create a FunctionObject with the given identifier, vector of code, and return type
-        FunctionObject(std::string ident, std::vector<visitor::Code> cq, type::Type ret);
+        FunctionObject(std::string id, std::vector<visitor::Code> cq, type::Type ret);
 
         // Returns the return type for this function
         type::Type getReturnType();
@@ -69,7 +69,7 @@ namespace type {
 
     public:
         // Constructor to create a StructObject with the given identifier and map of members
-        StructObject(std::string ident, std::map<std::string, storage::Val> mems);
+        StructObject(std::string id, std::map<std::string, storage::Val> mems);
 
         // Returns the value of the member with the given name, or a default-constructed storage::Val object if no such member exists
         storage::Val getMemberVal(const std::string& memIdent);
@@ -100,9 +100,9 @@ namespace type {
 
     public:
         // Constructor to create an ImplementObject with the given identifier
-        explicit ImplementObject(std::string ident);
+        ImplementObject(std::string id);
         // Constructor to create an ImplementObject with the given identifier and pointer to the associated StructObject
-        ImplementObject(std::string ident, StructObject *f);
+        ImplementObject(std::string id, StructObject *f);
 
         // Adds the given FunctionObject to the map of methods for this implementation
         void addMethod(FunctionObject fn);

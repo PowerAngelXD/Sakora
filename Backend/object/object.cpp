@@ -9,8 +9,8 @@
 using namespace type;
 
 // Function Object
-FunctionObject::FunctionObject(std::string ident, std::vector<visitor::Code> cq, type::Type ret):
-    ident(std::move(ident)), codeQueue(std::move(cq)), retType(ret) {}
+FunctionObject::FunctionObject(std::string id, std::vector<visitor::Code> cq, type::Type ret):
+        ident(std::move(id)), codeQueue(std::move(cq)), retType(ret) {}
 
 type::Type FunctionObject::getReturnType() { return retType; }
 Arg FunctionObject::getArg(const std::string& argName) { return {argName, args[argName]}; }
@@ -20,18 +20,18 @@ Arg FunctionObject::operator[] (const std::string& argName) { return {argName, a
 std::string FunctionObject::getIdentifier() { return ident; }
 
 // Struct Object
-StructObject::StructObject(std::string ident, std::map<std::string, storage::Val> mems): ident(std::move(ident)), members(std::move(mems)) {}
+StructObject::StructObject(std::string id, std::map<std::string, storage::Val> mems): ident(std::move(id)), members(std::move(mems)) {}
 
 storage::Val StructObject::getMemberVal(const std::string& memIdent) { return members[memIdent]; }
 ImplementObject* StructObject::getAssocImpl(const std::string& impl) { return impls[impl]; }
-void StructObject::AddImplement(ImplementObject* impl) {}
+void StructObject::AddImplement(ImplementObject* impl) { impls.insert(AssocImpl(impl->getFather()->ident, impl)); }
 
 storage::Val StructObject::operator[] (std::string memIdent) { return members[memIdent]; }
 ImplementObject* StructObject::operator() (std::string impl) { return impls[impl]; }
 
 // Implement Object
-ImplementObject::ImplementObject(std::string ident): ident(std::move(ident)) {}
-ImplementObject::ImplementObject(std::string ident, StructObject* f): ident(std::move(ident)), father(f) {}
+ImplementObject::ImplementObject(std::string id): ident(std::move(id)) {}
+ImplementObject::ImplementObject(std::string id, StructObject* f): ident(std::move(id)), father(f) {}
 
 void ImplementObject::addMethod(FunctionObject fn) { methods.insert({fn.getIdentifier(), fn}); }
 FunctionObject ImplementObject::getMethod(const std::string& methodName) { return methods[methodName]; }
