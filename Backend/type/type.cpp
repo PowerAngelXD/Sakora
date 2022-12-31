@@ -6,6 +6,5 @@
 
 using namespace type;
 
-Type::Type(BasicType b): basic(b), ownership(StorageKind::Val), st(Structure::Normal) {}
-Type::Type(BasicType b, StorageKind ok): basic(b), ownership(ok), st(Structure::Normal) {}
-Type::Type(BasicType b, StorageKind ok, Structure s): basic(b), ownership(ok), st(s) {}
+Type::Type(BasicType b): basic(b), st(Structure::Normal) {}
+Type::Type(BasicType b, Structure s): basic(b), st(s) {}
