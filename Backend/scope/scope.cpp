@@ -10,6 +10,13 @@ using namespace storage;
 
 //Scope
 Scope::Scope(std::string i): ident(std::move(i)) {}
+
+Val & Scope::getMem(std::string id, int ln, int col) {
+    for (auto mem: members) {
+        if (get<0>(mem) == id) return get<2>(mem);
+    }
+    throw storage_error::UnknownIdentifierError(id, ln, col);
+}
 //
 
 
@@ -39,59 +46,48 @@ void Space::createMember(std::string name, T val, int ln, int col) {
     if (findMember(name)) {
         throw storage_error::DuplicateIdentifierError("", ln, col);
     }
-    space[deepC].members.insert(Member(name, Val(val)));
+    space[deepC].members.emplace_back(name, Identifier(name), val);
 }
 
 template<typename T>
 void Space::createMemberWithType(std::string name, T val, type::Type t, int ln, int col) {
     if (findMember(name)) {
-        throw storage_error::DuplicateIdentifierError("", ln, col);
+        throw storage_error::DuplicateIdentifierError(name, ln, col);
     }
-    space[deepC].members.insert(Member(name, Val(val, t)));
+    space[deepC].members.emplace_back(name, Identifier(name), Val(val, t));
+}
+
+template<typename T>
+void Space::createMemberCompletely(std::string name, Identifier id, T val, type::Type t, int ln, int col) {
+    if (findMember(name)) {
+        throw storage_error::DuplicateIdentifierError(name, ln, col);
+    }
+    space[deepC].members.emplace_back(name, id, Val(val, t));
 }
 
 void Space::deleteMember(const std::string& name, int ln, int col) {
-    if (space[deepC].members.find(name) != space[deepC].members.end()) {
-        space[deepC].members[name].freeVal();
-        space[deepC].members.erase(name);
-    }
-    else {
-        auto temp = static_cast<int>(deepC);
-        while (temp > 0) {
-            temp --;
-            if (space[static_cast<size_t>(temp)].members.find(name) != space[static_cast<size_t>(temp)].members.end()) {
-                space[deepC].members[name].freeVal();
-                space[static_cast<size_t>(temp)].members.erase(name);
-                return ;
-            }
+    for (auto scope: space) {
+        for (size_t i = 0; i < scope.members.size(); i ++) {
+            auto mem = scope.members[i];
+            if (get<0>(mem) == name) scope.members.erase(scope.members.begin() + static_cast<int>(i));
         }
-        throw storage_error::UnknownIdentifierError(name, ln, col);
     }
+    throw storage_error::UnknownIdentifierError(name, ln, col);
 }
-Val & Space::get(const std::string& name, int ln, int col) {
-    if (space[deepC].members.find(name) != space[deepC].members.end())
-        return space[deepC].members[name];
-    else {
-        auto temp = static_cast<int>(deepC);
-        while (temp > 0) {
-            temp --;
-            if (space[static_cast<size_t>(temp)].members.find(name) != space[static_cast<size_t>(temp)].members.end()) {
-                return space[static_cast<size_t>(temp)].members[name];
-            }
+Val& Space::getVal(const std::string& name, int ln, int col) {
+    for (auto scope: space) {
+        for (size_t i = 0; i < scope.members.size(); i ++) {
+            auto mem = scope.members[i];
+            if (get<0>(mem) == name) return scope.getMem(name);
         }
-        throw storage_error::UnknownIdentifierError(name, ln, col);
     }
+    throw storage_error::UnknownIdentifierError(name, ln, col);
 }
 bool Space::findMember(const std::string& name) {
-    if (space[deepC].members.find(name) != space[deepC].members.end())
-        return true;
-    else {
-        auto temp = static_cast<int>(deepC);
-        while (temp > 0) {
-            temp --;
-            if (space[static_cast<size_t>(temp)].members.find(name) != space[static_cast<size_t>(temp)].members.end())
-                return true;
+    for (const auto& scope: space) {
+        for (auto mem : scope.members) {
+            if (get<0>(mem) == name) return true;
         }
-        return false;
     }
+    return false;
 }

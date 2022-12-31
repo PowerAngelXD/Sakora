@@ -7,23 +7,25 @@
 
 #include "identifier.h"
 #include "../../error/storage_error.h"
-#include <map>
+using std::get;
 
 namespace storage {
     // Type alias for a member of a scope (pair of a string and a Val)
-    typedef std::pair<std::string, Val> Member;
+    typedef std::tuple<std::string, Identifier, Val> Member;
 
     // Struct representing a scope
     struct Scope {
         // identifier of the scope
         std::string ident;
         // map of members (string to Val)
-        std::map<std::string, Val> members;
+        std::vector<Member> members;
 
         // Constructors
         Scope() = default;
         // construct with identifier
         Scope(std::string i);
+        // Get members and can access and modify
+        Val &getMem(std::string id, int ln = -1, int col = -1);
     };
 
     // Class representing a space (collection of scopes)
@@ -52,12 +54,16 @@ namespace storage {
         template<typename T>
         void createMemberWithType(std::string name, T val, type::Type t, int ln = -1, int col = -1);
 
+        // create a member with the given name, value, identifier, and type
+        template<typename T>
+        void createMemberCompletely(std::string name, Identifier id, T val, type::Type t, int ln = -1, int col = -1);
+
         // check if the current scope has a member with the given name
         bool findMember(const std::string& name);
         // delete the member with the given name
         void deleteMember(const std::string& name, int ln = -1, int col = -1);
         // get value by given name
-        Val &get(const std::string& name, int ln = -1, int col = -1);
+        Val &getVal(const std::string& name, int ln = -1, int col = -1);
     };
 
 }
