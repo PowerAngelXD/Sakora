@@ -9,7 +9,7 @@ storage_error::DuplicateIdentifierError::DuplicateIdentifierError(std::string sr
 void storage_error::DuplicateIdentifierError::printError() {
     ERROR_HEAD_DISPLAY
     std::cout<<"DuplicateIdentifier Error"<<std::endl;
-    std::cout<<"    Attempt to create an existing identifier under the current scope"<<std::endl;
+    std::cout<<"    Attempt to create an existing identifier: '"<<source<<"' under the current scope"<<std::endl;
     std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
 }
 
