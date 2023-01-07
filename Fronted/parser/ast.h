@@ -10,6 +10,7 @@
 namespace parser {
     enum NodeKind {
         Token,
+        Container,
 
         // Expression
         CommaOp,                   // ','
