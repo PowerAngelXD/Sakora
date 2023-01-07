@@ -11,7 +11,8 @@ namespace visitor {
     enum CodeKind {
         push_float, push_double, push_i16, push_i32, push_i64, push_bool, push_str, push_iden,
         // calc
-        add, sub, mul, div, gmem, mod
+        add, sub, mul, div, gmem, mod,
+        eq, neq, gt, lt, ge, le, no, logic_and, logic_or
     };
     std::string kind_to_string(CodeKind k);
 
@@ -38,6 +39,8 @@ namespace visitor {
         void visitBasicOp(const parser::Node& node); void visitBasicExpression(parser::Node node);
         void visitMulOp(const parser::Node& node); void visitMulExpression(parser::Node node);
         void visitAddOp(const parser::Node& node); void visitAddExpression(parser::Node node);
+        void visitCompareOp(const parser::Node& node); void visitCompareExpression(parser::Node node);
+        void visitBooleanOp(const parser::Node& node); void visitBooleanExpression(parser::Node node);
         //
     };
 }

@@ -23,6 +23,15 @@ std::string visitor::kind_to_string(CodeKind k) {
         case div: return "div";
         case gmem: return "gmem";
         case mod: return "mod";
+        case eq: return "eq"; break;
+        case neq: return "neq"; break;
+        case gt: return "gt"; break;
+        case lt: return "lt"; break;
+        case ge: return "ge"; break;
+        case le: return "le"; break;
+        case no: return "no"; break;
+        case logic_and: return "logic_and"; break;
+        case logic_or: return "logic_or"; break;
     }
     return "null code";
 }
@@ -56,7 +65,13 @@ void Visitor::visitValToken(const parser::Node& node) {
             constantPool.push_back(node.token.content);
             out.emplace_back(CodeKind::push_iden, static_cast<double>(constantPool.size() - 1), node.token.line, node.token.column);
             break;
+        case lexer::Boolean:
+            if (node.token.content == "true")
+                out.emplace_back(CodeKind::push_bool, 1, node.token.line, node.token.column);
+            else if (node.token.content == "false")
+                out.emplace_back(CodeKind::push_bool, 0, node.token.line, node.token.column);
         case lexer::Keyword: case lexer::Symbol: case lexer::Eof: case lexer::NullToken: break;
+            break;
     }
 }
 void Visitor::visitBasicOp(const parser::Node& node) {
@@ -96,5 +111,41 @@ void Visitor::visitAddExpression(parser::Node node) {
     for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
         visitMulExpression(node[Marker::factors][i]);
         visitAddOp(node[Marker::ops][i]);
+    }
+}
+void Visitor::visitCompareOp(const parser::Node& node) {
+    if (node.token.content == "==")
+        out.emplace_back(CodeKind::eq, node.token.line, node.token.column);
+    else if (node.token.content == "!=")
+        out.emplace_back(CodeKind::neq, node.token.line, node.token.column);
+    else if (node.token.content == ">")
+        out.emplace_back(CodeKind::gt, node.token.line, node.token.column);
+    else if (node.token.content == "<")
+        out.emplace_back(CodeKind::lt, node.token.line, node.token.column);
+    else if (node.token.content == ">=")
+        out.emplace_back(CodeKind::ge, node.token.line, node.token.column);
+    else if (node.token.content == "<=")
+        out.emplace_back(CodeKind::le, node.token.line, node.token.column);
+}
+void Visitor::visitCompareExpression(parser::Node node) {
+    visitAddExpression(node[Marker::head][0]);
+    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
+        visitAddExpression(node[Marker::factors][i]);
+        visitCompareOp(node[Marker::ops][i]);
+    }
+}
+void Visitor::visitBooleanOp(const parser::Node& node) {
+    if (node.token.content == "&&")
+        out.emplace_back(CodeKind::logic_and, node.token.line, node.token.column);
+    else if (node.token.content == "||")
+        out.emplace_back(CodeKind::logic_or, node.token.line, node.token.column);
+    else if (node.token.content == "!")
+        out.emplace_back(CodeKind::no, node.token.line, node.token.column);
+}
+void Visitor::visitBooleanExpression(parser::Node node) {
+    visitCompareExpression(node[Marker::head][0]);
+    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
+        visitCompareExpression(node[Marker::factors][i]);
+        visitBooleanOp(node[Marker::ops][i]);
     }
 }
