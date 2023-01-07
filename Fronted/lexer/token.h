@@ -23,6 +23,7 @@ namespace lexer {
     // Enumeration of token kinds
     enum TokenKind {
         Number,   // number literal
+        Boolean,  // boolean literal
         String,   // string literal
         Ident,    // identifier
         Keyword,  // keyword
