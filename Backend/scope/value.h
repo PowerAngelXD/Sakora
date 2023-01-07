@@ -49,6 +49,8 @@ namespace storage {
         Val operator> (Val v);
         Val operator<= (Val v);
         Val operator>= (Val v);
+        Val operator ||(Val v);
+        Val operator &&(Val v);
         Val operator! ();
 
         // Returns the basic type of the value stored in this Val object (e.g. Int, Float, Bool)

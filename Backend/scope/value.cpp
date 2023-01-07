@@ -719,6 +719,22 @@ Val Val::operator>= (Val v) {
     }
     return {0};
 }
+Val Val::operator ||(Val v) {
+    switch (this->val_type.basic) {
+        case type::Boolean:
+            return {*(bool*)this->val_ptr || *(bool*)v.val_ptr};
+        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: break;
+    }
+    return {0};
+}
+Val Val::operator &&(Val v) {
+    switch (this->val_type.basic) {
+        case type::Boolean:
+            return {*(bool*)this->val_ptr && *(bool*)v.val_ptr};
+        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: break;
+    }
+    return {0};
+}
 Val Val::operator! () {
     switch (this->val_type.basic) {
         case type::Boolean:
