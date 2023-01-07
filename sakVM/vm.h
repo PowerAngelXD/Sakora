@@ -13,8 +13,8 @@ struct sakVM {
     /**
      * Naming conventions:
      * vm_xxx: Operation on VM
+     * ins_xxx: Instructions of VM
      */
-    std::string vm_info = "Sakora VM (Version: 1.0)";
     // VM code queues
     std::vector<sakVM_core::CodeQueue> threads;
     // Environment of the VM
@@ -41,6 +41,15 @@ struct sakVM {
     void ins_div();
     void ins_gmem();
     void ins_mod();
+    void ins_gt();
+    void ins_lt();
+    void ins_ge();
+    void ins_le();
+    void ins_eq();
+    void ins_neq();
+    void ins_logic_or();
+    void ins_logic_and();
+    void ins_no();
 
 };
 

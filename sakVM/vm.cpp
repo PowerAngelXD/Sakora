@@ -31,6 +31,15 @@ void sakVM::vm_run(size_t layer) {
             case visitor::div: ins_div(); break;
             case visitor::gmem: ins_gmem(); break;
             case visitor::mod: ins_mod(); break;
+            case visitor::eq: ins_eq(); break;
+            case visitor::neq: ins_neq(); break;
+            case visitor::gt: ins_gt(); break;
+            case visitor::lt: ins_lt(); break;
+            case visitor::ge: ins_ge(); break;
+            case visitor::le: ins_le(); break;
+            case visitor::no: ins_no(); break;
+            case visitor::logic_and: ins_logic_and(); break;
+            case visitor::logic_or: ins_logic_or(); break;
         }
     }
 }
@@ -73,6 +82,42 @@ void sakVM::ins_mod() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left % right);
+}
+void sakVM::ins_gt() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left > right);
+}
+void sakVM::ins_lt() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left < right);
+}
+void sakVM::ins_ge() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left >= right);
+}
+void sakVM::ins_le() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left <= right);
+}
+void sakVM::ins_eq() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left == right);
+}
+void sakVM::ins_neq() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left != right);
+}
+void sakVM::ins_logic_or() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left || right);
+}
+void sakVM::ins_logic_and() {
+    auto right = env.pop(), left = env.pop();
+    env.push(left && right);
+}
+void sakVM::ins_no() {
+    auto left = env.pop();
+    env.push(!left);
 }
 void sakVM::ins_gmem() {
 
