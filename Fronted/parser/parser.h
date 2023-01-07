@@ -9,7 +9,8 @@
 
 namespace parser {
     enum Marker {
-        head = 0, ops, factors
+        head = 0, ops = 1, factors = 2,
+        mark = 0
     };
 
     class Parser {
