@@ -68,12 +68,22 @@ Token Lexer::makeIdentifier() {
     }
     back();
 
-    return {
-        is_keyword(content)?TokenKind::Keyword:TokenKind::Ident,
-        content,
-        line,
-        column
-    };
+    if (content == "true" || content == "false") {
+        return {
+                TokenKind::Boolean,
+                content,
+                line,
+                column
+        };
+    }
+    else {
+        return {
+                is_keyword(content)?TokenKind::Keyword:TokenKind::Ident,
+                content,
+                line,
+                column
+        };
+    }
 }
 
 Token Lexer::makeSymbol() {
