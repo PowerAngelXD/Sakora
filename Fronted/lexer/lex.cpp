@@ -142,6 +142,7 @@ void Lexer::makeComment() {
 }
 
 void Lexer::make(char chk) {
+    if (chk == ' ' || chk == '\0') return;
     if (chk == '/' && source[pos + 1] == '/') {
         makeComment();
         return;
