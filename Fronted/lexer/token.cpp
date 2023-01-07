@@ -11,6 +11,7 @@ std::string lexer::kind_to_string(lexer::TokenKind kind) {
     switch (kind) {
         case Number: return "Number"; break;
         case String: return "String"; break;
+        case Boolean: return "Boolean"; break;
         case Ident: return "Identifier"; break;
         case Keyword: return "Keyword"; break;
         case Symbol: return "Symbol"; break;

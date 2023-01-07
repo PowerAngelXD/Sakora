@@ -51,7 +51,7 @@ bool parser::Parser::isCompareOpNode() {
            peek().content == ">" || peek().content == "<";
 }
 bool parser::Parser::isBooleanExpressionNode() {
-    return isCompareOpNode();
+    return isCompareExpressionNode();
 }
 bool parser::Parser::isBooleanOpNode() {
     return peek().content == "||" || peek().content == "&&" || peek().content == "!";
@@ -92,7 +92,7 @@ parser::Node parser::Parser::parseBasicOpNode() {
 }
 parser::Node parser::Parser::parseMulExpressionNode() {
      if (!isMulExpressionNode()) {
-         throw parser_error::UnexpectedTokenError("PrimaryExpression", token_group[pos].line, token_group[pos].column);
+         throw parser_error::UnexpectedTokenError("Primary Expression", token_group[pos].line, token_group[pos].column);
      }
      Node node(NodeKind::Container);
      node.subs.emplace_back(NodeKind::BasicExpression);
@@ -166,7 +166,7 @@ parser::Node parser::Parser::parseCompareOpNode() {
 }
 parser::Node parser::Parser::parseBooleanExpressionNode() {
     if (!isBooleanExpressionNode()) {
-        throw parser_error::UnexpectedTokenError("Boolean Expression", token_group[pos].line, token_group[pos].column);
+        throw parser_error::UnexpectedTokenError("Compare Expression", token_group[pos].line, token_group[pos].column);
     }
 
     Node node(NodeKind::Container);
