@@ -7,6 +7,7 @@
 
 #include "../type/type.h"
 #include <cmath>
+#include <cstring>
 
 #define float_equ(a,b) ((fabs((a) - (b)) < (1e-8))
 
