@@ -34,10 +34,10 @@ namespace parser {
         // parser
         IndexOpNode* parseIndexOpNode();
         CallOpNode* parseCallOpNode();
-        MulExprNode::MulOption* parseMulExprOp();
-        AddExprNode::AddOption* ParseAddExprOp();
-        CompareExprNode::CompareOption* parseCompareExprOp();
-        LogicExprNode::LogicOption* parseLogicExprOp();
+        MulExprNode::MulOpOption* parseMulExprOp();
+        AddExprNode::AddOpOption* parseAddExprOp();
+        CompareExprNode::CompareOpOption* parseCompareExprOp();
+        LogicExprNode::LogicOpOption* parseLogicExprOp();
 
         PrimaryExprNode* parsePrimExprNode();
         BasicExprNode* parseBasicExprNode();
