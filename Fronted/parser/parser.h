@@ -4,7 +4,8 @@
 
 #ifndef SAKORA_PARSER_H
 #define SAKORA_PARSER_H
-#include "ast.h"
+
+#include "ast_design.h"
 #include "../../error/parser_error.h"
 
 namespace parser {
@@ -20,20 +21,32 @@ namespace parser {
         Parser(std::vector<lexer::Token> tg);
 
         lexer::Token peek(size_t offset = 0);
-        lexer::Token eat();
+        lexer::Token* seek();
+        TokenNode* eat();
         // checker
-        bool isBasicExpressionNode(); bool isBasicOpNode();
-        bool isMulExpressionNode(); bool isMulOpNode();
-        bool isAddExpressionNode(); bool isAddOpNode();
-        bool isCompareExpressionNode(); bool isCompareOpNode();
-        bool isBooleanExpressionNode(); bool isBooleanOpNode();
-        bool isWholeExpressionNode();
+        bool isBasicExprNode(); bool isBasicOpNode();
+        #define isPrimExprNode isBasicExprNode
+        bool isMulExprNode(); bool isMulOpNode();
+        bool isAddExprNode(); bool isAddOpNode();
+        bool isCompareExprNode(); bool isCompareOpNode();
+        bool isLogicExprNode(); bool isLogicOpNode();
+        bool isWholeExprNode();
         // parser
-        Node parseBasicExpressionNode(); Node parseBasicOpNode();
-        Node parseMulExpressionNode(); Node parseMulOpNode();
-        Node parseAddExpressionNode(); Node parseAddOpNode();
-        Node parseCompareExpressionNode(); Node parseCompareOpNode();
-        Node parseBooleanExpressionNode(); Node parseBooleanOpNode();
+        IndexOpNode* parseIndexOpNode();
+        CallOpNode* parseCallOpNode();
+        MulExprNode::MulOption* parseMulExprOp();
+        AddExprNode::AddOption* ParseAddExprOp();
+        CompareExprNode::CompareOption* parseCompareExprOp();
+        LogicExprNode::LogicOption* parseLogicExprOp();
+
+        PrimaryExprNode* parsePrimExprNode();
+        BasicExprNode* parseBasicExprNode();
+        MulExprNode* parseMulExprNode();
+        AddExprNode* parseAddExprNode();
+        CompareExprNode* parseCompareExprNode();
+        LogicExprNode* parseLogicExprNode();
+        WholeExprNode* parseWholeExprNode();
+
     };
 }
 
