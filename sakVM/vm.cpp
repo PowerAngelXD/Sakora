@@ -37,7 +37,7 @@ void sakVM::vm_run(size_t layer) {
             case visitor::lt: ins_lt(); break;
             case visitor::ge: ins_ge(); break;
             case visitor::le: ins_le(); break;
-            case visitor::no: ins_no(); break;
+            case visitor::logic_not: ins_no(); break;
             case visitor::logic_and: ins_logic_and(); break;
             case visitor::logic_or: ins_logic_or(); break;
         }
