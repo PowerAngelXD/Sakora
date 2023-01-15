@@ -4,6 +4,3 @@
 
 #include "ast_design.h"
 
-void parser::WholeExprNode::free() {
-
-}

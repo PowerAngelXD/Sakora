@@ -40,11 +40,13 @@ namespace parser {
         TokenNode* right = nullptr;
     };
     struct BasicExprNode {
-        typedef std::tuple<IndexOpNode*, CallOpNode*> CallingOption;
-        static const size_t IndexOp = 0, CallOp = 1;
+        struct CallingOpOption {
+            IndexOpNode* index_op = nullptr;
+            CallOpNode* call_op = nullptr
+        };
 
         TokenNode* factor = nullptr;
-        std::vector<CallingOption*>* ops = nullptr;
+        std::vector<CallingOpOption*>* ops = nullptr;
     };
 
     struct PrimaryExprNode {
@@ -61,38 +63,51 @@ namespace parser {
     };
 
     struct MulExprNode {
-        typedef std::tuple<MulOpNode*, DivOpNode*> MulOption;
-        static const size_t MulOp = 0, DivOp = 1;
+        struct MulOpOption {
+            MulOpNode* mul_op = nullptr;
+            DivOpNode* div_op = nullptr;
+        };
 
         PrimaryExprNode* head = nullptr;
-        std::vector<MulOption*>* ops = nullptr;
+        std::vector<MulOpOption*>* ops = nullptr;
         std::vector<PrimaryExprNode*>* factors = nullptr;
     };
 
     struct AddExprNode {
-        typedef std::tuple<AddOpNode*, SubOpNode*> AddOption;
-        static const size_t AddOp = 0, SubOp = 1;
+        struct AddOpOption {
+            AddOpNode* add_op = nullptr;
+            SubOpNode* sub_op = nullptr;
+        };
 
         MulExprNode* head = nullptr;
-        std::vector<AddOption *>* ops = nullptr;
+        std::vector<AddOpOption *>* ops = nullptr;
         std::vector<MulExprNode*>* factors = nullptr;
     };
 
     struct CompareExprNode {
-        typedef std::tuple<EqOpNode*, NeqOpNode*, GtOpNode*, LtOpNode*, GeOpNode*, LeOpNode*> CompareOption;
-        static const size_t EqOp = 0, NeqOp = 1, GtOp = 2, LtOp = 3, GeOp = 4, LeOp = 5;
+        struct CompareOpOption {
+            EqOpNode* eq_op = nullptr;
+            NeqOpNode* neq_op = nullptr;
+            GtOpNode* gt_op = nullptr;
+            LtOpNode* lt_op = nullptr;
+            GeOpNode* ge_op = nullptr;
+            LeOpNode* le_op = nullptr;
+        };
 
         AddExprNode* head = nullptr;
-        std::vector<CompareOption*>* ops = nullptr;
+        std::vector<CompareOpOption*>* ops = nullptr;
         std::vector<AddExprNode*>* factors = nullptr;
     };
 
     struct LogicExprNode {
-        typedef std::tuple<LogicAndOpNode*, LogicOrOpNode*, LogicNotOpNode*> LogicOption;
-        static const size_t LogicAndOp = 0, LogicOrOp = 1, LogicNotOp = 2;
+        struct LogicOpOption {
+            LogicAndOpNode* logic_and_op = nullptr;
+            LogicNotOpNode* logic_not_op = nullptr;
+            LogicOrOpNode* logic_or_op = nullptr;
+        };
 
         CompareExprNode* head = nullptr;
-        std::vector<LogicOption*>* ops = nullptr;
+        std::vector<LogicOpOption*>* ops = nullptr;
         std::vector<CompareExprNode*>* factors = nullptr;
     };
 
