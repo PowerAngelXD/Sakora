@@ -12,7 +12,7 @@ namespace visitor {
         push_float, push_double, push_i16, push_i32, push_i64, push_bool, push_str, push_iden,
         // calc
         add, sub, mul, div, gmem, mod,
-        eq, neq, gt, lt, ge, le, no, logic_and, logic_or
+        eq, neq, gt, lt, ge, le, logic_not, logic_and, logic_or
     };
     std::string kind_to_string(CodeKind k);
 
@@ -25,22 +25,18 @@ namespace visitor {
         Code(CodeKind k, double v, int l, int c);
     };
 
-    class Visitor {
-        // visiting source
-        parser::Node source;
-    public:
+    struct Visitor {
         std::vector<Code> out;
         std::vector<std::string> constantPool;
 
-        Visitor(parser::Node src);
-
         // Expression Visitor
-        void visitValToken(const parser::Node& node);
-        void visitBasicOp(const parser::Node& node); void visitBasicExpression(parser::Node node);
-        void visitMulOp(const parser::Node& node); void visitMulExpression(parser::Node node);
-        void visitAddOp(const parser::Node& node); void visitAddExpression(parser::Node node);
-        void visitCompareOp(const parser::Node& node); void visitCompareExpression(parser::Node node);
-        void visitBooleanOp(const parser::Node& node); void visitBooleanExpression(parser::Node node);
+        void visitValToken(parser::TokenNode* node);
+        void visitBasicOp(parser::BasicExprNode::CallingOpOption* node); void visitBasicExpression(parser::BasicExprNode* node);
+        void visitPrimOp(parser::TokenNode* node); void visitPrimExpression(parser::PrimaryExprNode* node);
+        void visitMulOp(parser::MulExprNode::MulOpOption* node); void visitMulExpression(parser::MulExprNode* node);
+        void visitAddOp(parser::AddExprNode::AddOpOption* node); void visitAddExpression(parser::AddExprNode* node);
+        void visitCompareOp(parser::CompareExprNode::CompareOpOption* node); void visitCompareExpression(parser::CompareExprNode* node);
+        void visitLogicOp(parser::LogicExprNode::LogicOpOption* node); void visitLogicExpression(parser::LogicExprNode* node);
         //
     };
 }

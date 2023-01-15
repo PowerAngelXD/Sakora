@@ -104,78 +104,39 @@ CallOpNode* Parser::parseCallOpNode() {
     }
     throw parser_error::UnexpectedTokenError("Calling Op", peek().line, peek().column);
 }
-MulExprNode::MulOption* Parser::parseMulExprOp() {
-    auto* opt = new MulExprNode::MulOption;
-    if (peek().content == "*") { 
-        TG(MulExprNode::MulOp, *opt) = new MulOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "/") { 
-        TG(MulExprNode::DivOp, *opt) = new DivOpNode { eat() };
-        return opt;
-    }
+MulExprNode::MulOpOption* Parser::parseMulExprOp() {
+    auto* opt = new MulExprNode::MulOpOption;
+    if (peek().content == "*") opt->mul_op = new MulOpNode{eat()};
+    else if (peek().content == "/") opt->div_op = new DivOpNode {eat()};
     else {
         throw parser_error::UnexpectedTokenError("'/' or '*'", peek().line, peek().column);
     }
 }
-AddExprNode::AddOption* Parser::ParseAddExprOp() {
-    auto* opt = new AddExprNode::AddOption;
-    if (peek().content == "+") { 
-        TG(AddExprNode::AddOp, *opt) = new AddOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "-") { 
-        TG(AddExprNode::SubOp, *opt) = new SubOpNode { eat() };
-        return opt;
-    }
+AddExprNode::AddOpOption* Parser::parseAddExprOp() {
+    auto* opt = new AddExprNode::AddOpOption;
+    if (peek().content == "+") opt->add_op = new AddOpNode{eat()};
+    else if (peek().content == "-") opt->sub_op = new SubOpNode{eat()};
     else {
         throw parser_error::UnexpectedTokenError("'+' or '-'", peek().line, peek().column);
     }
 }
-CompareExprNode::CompareOption* Parser::parseCompareExprOp() {
-    auto* opt = new CompareExprNode::CompareOption;
-    if (peek().content == "==") { 
-        TG(CompareExprNode::EqOp, *opt) = new EqOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "!=") { 
-        TG(CompareExprNode::NeqOp, *opt) = new NeqOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == ">") { 
-        TG(CompareExprNode::GtOp, *opt) = new GtOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == ">=") { 
-        TG(CompareExprNode::GeOp, *opt) = new GeOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "<") { 
-        TG(CompareExprNode::LtOp, *opt) = new LtOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "<=") { 
-        TG(CompareExprNode::LeOp, *opt) = new LeOpNode { eat() };
-        return opt;
-    }
+CompareExprNode::CompareOpOption* Parser::parseCompareExprOp() {
+    auto* opt = new CompareExprNode::CompareOpOption;
+    if (peek().content == "==") opt->eq_op = new EqOpNode {eat()};
+    else if (peek().content == "!=") opt->neq_op = new NeqOpNode {eat()};
+    else if (peek().content == ">") opt->gt_op = new GtOpNode {eat()};
+    else if (peek().content == ">=") opt->ge_op = new GeOpNode {eat()};
+    else if (peek().content == "<") opt->lt_op = new LtOpNode {eat()};
+    else if (peek().content == "<=") opt->le_op = new LeOpNode {eat()};
     else {
         throw parser_error::UnexpectedTokenError("'==', '!=', '<', '>', '<=' or '>='", peek().line, peek().column);
     }
 }
-LogicExprNode::LogicOption* Parser::parseLogicExprOp() {
-    auto* opt = new LogicExprNode::LogicOption;
-    if (peek().content == "&&") { 
-        TG(LogicExprNode::LogicAndOp, *opt) = new LogicAndOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "||") { 
-        TG(LogicExprNode::LogicOrOp, *opt) = new LogicOrOpNode { eat() };
-        return opt;
-    }
-    else if (peek().content == "!") { 
-        TG(LogicExprNode::LogicNotOp, *opt) = new LogicNotOpNode { eat() };
-        return opt;
-    }
+LogicExprNode::LogicOpOption* Parser::parseLogicExprOp() {
+    auto* opt = new LogicExprNode::LogicOpOption;
+    if (peek().content == "&&") opt->logic_and_op = new LogicAndOpNode {eat()};
+    else if (peek().content == "||") opt->logic_or_op = new LogicOrOpNode {eat()};
+    else if (peek().content == "!") opt->logic_not_op = new LogicNotOpNode {eat()};
     else {
         throw parser_error::UnexpectedTokenError("'&&', '||' or '!'", peek().line, peek().column);
     }
@@ -213,18 +174,22 @@ PrimaryExprNode* Parser::parsePrimExprNode() {
 
         return node;
     }
+    throw parser_error::UnexpectedTokenError("Primary Expression", peek().line, peek().column);
 }
 BasicExprNode* Parser::parseBasicExprNode() {
     if (isBasicExprNode()) {
         auto* node = new BasicExprNode;
+        auto* opt = new BasicExprNode::CallingOpOption;
         node->factor = eat();
         
         while (peek().content == "(" || peek().content == "[") {
             if (peek().content == "(") {
-                node->ops->push_back(new BasicExprNode::CallingOption { nullptr, parseCallOpNode() });
+                opt->call_op = parseCallOpNode();
+                node->ops->push_back(opt);
             }
             else if (peek().content == "[") {
-                node->ops->push_back(new BasicExprNode::CallingOption { parseIndexOpNode(), nullptr });
+                opt->index_op = parseIndexOpNode();
+                node->ops->push_back(opt);
             }
         }
 
@@ -249,7 +214,7 @@ AddExprNode* Parser::parseAddExprNode() {
         auto* node = new AddExprNode;
         node->head = parseMulExprNode();
         while (isAddOpNode()) {
-            node->ops->push_back(ParseAddExprOp());
+            node->ops->push_back(parseAddExprOp());
             node->factors->push_back(parseMulExprNode());
         }
         return node;

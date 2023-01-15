@@ -29,7 +29,7 @@ std::string visitor::kind_to_string(CodeKind k) {
         case lt: return "lt"; break;
         case ge: return "ge"; break;
         case le: return "le"; break;
-        case no: return "no"; break;
+        case logic_not: return "no"; break;
         case logic_and: return "logic_and"; break;
         case logic_or: return "logic_or"; break;
     }
@@ -39,113 +39,86 @@ std::string visitor::kind_to_string(CodeKind k) {
 Code::Code(CodeKind k, int l, int c): kind(k),val(0), ln(l), col(c) {}
 Code::Code(CodeKind k, double v, int l, int c): kind(k), val(v), ln(l), col(c) {}
 
-Visitor::Visitor(parser::Node src): source(std::move(src)) {}
-
-void Visitor::visitValToken(const parser::Node& node) {
-    switch (node.token.kind) {
+void Visitor::visitValToken(parser::TokenNode* node) {
+    switch (node->token->kind) {
         case lexer::Number:
-            if (node.token.content.find('.') != std::string::npos) {
-                if (node.token.content.size() > 10)
-                    out.emplace_back(CodeKind::push_double, std::stod(node.token.content), node.token.line, node.token.column);
+            if (node->token->content.find('.') != std::string::npos) {
+                if (node->token->content.size() > 10)
+                    out.emplace_back(CodeKind::push_double, std::stod(node->token->content), node->token->line, node->token->column);
                 else
-                    out.emplace_back(CodeKind::push_float, std::stof(node.token.content), node.token.line, node.token.column);
+                    out.emplace_back(CodeKind::push_float, std::stof(node->token->content), node->token->line, node->token->column);
             }
             else {
-                if (node.token.content.size() >= 6)
-                    out.emplace_back(CodeKind::push_i64, static_cast<double>(std::stoi(node.token.content)), node.token.line, node.token.column);
+                if (node->token->content.size() >= 6)
+                    out.emplace_back(CodeKind::push_i64, static_cast<double>(std::stoi(node->token->content)), node->token->line, node->token->column);
                 else
-                    out.emplace_back(CodeKind::push_i32, static_cast<double>(std::stoi(node.token.content)), node.token.line, node.token.column);
+                    out.emplace_back(CodeKind::push_i32, static_cast<double>(std::stoi(node->token->content)), node->token->line, node->token->column);
             }
             break;
         case lexer::String:
-            constantPool.push_back(node.token.content);
-            out.emplace_back(CodeKind::push_str, static_cast<double>(constantPool.size() - 1), node.token.line, node.token.column);
+            constantPool.push_back(node->token->content);
+            out.emplace_back(CodeKind::push_str, static_cast<double>(constantPool.size() - 1), node->token->line, node->token->column);
             break;
         case lexer::Ident:
-            constantPool.push_back(node.token.content);
-            out.emplace_back(CodeKind::push_iden, static_cast<double>(constantPool.size() - 1), node.token.line, node.token.column);
+            constantPool.push_back(node->token->content);
+            out.emplace_back(CodeKind::push_iden, static_cast<double>(constantPool.size() - 1), node->token->line, node->token->column);
             break;
         case lexer::Boolean:
-            if (node.token.content == "true")
-                out.emplace_back(CodeKind::push_bool, 1, node.token.line, node.token.column);
-            else if (node.token.content == "false")
-                out.emplace_back(CodeKind::push_bool, 0, node.token.line, node.token.column);
+            if (node->token->content == "true")
+                out.emplace_back(CodeKind::push_bool, 1, node->token->line, node->token->column);
+            else if (node->token->content == "false")
+                out.emplace_back(CodeKind::push_bool, 0, node->token->line, node->token->column);
         case lexer::Keyword: case lexer::Symbol: case lexer::Eof: case lexer::NullToken: break;
             break;
     }
 }
-void Visitor::visitBasicOp(const parser::Node& node) {
-    out.emplace_back(CodeKind::gmem, node.token.line, node.token.column);
-}
-void Visitor::visitBasicExpression(parser::Node node) {
-    visitValToken(node[Marker::head][0]);
 
-    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
-        visitValToken(node[Marker::factors][i]);
-        visitBasicOp(node[Marker::ops][i]);
+void Visitor::visitBasicOp(parser::BasicExprNode::CallingOpOption* node) {
+    if (node->call_op != nullptr) {
+
+    }
+    else if (node->call_op != nullptr) {
+
+    }
+    // TODO
+}
+void Visitor::visitBasicExpression(parser::BasicExprNode* node) {
+    visitValToken(node->factor);
+    for (size_t i = 0; i < node->ops->size(); i ++) {
+        visitBasicOp(node->ops->at(i));
     }
 }
-void Visitor::visitMulOp(const parser::Node& node) {
-    if (node.token.content == "*")
-        out.emplace_back(CodeKind::mul, node.token.line, node.token.column);
-    else if (node.token.content == "/")
-        out.emplace_back(CodeKind::div, node.token.line, node.token.column);
-    else if (node.token.content == "%")
-        out.emplace_back(CodeKind::mod, node.token.line, node.token.column);
+void Visitor::visitPrimOp(parser::TokenNode* node) {
+    out.push_back(Code {CodeKind::gmem, node->token->line, node->token->column});
 }
-void Visitor::visitMulExpression(parser::Node node) {
-    visitBasicExpression(node[Marker::head][0]);
-    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
-        visitBasicExpression(node[Marker::factors][i]);
-        visitMulOp(node[Marker::ops][i]);
+void Visitor::visitPrimExpression(parser::PrimaryExprNode* node) {
+    visitBasicExpression(node->head->head);
+    for (size_t i = 0; i < node->ops->size(); i ++) {
+        visitPrimOp(node->ops->at(i)->op);
+        visitBasicExpression(node->factors->at(i)->head);
     }
 }
-void Visitor::visitAddOp(const Node& node) {
-    if (node.token.content == "+")
-        out.emplace_back(CodeKind::add, node.token.line, node.token.column);
-    else if (node.token.content == "-")
-        out.emplace_back(CodeKind::sub, node.token.line, node.token.column);
+void Visitor::visitMulOp(parser::MulExprNode::MulOpOption* node) {
+
 }
-void Visitor::visitAddExpression(parser::Node node) {
-    visitMulExpression(node[Marker::head][0]);
-    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
-        visitMulExpression(node[Marker::factors][i]);
-        visitAddOp(node[Marker::ops][i]);
-    }
+void Visitor::visitMulExpression(parser::MulExprNode* node) {
+
 }
-void Visitor::visitCompareOp(const parser::Node& node) {
-    if (node.token.content == "==")
-        out.emplace_back(CodeKind::eq, node.token.line, node.token.column);
-    else if (node.token.content == "!=")
-        out.emplace_back(CodeKind::neq, node.token.line, node.token.column);
-    else if (node.token.content == ">")
-        out.emplace_back(CodeKind::gt, node.token.line, node.token.column);
-    else if (node.token.content == "<")
-        out.emplace_back(CodeKind::lt, node.token.line, node.token.column);
-    else if (node.token.content == ">=")
-        out.emplace_back(CodeKind::ge, node.token.line, node.token.column);
-    else if (node.token.content == "<=")
-        out.emplace_back(CodeKind::le, node.token.line, node.token.column);
+void Visitor::visitAddOp(parser::AddExprNode::AddOpOption* node) {
+
 }
-void Visitor::visitCompareExpression(parser::Node node) {
-    visitAddExpression(node[Marker::head][0]);
-    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
-        visitAddExpression(node[Marker::factors][i]);
-        visitCompareOp(node[Marker::ops][i]);
-    }
+void Visitor::visitAddExpression(parser::AddExprNode* node) {
+
 }
-void Visitor::visitBooleanOp(const parser::Node& node) {
-    if (node.token.content == "&&")
-        out.emplace_back(CodeKind::logic_and, node.token.line, node.token.column);
-    else if (node.token.content == "||")
-        out.emplace_back(CodeKind::logic_or, node.token.line, node.token.column);
-    else if (node.token.content == "!")
-        out.emplace_back(CodeKind::no, node.token.line, node.token.column);
+void Visitor::visitCompareOp(parser::CompareExprNode::CompareOpOption* node) {
+
 }
-void Visitor::visitBooleanExpression(parser::Node node) {
-    visitCompareExpression(node[Marker::head][0]);
-    for (size_t i = 0; i < node[Marker::ops].subs.size(); i ++) {
-        visitCompareExpression(node[Marker::factors][i]);
-        visitBooleanOp(node[Marker::ops][i]);
-    }
+void Visitor::visitCompareExpression(parser::CompareExprNode* node) {
+
+}
+void Visitor::visitLogicOp(parser::LogicExprNode::LogicOpOption* node) {
+
+}
+void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
+
 }
