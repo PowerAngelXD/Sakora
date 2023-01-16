@@ -9,15 +9,14 @@ int main() {
     parser::Parser p(lex.out);
     try {
         auto node = p.parseAddExprNode();
-        //visitor::Visitor vr(node);
-        //vr.visitAddExpression(node);
+        visitor::Visitor vr;
+        vr.visitAddExpression(node);
 
-        //sakVM vm(vr.constantPool, node[parser::Marker::head][0].token.line, node[parser::Marker::head][0].token.column);
-        //vm.threads.push_back(vr.out);
-        //vm.vm_run(0);
+        sakVM vm(vr.constantPool, vr.out[0].ln, vr.out[0].col);
+        vm.threads.push_back(vr.out);
+        vm.vm_run(0);
 
-        //auto result = vm.env.pop();
-        std::cout<<node->head->head->head->head->factor->token->content<<std::endl;
+        std::cout<<*(int*)vm.env.pop().val()<<std::endl;
     }
     catch (parser_error::UnexpectedTokenError& e) {
         e.printError();
