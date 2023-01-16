@@ -35,18 +35,18 @@ namespace parser {
     };
     struct CallOpNode {
         TokenNode* left = nullptr;
-        std::vector<WholeExprNode*>* factors = nullptr;
-        std::vector<CommaOpNode*>* seps = nullptr;
+        std::vector<WholeExprNode*> factors;
+        std::vector<CommaOpNode*> seps;
         TokenNode* right = nullptr;
     };
     struct BasicExprNode {
         struct CallingOpOption {
             IndexOpNode* index_op = nullptr;
-            CallOpNode* call_op = nullptr
+            CallOpNode* call_op = nullptr;
         };
 
         TokenNode* factor = nullptr;
-        std::vector<CallingOpOption*>* ops = nullptr;
+        std::vector<CallingOpOption*> ops;
     };
 
     struct PrimaryExprNode {
@@ -58,8 +58,8 @@ namespace parser {
             TokenNode* right = nullptr;
         };
         Factor* head = nullptr;
-        std::vector<Factor*>* factors = nullptr;
-        std::vector<GmemOpNode*>* ops = nullptr;
+        std::vector<Factor*> factors;
+        std::vector<GmemOpNode*> ops;
     };
 
     struct MulExprNode {
@@ -69,8 +69,8 @@ namespace parser {
         };
 
         PrimaryExprNode* head = nullptr;
-        std::vector<MulOpOption*>* ops = nullptr;
-        std::vector<PrimaryExprNode*>* factors = nullptr;
+        std::vector<MulOpOption*> ops;
+        std::vector<PrimaryExprNode*> factors;
     };
 
     struct AddExprNode {
@@ -80,8 +80,8 @@ namespace parser {
         };
 
         MulExprNode* head = nullptr;
-        std::vector<AddOpOption *>* ops = nullptr;
-        std::vector<MulExprNode*>* factors = nullptr;
+        std::vector<AddOpOption *> ops;
+        std::vector<MulExprNode*> factors;
     };
 
     struct CompareExprNode {
@@ -95,8 +95,8 @@ namespace parser {
         };
 
         AddExprNode* head = nullptr;
-        std::vector<CompareOpOption*>* ops = nullptr;
-        std::vector<AddExprNode*>* factors = nullptr;
+        std::vector<CompareOpOption*> ops;
+        std::vector<AddExprNode*> factors;
     };
 
     struct LogicExprNode {
@@ -107,8 +107,8 @@ namespace parser {
         };
 
         CompareExprNode* head = nullptr;
-        std::vector<LogicOpOption*>* ops = nullptr;
-        std::vector<CompareExprNode*>* factors = nullptr;
+        std::vector<LogicOpOption*> ops;
+        std::vector<CompareExprNode*> factors;
     };
 
     struct WholeExprNode {
