@@ -84,8 +84,8 @@ void Visitor::visitBasicOp(parser::BasicExprNode::CallingOpOption* node) {
 }
 void Visitor::visitBasicExpression(parser::BasicExprNode* node) {
     visitValToken(node->factor);
-    for (size_t i = 0; i < node->ops->size(); i ++) {
-        visitBasicOp(node->ops->at(i));
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitBasicOp(node->ops[i]);
     }
 }
 void Visitor::visitPrimOp(parser::TokenNode* node) {
@@ -93,32 +93,58 @@ void Visitor::visitPrimOp(parser::TokenNode* node) {
 }
 void Visitor::visitPrimExpression(parser::PrimaryExprNode* node) {
     visitBasicExpression(node->head->head);
-    for (size_t i = 0; i < node->ops->size(); i ++) {
-        visitPrimOp(node->ops->at(i)->op);
-        visitBasicExpression(node->factors->at(i)->head);
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitBasicExpression(node->factors[i]->head);
+        visitPrimOp(node->ops[i]->op);
     }
 }
 void Visitor::visitMulOp(parser::MulExprNode::MulOpOption* node) {
-
+    if (node->mul_op != nullptr) out.push_back(Code {CodeKind::mul, node->mul_op->op->token->line, node->mul_op->op->token->column});
+    else if (node->div_op != nullptr) out.push_back(Code {CodeKind::div, node->div_op->op->token->line, node->div_op->op->token->column});
 }
 void Visitor::visitMulExpression(parser::MulExprNode* node) {
-
-}
+    visitPrimExpression(node->head);
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitPrimExpression(node->factors[i]);
+        visitMulOp(node->ops[i]);
+    }
+}   
 void Visitor::visitAddOp(parser::AddExprNode::AddOpOption* node) {
-
+    if (node->add_op != nullptr) out.push_back(Code {CodeKind::add, node->add_op->op->token->line, node->add_op->op->token->column});
+    else if (node->sub_op != nullptr) out.push_back(Code {CodeKind::sub, node->sub_op->op->token->line, node->sub_op->op->token->column});
 }
 void Visitor::visitAddExpression(parser::AddExprNode* node) {
-
+    visitMulExpression(node->head);
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitMulExpression(node->factors[i]);
+        visitAddOp(node->ops[i]);
+    }
 }
 void Visitor::visitCompareOp(parser::CompareExprNode::CompareOpOption* node) {
+    if (node->eq_op != nullptr) out.push_back(Code {CodeKind::eq, node->eq_op->op->token->line, node->eq_op->op->token->column});
+    else if (node->neq_op != nullptr) out.push_back(Code {CodeKind::neq, node->neq_op->op->token->line, node->neq_op->op->token->column});
+    else if (node->gt_op != nullptr) out.push_back(Code {CodeKind::gt, node->gt_op->op->token->line, node->gt_op->op->token->column});
+    else if (node->ge_op != nullptr) out.push_back(Code {CodeKind::ge, node->ge_op->op->token->line, node->ge_op->op->token->column});
+    else if (node->lt_op != nullptr) out.push_back(Code {CodeKind::lt, node->lt_op->op->token->line, node->lt_op->op->token->column});
+    else if (node->le_op != nullptr) out.push_back(Code {CodeKind::le, node->le_op->op->token->line, node->le_op->op->token->column});
 
 }
 void Visitor::visitCompareExpression(parser::CompareExprNode* node) {
-
+    visitAddExpression(node->head);
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitAddExpression(node->factors[i]);
+        visitCompareOp(node->ops[i]);
+    }
 }
 void Visitor::visitLogicOp(parser::LogicExprNode::LogicOpOption* node) {
-
+    if (node->logic_and_op != nullptr) out.push_back(Code {CodeKind::logic_and, node->logic_and_op->op->token->line, node->logic_and_op->op->token->column});
+    else if (node->logic_or_op != nullptr) out.push_back(Code {CodeKind::logic_or, node->logic_or_op->op->token->line, node->logic_or_op->op->token->column});
+    else if (node->logic_not_op != nullptr) out.push_back(Code {CodeKind::logic_not, node->logic_not_op->op->token->line, node->logic_not_op->op->token->column});
 }
 void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
-
+    visitCompareExpression(node->head);
+    for (size_t i = 0; i < node->ops.size(); i ++) {
+        visitCompareExpression(node->factors[i]);
+        visitLogicOp(node->ops[i]);
+    }
 }
