@@ -89,10 +89,10 @@ CallOpNode* Parser::parseCallOpNode() {
         auto* node = new CallOpNode;
         node->left = eat();
         if (!isWholeExprNode()) {
-            node->factors->push_back(parseWholeExprNode());
+            node->factors.push_back(parseWholeExprNode());
             while (peek().content == ",") {
-                node->seps->push_back(new CommaOpNode { eat() });
-                node->factors->push_back(parseWholeExprNode());
+                node->seps.push_back(new CommaOpNode { eat() });
+                node->factors.push_back(parseWholeExprNode());
             }
         }
         if (peek().content != ")") {
@@ -111,6 +111,7 @@ MulExprNode::MulOpOption* Parser::parseMulExprOp() {
     else {
         throw parser_error::UnexpectedTokenError("'/' or '*'", peek().line, peek().column);
     }
+    return opt;
 }
 AddExprNode::AddOpOption* Parser::parseAddExprOp() {
     auto* opt = new AddExprNode::AddOpOption;
@@ -119,6 +120,7 @@ AddExprNode::AddOpOption* Parser::parseAddExprOp() {
     else {
         throw parser_error::UnexpectedTokenError("'+' or '-'", peek().line, peek().column);
     }
+    return opt;
 }
 CompareExprNode::CompareOpOption* Parser::parseCompareExprOp() {
     auto* opt = new CompareExprNode::CompareOpOption;
@@ -131,6 +133,7 @@ CompareExprNode::CompareOpOption* Parser::parseCompareExprOp() {
     else {
         throw parser_error::UnexpectedTokenError("'==', '!=', '<', '>', '<=' or '>='", peek().line, peek().column);
     }
+    return opt;
 }
 LogicExprNode::LogicOpOption* Parser::parseLogicExprOp() {
     auto* opt = new LogicExprNode::LogicOpOption;
@@ -140,6 +143,7 @@ LogicExprNode::LogicOpOption* Parser::parseLogicExprOp() {
     else {
         throw parser_error::UnexpectedTokenError("'&&', '||' or '!'", peek().line, peek().column);
     }
+    return opt;
 }
 
 PrimaryExprNode* Parser::parsePrimExprNode() {
@@ -168,8 +172,8 @@ PrimaryExprNode* Parser::parsePrimExprNode() {
 
         node->head = makeFactor();
         while (peek().content == ".") {
-            node->ops->push_back(new GmemOpNode { eat() });
-            node->factors->push_back(makeFactor());
+            node->ops.push_back(new GmemOpNode { eat() });
+            node->factors.push_back(makeFactor());
         }
 
         return node;
@@ -185,11 +189,11 @@ BasicExprNode* Parser::parseBasicExprNode() {
         while (peek().content == "(" || peek().content == "[") {
             if (peek().content == "(") {
                 opt->call_op = parseCallOpNode();
-                node->ops->push_back(opt);
+                node->ops.push_back(opt);
             }
             else if (peek().content == "[") {
                 opt->index_op = parseIndexOpNode();
-                node->ops->push_back(opt);
+                node->ops.push_back(opt);
             }
         }
 
@@ -202,8 +206,8 @@ MulExprNode* Parser::parseMulExprNode() {
         auto* node = new MulExprNode;
         node->head = parsePrimExprNode();
         while (isMulOpNode()) {
-            node->ops->push_back(parseMulExprOp());
-            node->factors->push_back(parsePrimExprNode());
+            node->ops.push_back(parseMulExprOp());
+            node->factors.push_back(parsePrimExprNode());
         }
         return node;
     }
@@ -214,8 +218,8 @@ AddExprNode* Parser::parseAddExprNode() {
         auto* node = new AddExprNode;
         node->head = parseMulExprNode();
         while (isAddOpNode()) {
-            node->ops->push_back(parseAddExprOp());
-            node->factors->push_back(parseMulExprNode());
+            node->ops.push_back(parseAddExprOp());
+            node->factors.push_back(parseMulExprNode());
         }
         return node;
     }
@@ -226,8 +230,8 @@ CompareExprNode* Parser::parseCompareExprNode() {
         auto* node = new CompareExprNode;
         node->head = parseAddExprNode();
         while (isCompareOpNode()) {
-            node->ops->push_back(parseCompareExprOp());
-            node->factors->push_back(parseAddExprNode());
+            node->ops.push_back(parseCompareExprOp());
+            node->factors.push_back(parseAddExprNode());
         }
         return node;
     }
@@ -238,8 +242,8 @@ LogicExprNode* Parser::parseLogicExprNode() {
         auto* node = new LogicExprNode;
         node->head = parseCompareExprNode();
         while (isLogicOpNode()) {
-            node->ops->push_back(parseLogicExprOp());
-            node->factors->push_back(parseCompareExprNode());
+            node->ops.push_back(parseLogicExprOp());
+            node->factors.push_back(parseCompareExprNode());
         }
         return node;
     }
