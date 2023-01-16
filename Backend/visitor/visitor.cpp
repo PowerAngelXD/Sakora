@@ -89,7 +89,7 @@ void Visitor::visitBasicExpression(parser::BasicExprNode* node) {
     }
 }
 void Visitor::visitPrimOp(parser::TokenNode* node) {
-    out.push_back(Code {CodeKind::gmem, node->token->line, node->token->column});
+    out.emplace_back(CodeKind::gmem, node->token->line, node->token->column);
 }
 void Visitor::visitPrimExpression(parser::PrimaryExprNode* node) {
     visitBasicExpression(node->head->head);
@@ -99,8 +99,8 @@ void Visitor::visitPrimExpression(parser::PrimaryExprNode* node) {
     }
 }
 void Visitor::visitMulOp(parser::MulExprNode::MulOpOption* node) {
-    if (node->mul_op != nullptr) out.push_back(Code {CodeKind::mul, node->mul_op->op->token->line, node->mul_op->op->token->column});
-    else if (node->div_op != nullptr) out.push_back(Code {CodeKind::div, node->div_op->op->token->line, node->div_op->op->token->column});
+    if (node->mul_op != nullptr) out.emplace_back(CodeKind::mul, node->mul_op->op->token->line, node->mul_op->op->token->column);
+    else if (node->div_op != nullptr) out.emplace_back(CodeKind::div, node->div_op->op->token->line, node->div_op->op->token->column);
 }
 void Visitor::visitMulExpression(parser::MulExprNode* node) {
     visitPrimExpression(node->head);
@@ -110,8 +110,8 @@ void Visitor::visitMulExpression(parser::MulExprNode* node) {
     }
 }   
 void Visitor::visitAddOp(parser::AddExprNode::AddOpOption* node) {
-    if (node->add_op != nullptr) out.push_back(Code {CodeKind::add, node->add_op->op->token->line, node->add_op->op->token->column});
-    else if (node->sub_op != nullptr) out.push_back(Code {CodeKind::sub, node->sub_op->op->token->line, node->sub_op->op->token->column});
+    if (node->add_op != nullptr) out.emplace_back(CodeKind::add, node->add_op->op->token->line, node->add_op->op->token->column);
+    else if (node->sub_op != nullptr) out.emplace_back(CodeKind::sub, node->sub_op->op->token->line, node->sub_op->op->token->column);
 }
 void Visitor::visitAddExpression(parser::AddExprNode* node) {
     visitMulExpression(node->head);
@@ -121,12 +121,12 @@ void Visitor::visitAddExpression(parser::AddExprNode* node) {
     }
 }
 void Visitor::visitCompareOp(parser::CompareExprNode::CompareOpOption* node) {
-    if (node->eq_op != nullptr) out.push_back(Code {CodeKind::eq, node->eq_op->op->token->line, node->eq_op->op->token->column});
-    else if (node->neq_op != nullptr) out.push_back(Code {CodeKind::neq, node->neq_op->op->token->line, node->neq_op->op->token->column});
-    else if (node->gt_op != nullptr) out.push_back(Code {CodeKind::gt, node->gt_op->op->token->line, node->gt_op->op->token->column});
-    else if (node->ge_op != nullptr) out.push_back(Code {CodeKind::ge, node->ge_op->op->token->line, node->ge_op->op->token->column});
-    else if (node->lt_op != nullptr) out.push_back(Code {CodeKind::lt, node->lt_op->op->token->line, node->lt_op->op->token->column});
-    else if (node->le_op != nullptr) out.push_back(Code {CodeKind::le, node->le_op->op->token->line, node->le_op->op->token->column});
+    if (node->eq_op != nullptr) out.emplace_back(CodeKind::eq, node->eq_op->op->token->line, node->eq_op->op->token->column);
+    else if (node->neq_op != nullptr) out.emplace_back(CodeKind::neq, node->neq_op->op->token->line, node->neq_op->op->token->column);
+    else if (node->gt_op != nullptr) out.emplace_back(CodeKind::gt, node->gt_op->op->token->line, node->gt_op->op->token->column);
+    else if (node->ge_op != nullptr) out.emplace_back(CodeKind::ge, node->ge_op->op->token->line, node->ge_op->op->token->column);
+    else if (node->lt_op != nullptr) out.emplace_back(CodeKind::lt, node->lt_op->op->token->line, node->lt_op->op->token->column);
+    else if (node->le_op != nullptr) out.emplace_back(CodeKind::le, node->le_op->op->token->line, node->le_op->op->token->column);
 
 }
 void Visitor::visitCompareExpression(parser::CompareExprNode* node) {
@@ -137,9 +137,9 @@ void Visitor::visitCompareExpression(parser::CompareExprNode* node) {
     }
 }
 void Visitor::visitLogicOp(parser::LogicExprNode::LogicOpOption* node) {
-    if (node->logic_and_op != nullptr) out.push_back(Code {CodeKind::logic_and, node->logic_and_op->op->token->line, node->logic_and_op->op->token->column});
-    else if (node->logic_or_op != nullptr) out.push_back(Code {CodeKind::logic_or, node->logic_or_op->op->token->line, node->logic_or_op->op->token->column});
-    else if (node->logic_not_op != nullptr) out.push_back(Code {CodeKind::logic_not, node->logic_not_op->op->token->line, node->logic_not_op->op->token->column});
+    if (node->logic_and_op != nullptr) out.emplace_back(CodeKind::logic_and, node->logic_and_op->op->token->line, node->logic_and_op->op->token->column);
+    else if (node->logic_or_op != nullptr) out.emplace_back(CodeKind::logic_or, node->logic_or_op->op->token->line, node->logic_or_op->op->token->column);
+    else if (node->logic_not_op != nullptr) out.emplace_back(CodeKind::logic_not, node->logic_not_op->op->token->line, node->logic_not_op->op->token->column);
 }
 void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
     visitCompareExpression(node->head);
