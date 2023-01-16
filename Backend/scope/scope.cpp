@@ -12,8 +12,8 @@ using namespace storage;
 Scope::Scope(std::string i): ident(std::move(i)) {}
 
 Val & Scope::getMem(std::string id, int ln, int col) {
-    for (auto mem: members) {
-        if (get<0>(mem) == id) return get<2>(mem);
+    for (size_t i =0; i < members.size(); i ++) {
+        if (get<0>(members[i]) == id) return get<2>(members[i]);
     }
     throw storage_error::UnknownIdentifierError(id, ln, col);
 }
