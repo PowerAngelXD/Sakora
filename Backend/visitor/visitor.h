@@ -37,6 +37,7 @@ namespace visitor {
         void visitAddOp(parser::AddExprNode::AddOpOption* node); void visitAddExpression(parser::AddExprNode* node);
         void visitCompareOp(parser::CompareExprNode::CompareOpOption* node); void visitCompareExpression(parser::CompareExprNode* node);
         void visitLogicOp(parser::LogicExprNode::LogicOpOption* node); void visitLogicExpression(parser::LogicExprNode* node);
+        void visitWholeExpression(parser::WholeExprNode* node);
         //
     };
 }

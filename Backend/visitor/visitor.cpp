@@ -92,9 +92,19 @@ void Visitor::visitPrimOp(parser::TokenNode* node) {
     out.emplace_back(CodeKind::gmem, node->token->line, node->token->column);
 }
 void Visitor::visitPrimExpression(parser::PrimaryExprNode* node) {
-    visitBasicExpression(node->head->head);
+    if (node->head->head != nullptr) {
+        visitBasicExpression(node->head->head);
+    }
+    else {
+        visitWholeExpression(node->head->expr);
+    }
     for (size_t i = 0; i < node->ops.size(); i ++) {
-        visitBasicExpression(node->factors[i]->head);
+        if (node->head->head != nullptr) {
+            visitBasicExpression(node->factors[i]->head);
+        }
+        else {
+            visitWholeExpression(node->factors[i]->expr);
+        }
         visitPrimOp(node->ops[i]->op);
     }
 }
@@ -147,4 +157,9 @@ void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
         visitCompareExpression(node->factors[i]);
         visitLogicOp(node->ops[i]);
     }
+}
+
+void Visitor::visitWholeExpression(parser::WholeExprNode *node) {
+    if (node->add_expr != nullptr) visitAddExpression(node->add_expr);
+    else if (node->logic_expr != nullptr) visitLogicExpression(node->logic_expr);
 }
