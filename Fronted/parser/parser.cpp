@@ -3,6 +3,7 @@
 //
 
 #include "parser.h"
+#include "ast_design.h"
 
 #include <utility>
 
@@ -155,7 +156,7 @@ PrimaryExprNode* Parser::parsePrimExprNode() {
             factor = new PrimaryExprNode::Factor;
             if (peek().content == "(") {
                 factor->left = eat();
-            if (isWholeExprNode()) factor->expr = parseWholeExprNode();
+                if (isWholeExprNode()) factor->expr = parseWholeExprNode();
                 else {
                     throw parser_error::UnexpectedTokenError("Whole Expression", peek().line, peek().column);
                 }
