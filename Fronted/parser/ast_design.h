@@ -12,22 +12,26 @@
 
 namespace parser {
     // pre defined
+    struct TypeExprNode;
     struct WholeExprNode;
     struct AddExprNode;
     //
 
+    // ExprDesign
     struct TokenNode {
         lexer::Token* token = nullptr;
     };
     
-    struct AddOpNode { TokenNode* op = nullptr; };      struct EqOpNode { TokenNode* op = nullptr; };
-    struct SubOpNode { TokenNode* op = nullptr; };      struct NeqOpNode { TokenNode* op = nullptr; };
-    struct MulOpNode { TokenNode* op = nullptr; };      struct GtOpNode { TokenNode* op = nullptr; };
-    struct DivOpNode { TokenNode* op = nullptr; };      struct LtOpNode { TokenNode* op = nullptr; };
-    struct GeOpNode { TokenNode* op = nullptr; };       struct LeOpNode { TokenNode* op = nullptr; };
-    struct LogicOrOpNode { TokenNode* op = nullptr; };  struct LogicAndOpNode { TokenNode* op = nullptr; };
-    struct LogicNotOpNode { TokenNode* op = nullptr; }; struct GmemOpNode { TokenNode* op = nullptr; };
-    struct CommaOpNode { TokenNode* op = nullptr; };
+    struct AddOpNode { TokenNode* op = nullptr; };       struct EqOpNode { TokenNode* op = nullptr; };
+    struct SubOpNode { TokenNode* op = nullptr; };       struct NeqOpNode { TokenNode* op = nullptr; };
+    struct MulOpNode { TokenNode* op = nullptr; };       struct GtOpNode { TokenNode* op = nullptr; };
+    struct DivOpNode { TokenNode* op = nullptr; };       struct LtOpNode { TokenNode* op = nullptr; };
+    struct GeOpNode { TokenNode* op = nullptr; };        struct LeOpNode { TokenNode* op = nullptr; };
+    struct LogicOrOpNode { TokenNode* op = nullptr; };   struct LogicAndOpNode { TokenNode* op = nullptr; };
+    struct LogicNotOpNode { TokenNode* op = nullptr; };  struct GmemOpNode { TokenNode* op = nullptr; };
+    struct CommaOpNode { TokenNode* op = nullptr; };     struct AssignOpNode {TokenNode* op = nullptr; };
+    struct RestOpNode { TokenNode* op = nullptr; };      struct ListFlagOpNode { TokenNode* op = nullptr; };
+    struct StructFlagOpNode { TokenNode* op = nullptr; };
     struct IndexOpNode {
         TokenNode* left = nullptr;
         AddExprNode* index = nullptr;
@@ -47,8 +51,11 @@ namespace parser {
 
         TokenNode* factor = nullptr;
         std::vector<CallingOpOption*> ops;
+
+        TypeExprNode* type = nullptr;
     };
 
+    // Can be used as a separate statement
     struct PrimaryExprNode {
         struct Factor {
             BasicExprNode* head = nullptr;
@@ -111,9 +118,88 @@ namespace parser {
         std::vector<CompareExprNode*> factors;
     };
 
+    // Can be used as a separate statement
+    struct AssignExprNode {
+        PrimaryExprNode* lval = nullptr;
+        AssignOpNode* op = nullptr;
+        WholeExprNode* rval = nullptr;
+    };
+
+    struct ListLiteralExprNode {
+        TokenNode* bgn_sym = nullptr;
+        std::vector<WholeExprNode*> elements;
+        std::vector<TokenNode*> seps;
+        TokenNode* end_sym = nullptr;
+    };
+
+    /**
+     * Type literal expression
+     * Example:
+     * int32[] -> List of type int32
+     * (int32, string, boolean) -> A tuple with element types of int32, string and boolean
+     * struct MyStruct -> A structure named MyStruct
+     * fn(int32, int32)->int32  ->  A function with a return value of int32 and two parameters of int32
+     */
+    struct BasicTypeExprNode {
+        struct ModifierOpOption {
+            ListFlagOpNode* list_flag = nullptr;
+            StructFlagOpNode* struct_flag = nullptr;
+        };
+        TokenNode* basic_type = nullptr;
+    };
+
+    struct TupleTypeExprNode {
+        TokenNode* bgn_sym = nullptr;
+        std::vector<BasicTypeExprNode*> elements;
+        std::vector<TokenNode*> seps;
+        TokenNode* end_sym = nullptr;
+
+        ListFlagOpNode* list_flag = nullptr; // is tuple list
+    };
+
+    struct FnTypeExprNode {
+        struct ArgOption {
+            TupleTypeExprNode* tuple_type = nullptr;
+            BasicTypeExprNode* basic_type = nullptr;
+        };
+        TokenNode* mark = nullptr;
+        TokenNode* bgn_sym = nullptr;
+        std::vector<ArgOption*> elements;
+        std::vector<TokenNode*> seps;
+        TokenNode* end_sym = nullptr;
+    };
+
+    struct TypeExprNode {
+        BasicTypeExprNode* basic_type = nullptr;
+        TupleTypeExprNode* tuple_type = nullptr;
+        FnTypeExprNode* fn_type = nullptr;
+    };
+
+
     struct WholeExprNode {
         AddExprNode* add_expr = nullptr;
         LogicExprNode* logic_expr = nullptr;
+        TypeExprNode* type_expr = nullptr;
+    };
+
+    // StmtDesign
+
+    struct LetStmtNode {
+        struct InitFactor {
+            TokenNode* ident = nullptr;
+            RestOpNode* type_restrict = nullptr;
+            TypeExprNode* type = nullptr;
+            AssignOpNode* assign_op = nullptr;
+            WholeExprNode* value = nullptr;
+        };
+    };
+
+    // Those special expressions that can be used as separate statements will become a branch of this statement
+    struct ExprStmtNode {
+        AssignExprNode* assign_expr = nullptr;
+        PrimaryExprNode* prim_expr = nullptr;
+
+        TokenNode* end_mark = nullptr;
     };
 }
 
