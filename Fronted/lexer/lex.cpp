@@ -88,28 +88,36 @@ Token Lexer::makeIdentifier() {
 
 Token Lexer::makeSymbol() {
     char chk = source[pos];
-    if (!is_symbol_char(chk)) {}
-
-    std::string content;
-    switch (chk) {
-        case '(':
-        case ')':
-        case '[':
-        case ']':
-        case '{':
-        case '}': { content.push_back(chk); next(); break; }
-    
-        default: {
-            for (; pos < source.size(); chk = next()) {
-                if (is_symbol_char(chk)) content.push_back(chk);
-                else break;
-            }
-            break;
-        }
+    if (!is_symbol_char(chk)) {
+        throw lexer_error::IllegalSymbolError(std::to_string(chk), line, column);
     }
-    back();
-
-    return {TokenKind::Symbol, content, line, column};
+    if (chk == '+') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "+=", line, column}; }
+        else if (source[pos + 1] == '+') { pos ++; return {TokenKind::Symbol, "++", line, column}; }
+        else return {TokenKind::Symbol, "+", line, column};
+    }
+    else if (chk == '-') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "-=", line, column}; }
+        else if (source[pos + 1] == '-') { pos ++; return {TokenKind::Symbol, "--", line, column}; }
+        else return {TokenKind::Symbol, "-", line, column};
+    }
+    else if (chk == '*') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "*=", line, column}; }
+        else return {TokenKind::Symbol, "*", line, column};
+    }
+    else if (chk == '/') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "/=", line, column}; }
+        else return {TokenKind::Symbol, "/", line, column};
+    }
+    else if (chk == '(') return {TokenKind::Symbol, "(", line, column};
+    else if (chk == '[') return {TokenKind::Symbol, "[", line, column};
+    else if (chk == ')') return {TokenKind::Symbol, ")", line, column};
+    else if (chk == ']') return {TokenKind::Symbol, "]", line, column};
+    else if (chk == '{') return {TokenKind::Symbol, "{", line, column};
+    else if (chk == '}') return {TokenKind::Symbol, "}", line, column};
+    else {
+        throw lexer_error::IllegalSymbolError(std::to_string(chk), line, column);
+    }
 }
 
 Token Lexer::makeString() {
