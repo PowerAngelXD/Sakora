@@ -158,15 +158,18 @@ namespace parser {
     };
 
     struct FnTypeExprNode {
-        struct ArgOption {
+        struct PrimTypeOption {
             TupleTypeExprNode* tuple_type = nullptr;
             BasicTypeExprNode* basic_type = nullptr;
         };
         TokenNode* mark = nullptr;
         TokenNode* bgn_sym = nullptr;
-        std::vector<ArgOption*> elements;
+        std::vector<PrimTypeOption*> elements;
         std::vector<TokenNode*> seps;
         TokenNode* end_sym = nullptr;
+
+        TokenNode* ret_pointer = nullptr;
+        PrimTypeOption* ret_type = nullptr;
     };
 
     struct TypeExprNode {
@@ -192,6 +195,10 @@ namespace parser {
             AssignOpNode* assign_op = nullptr;
             WholeExprNode* value = nullptr;
         };
+        TokenNode* mark = nullptr;
+        std::vector<InitFactor*> inits;
+        std::vector<TokenNode*> seps;
+        TokenNode* end_mark = nullptr;
     };
 
     // Those special expressions that can be used as separate statements will become a branch of this statement
@@ -200,6 +207,10 @@ namespace parser {
         PrimaryExprNode* prim_expr = nullptr;
 
         TokenNode* end_mark = nullptr;
+    };
+
+    struct IfStmtNode {
+        TokenNode* mark = nullptr;
     };
 }
 
