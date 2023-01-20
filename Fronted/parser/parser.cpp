@@ -65,6 +65,38 @@ bool Parser::isLogicOpNode() {
 bool Parser::isWholeExprNode() {
     return isAddExprNode() || isLogicExprNode();
 }
+bool Parser::isBasicTypeExprNode() {
+    if (peek().content == "struct"&& peek(1).kind == lexer::TokenKind::Ident) return true;
+    else if (peek().kind == lexer::TokenKind::Ident) return true;
+    else return false;
+}
+bool Parser::isTypeModifierOpNode() {
+    return peek().content == "[]" || peek().content == "struct";
+}
+bool Parser::isTupleTypeExprNode() {
+    auto temp = pos;
+    if (peek().content == "(") {
+        eat();
+        if (isBasicExprNode()) {
+            pos = temp;
+            return true;
+        }
+        else {
+            pos = temp;
+            return false;
+        }
+    }
+    else return false;
+}
+bool Parser::isPrimTypeExprNode() {
+    return isBasicExprNode() || isTupleTypeExprNode();
+}
+bool Parser::isFnTypeExprNode() {
+    return peek().content == "func";
+}
+bool Parser::isTypeExprNode() {
+    return isBasicExprNode() || isTupleTypeExprNode() || isFnTypeExprNode();
+}
 
 // parser
 
