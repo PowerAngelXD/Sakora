@@ -31,7 +31,10 @@ namespace parser {
     struct LogicNotOpNode { TokenNode* op = nullptr; };  struct GmemOpNode { TokenNode* op = nullptr; };
     struct CommaOpNode { TokenNode* op = nullptr; };     struct AssignOpNode {TokenNode* op = nullptr; };
     struct RestOpNode { TokenNode* op = nullptr; };      struct ListFlagOpNode { TokenNode* op = nullptr; };
-    struct StructFlagOpNode { TokenNode* op = nullptr; };
+    struct StructFlagOpNode {
+        TokenNode* op = nullptr;
+        ListFlagOpNode* list_flag = nullptr;
+    };
     struct IndexOpNode {
         TokenNode* left = nullptr;
         AddExprNode* index = nullptr;
@@ -141,16 +144,13 @@ namespace parser {
      * fn(int32, int32)->int32  ->  A function with a return value of int32 and two parameters of int32
      */
     struct BasicTypeExprNode {
-        struct ModifierOpOption {
-            ListFlagOpNode* list_flag = nullptr;
-            StructFlagOpNode* struct_flag = nullptr;
-        };
+        StructFlagOpNode* struct_flag = nullptr;
         TokenNode* basic_type = nullptr;
     };
 
     struct TupleTypeExprNode {
         TokenNode* bgn_sym = nullptr;
-        std::vector<BasicTypeExprNode*> elements;
+        std::vector<TypeExprNode*> elements;
         std::vector<TokenNode*> seps;
         TokenNode* end_sym = nullptr;
 
