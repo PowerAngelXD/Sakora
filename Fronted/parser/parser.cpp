@@ -70,9 +70,6 @@ bool Parser::isBasicTypeExprNode() {
     else if (peek().kind == lexer::TokenKind::Ident) return true;
     else return false;
 }
-bool Parser::isTypeModifierOpNode() {
-    return peek().content == "[]" || peek().content == "struct";
-}
 bool Parser::isTupleTypeExprNode() {
     auto temp = pos;
     if (peek().content == "(") {
@@ -87,9 +84,6 @@ bool Parser::isTupleTypeExprNode() {
         }
     }
     else return false;
-}
-bool Parser::isPrimTypeExprNode() {
-    return isBasicExprNode() || isTupleTypeExprNode();
 }
 bool Parser::isFnTypeExprNode() {
     return peek().content == "fn";
