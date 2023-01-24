@@ -10,7 +10,7 @@
 
 namespace lexer {
     static std::vector<std::string> keywords = {"let", "if", "dynic", "static", "repeat", "loop", "until", "while", "for",
-                                                "if", "else", "import", "typeof"};
+                                                "if", "else", "import", "typeof", "fn"};
     bool is_keyword(const std::string& str);
 
     static std::vector<char> symbols = {'=', '+', '-', '/', '*', 
