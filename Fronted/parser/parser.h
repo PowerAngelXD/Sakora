@@ -50,8 +50,8 @@ namespace parser {
         LogicExprNode* parseLogicExprNode();
         WholeExprNode* parseWholeExprNode();
 
+        StructFlagOpNode* parseStructFlagOpNode();
         BasicTypeExprNode* parseBasicTypeExprNode();
-        BasicTypeExprNode::ModifierOpOption* parseTypeModifierOp();
         TupleTypeExprNode* parseTupleTypeExprNode();
         FnTypeExprNode::PrimTypeOption* parsePrimTypeExpr();
         FnTypeExprNode* parseFnTypeExprNode();

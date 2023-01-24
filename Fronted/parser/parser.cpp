@@ -92,7 +92,7 @@ bool Parser::isPrimTypeExprNode() {
     return isBasicExprNode() || isTupleTypeExprNode();
 }
 bool Parser::isFnTypeExprNode() {
-    return peek().content == "func";
+    return peek().content == "fn";
 }
 bool Parser::isTypeExprNode() {
     return isBasicExprNode() || isTupleTypeExprNode() || isFnTypeExprNode();
@@ -288,5 +288,93 @@ WholeExprNode* Parser::parseWholeExprNode() {
     else if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
 
     return node;
+}
+
+StructFlagOpNode* Parser::parseStructFlagOpNode() {
+    if (peek().content == "struct") {
+        auto* node = new StructFlagOpNode;
+        node->op = eat();
+        if (peek().content == "[]")
+            node->list_flag = new ListFlagOpNode{eat()};
+        return node;
+    }
+    throw parser_error::UnexpectedTokenError("'struct'", peek().line, peek().column);
+}
+
+BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
+    if (isBasicTypeExprNode()) {
+        auto* node = new BasicTypeExprNode;
+        if (peek().content == "struct")
+            node->struct_flag = parseStructFlagOpNode();
+
+        if (peek().kind == lexer::TokenKind::Ident)
+            node->basic_type = eat();
+        else
+            throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
+
+        return node;
+    }
+    throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
+}
+TupleTypeExprNode* Parser::parseTupleTypeExprNode() {
+    if (isTupleTypeExprNode()) {
+        auto* node = new TupleTypeExprNode;
+        node->bgn_sym = eat();
+        while (isTypeExprNode()) {
+            node->elements.push_back(parseTypeExprNode());
+            if (peek().content != ",")
+                throw parser_error::UnexpectedTokenError("','", peek().line, peek().column);
+            else if (peek().content == ")") break;
+            else
+                node->seps.push_back(eat());
+        }
+        node->end_sym = eat();
+        if (peek().content == "[]")
+            node->list_flag = new ListFlagOpNode {eat()};
+
+        return node;
+    }
+    throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
+}
+FnTypeExprNode* Parser::parseFnTypeExprNode() {
+    if (isFnTypeExprNode()) {
+        auto* node = new FnTypeExprNode;
+        if (peek().content != "(")
+            throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
+        node->bgn_sym = eat();
+        while (isTypeExprNode()) {
+            node->elements.push_back(parseTypeExprNode());
+            if (peek().content != ",")
+                throw parser_error::UnexpectedTokenError("','", peek().line, peek().column);
+            else if (peek().content == ")") break;
+            else
+                node->seps.push_back(eat());
+        }
+        node->end_sym = eat();
+
+        if (peek().content != "->")
+            throw parser_error::UnexpectedTokenError("'->'", peek().line, peek().column);
+        node->ret_pointer = eat();
+        if (!isTypeExprNode())
+            throw parser_error::UnexpectedTokenError("TypeExpr", peek().line, peek().column);
+        node->ret_type = parseTypeExprNode();
+    }
+    throw parser_error::UnexpectedTokenError("'fn'", peek().line, peek().column);
+}
+TypeExprNode* Parser::parseTypeExprNode() {
+    auto* node = new TypeExprNode;
+    if (isBasicExprNode()) {
+        node->basic_type = parseBasicTypeExprNode();
+        return node;
+    }
+    else if (isTupleTypeExprNode()) {
+        node->tuple_type = parseTupleTypeExprNode();
+        return node;
+    }
+    else if (isFnTypeExprNode()) {
+        node->fn_type = parseFnTypeExprNode();
+        return node;
+    }
+    else throw parser_error::UnexpectedTokenError("BasicTypeExpr, TupleTypeExpr or FnTypeExpr", peek().line, peek().column);
 }
 
