@@ -158,18 +158,14 @@ namespace parser {
     };
 
     struct FnTypeExprNode {
-        struct PrimTypeOption {
-            TupleTypeExprNode* tuple_type = nullptr;
-            BasicTypeExprNode* basic_type = nullptr;
-        };
         TokenNode* mark = nullptr;
         TokenNode* bgn_sym = nullptr;
-        std::vector<PrimTypeOption*> elements;
+        std::vector<TypeExprNode*> elements;
         std::vector<TokenNode*> seps;
         TokenNode* end_sym = nullptr;
 
         TokenNode* ret_pointer = nullptr;
-        PrimTypeOption* ret_type = nullptr;
+        TypeExprNode* ret_type = nullptr;
     };
 
     struct TypeExprNode {
