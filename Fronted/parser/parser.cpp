@@ -306,6 +306,15 @@ BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
         else
             throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
 
+        if (peek().content == "[]") {
+            if (node->struct_flag != nullptr)
+                throw parser_error::SyntaxError("An identifier '" + node->basic_type->token->content + "' cannot be declared as an array type. Identifier '" + node->basic_type->token->content + "' is not a type", peek().line, peek().column);
+            else
+                node->list_flag = new ListFlagOpNode {eat()};
+        }
+        else if (peek().content == "&")
+            node->ref_flag = new RefFlagOpNode {eat()};
+
         return node;
     }
     throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
