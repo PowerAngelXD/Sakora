@@ -40,12 +40,38 @@ void sakVM::vm_run(size_t layer) {
             case visitor::logic_not: ins_no(); break;
             case visitor::logic_and: ins_logic_and(); break;
             case visitor::logic_or: ins_logic_or(); break;
+            case visitor::type_float:
+                break;
+            case visitor::type_double:
+                break;
+            case visitor::type_i16:
+                break;
+            case visitor::type_i32:
+                break;
+            case visitor::type_i64:
+                break;
+            case visitor::type_bool:
+                break;
+            case visitor::type_str:
+                break;
+            case visitor::type_typeid:
+                break;
+            case visitor::set_list:
+                break;
+            case visitor::set_struct_array:
+                break;
+            case visitor::set_ref:
+                break;
+            case visitor::set_tuple:
+                break;
+            case visitor::set_struct:
+                break;
         }
     }
 }
 
 // Code set
-void sakVM::ins_push_i16(visitor::Code code) { env.push(static_cast<short>(code.val)); }
+void sakVM::ins_push_i16(visitor::Code code) { env.push(static_cast<int>(code.val)); }
 void sakVM::ins_push_i32(visitor::Code code) { env.push(static_cast<int>(code.val)); }
 void sakVM::ins_push_i64(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
 void sakVM::ins_push_float(visitor::Code code) { env.push(static_cast<float>(code.val)); }
