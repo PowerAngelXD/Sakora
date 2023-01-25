@@ -12,6 +12,11 @@ namespace parser_error {
 
         void printError() override;
     };
+    struct SyntaxError: public error::ErrorBasic {
+        SyntaxError(std::string src, int ln, int col);
+
+        void printError() override;
+    };
 }
 
 #endif //SAKORA_PARSER_ERROR_H

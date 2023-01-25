@@ -14,3 +14,13 @@ void UnexpectedTokenError::printError() {
     std::cout<<"    Expect: "<<source<<", but it provides unexpected Token"<<std::endl;
     std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
 }
+
+
+SyntaxError::SyntaxError(std::string src, int ln, int col): ErrorBasic(src, ln, col) {}
+
+void SyntaxError::printError() {
+    ERROR_HEAD_DISPLAY
+    std::cout<<"Syntax Error"<<std::endl;
+    std::cout<<source<<std::endl;
+    std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
+}
