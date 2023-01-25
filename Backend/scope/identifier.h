@@ -14,20 +14,13 @@ namespace storage {
         Own
     };
 
-    // Modifier of operation mode of identifier on value
-    enum Modifier {
-        Dynamic,
-        Static
-    };
-
     class Identifier {
         // Content of identifier
         std::string content;
         OwnKind ownership;
-        Modifier mod;
     public:
         Identifier(std::string c);
-        Identifier(std::string c, Modifier m, OwnKind o);
+        Identifier(std::string c, OwnKind o);
 
         // Get the identifier content
         std::string ident();
@@ -35,7 +28,6 @@ namespace storage {
 
         bool isRef();
         OwnKind getRefKind();
-        bool isDynamic();
     };
 }
 

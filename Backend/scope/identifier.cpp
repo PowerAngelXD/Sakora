@@ -6,8 +6,8 @@
 
 #include <utility>
 
-storage::Identifier::Identifier(std::string c): Identifier(std::move(c), Modifier::Static, OwnKind::Own) {}
-storage::Identifier::Identifier(std::string c, Modifier m, OwnKind o): content(std::move(c)), ownership(o), mod(m) {}
+storage::Identifier::Identifier(std::string c): Identifier(std::move(c), OwnKind::Own) {}
+storage::Identifier::Identifier(std::string c, OwnKind o): content(std::move(c)), ownership(o) {}
 
 // Get the identifier content
 std::string storage::Identifier::ident() { return content; }
@@ -19,4 +19,3 @@ storage::OwnKind storage::Identifier::getRefKind() {
 
     return ownership;
 }
-bool storage::Identifier::isDynamic() { return mod == Modifier::Dynamic; }
