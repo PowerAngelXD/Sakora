@@ -35,6 +35,7 @@ namespace parser {
         TokenNode* op = nullptr;
         ListFlagOpNode* list_flag = nullptr;
     };
+    struct RefFlagOpNode { TokenNode* op = nullptr; };
     struct IndexOpNode {
         TokenNode* left = nullptr;
         AddExprNode* index = nullptr;
@@ -146,6 +147,8 @@ namespace parser {
     struct BasicTypeExprNode {
         StructFlagOpNode* struct_flag = nullptr;
         TokenNode* basic_type = nullptr;
+        ListFlagOpNode* list_flag = nullptr;
+        RefFlagOpNode* ref_flag = nullptr;
     };
 
     struct TupleTypeExprNode {
