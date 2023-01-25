@@ -26,15 +26,16 @@ namespace storage {
         Val()=default;
 
         // Constructors to create a Val object with a basic type value of the given type
-        Val(short v);
         Val(int v);
+        Val(long v);
         Val(long long v);
         Val(float v);
         Val(double v);
         Val(bool v);
         Val(std::string v);
+        Val(type::Type v);
 
-        // Constructor to create a Val object with a value of the given type and a pointer to the value
+        // Constructor to create a Val object with a value of the given type and a polonger to the value
         template<typename T>
         Val(T v, type::Type t);
 
@@ -54,7 +55,7 @@ namespace storage {
         Val operator &&(Val v);
         Val operator! ();
 
-        // Returns the basic type of the value stored in this Val object (e.g. Int, Float, Bool)
+        // Returns the basic type of the value stored in this Val object (e.g. long, Float, Bool)
         type::BasicType getBasicType() const;
         // Returns the type of the value stored in this Val object (could be a basic type or a user-defined type)
         type::Type getType() const;
