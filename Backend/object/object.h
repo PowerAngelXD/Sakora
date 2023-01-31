@@ -17,8 +17,8 @@ namespace type {
     };
 
     // Arg type represents an argument for a function, which is a pair consisting of a string (the argument name)
-    // and a type::Type (the type of the argument)
-    typedef std::pair<std::string, type::Type> Arg;
+    // and a type::UnitType (the type of the argument)
+    typedef std::pair<std::string, type::UnitType> Arg;
 
     // FunctionObject class represents a function with a set of arguments and a return type
     class FunctionObject {
@@ -27,17 +27,17 @@ namespace type {
         // Vector of visitor::Code objects representing the code for this function
         std::vector<visitor::Code> codeQueue;
         // Map of arguments for this function, with the argument name as the key
-        std::map<std::string, type::Type> args;
+        std::map<std::string, type::UnitType> args;
         // Return type for this function
-        type::Type retType;
+        type::UnitType retType;
 
     public:
         FunctionObject()=default;
         // Constructor to create a FunctionObject with the given identifier, vector of code, and return type
-        FunctionObject(std::string id, std::vector<visitor::Code> cq, type::Type ret);
+        FunctionObject(std::string id, std::vector<visitor::Code> cq, type::UnitType ret);
 
         // Returns the return type for this function
-        type::Type getReturnType();
+        type::UnitType getReturnType();
         // Returns the Arg object with the given name, or an empty Arg object if no such argument exists
         Arg getArg(const std::string& argName);
         // Returns the identifier for this function
@@ -135,7 +135,7 @@ namespace type {
          * @param cs The code vector of the object.
          * @param ret The return type of the object.
         */
-        Object(std::string ident, std::vector<visitor::Code> cs, type::Type ret);
+        Object(std::string ident, std::vector<visitor::Code> cs, type::UnitType ret);
         /**
          * @brief Construct an object with the given identifier and member map.
          * @param ident The identifier of the object.

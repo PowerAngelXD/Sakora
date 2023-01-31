@@ -52,7 +52,7 @@ void Space::createMember(std::string name, T val, int ln, int col) {
 }
 
 template<typename T>
-void Space::createMemberWithType(std::string name, T val, type::Type t, int ln, int col) {
+void Space::createMemberWithType(std::string name, T val, type::UnitType t, int ln, int col) {
     if (findMember(name)) {
         throw storage_error::DuplicateIdentifierError(name, ln, col);
     }
@@ -60,7 +60,7 @@ void Space::createMemberWithType(std::string name, T val, type::Type t, int ln, 
 }
 
 template<typename T>
-void Space::createMemberCompletely(std::string name, Identifier id, T val, type::Type t, int ln, int col) {
+void Space::createMemberCompletely(std::string name, Identifier id, T val, type::UnitType t, int ln, int col) {
     if (findMember(name)) {
         throw storage_error::DuplicateIdentifierError(name, ln, col);
     }

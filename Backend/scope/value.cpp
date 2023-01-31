@@ -12,53 +12,53 @@ Val::Val(int v) {
     val_size = sizeof(int);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Int16);
+    val_type = type::UnitType(type::BasicType::Int16);
 }
 Val::Val(long v) {
     val_size = sizeof(long);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Int32);
+    val_type = type::UnitType(type::BasicType::Int32);
 }
 Val::Val(long long v) {
     val_size = sizeof(long long);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Int64);
+    val_type = type::UnitType(type::BasicType::Int64);
 }
 Val::Val(float v) {
     val_size = sizeof(float);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Float);
+    val_type = type::UnitType(type::BasicType::Float);
 }
 Val::Val(double v) {
     val_size = sizeof(double);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Double);
+    val_type = type::UnitType(type::BasicType::Double);
 }
 Val::Val(bool v) {
     val_size = sizeof(bool);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Boolean);
+    val_type = type::UnitType(type::BasicType::Boolean);
 }
 Val::Val(std::string v) {
     val_size = sizeof(std::string);
     val_ptr = new std::string;
     *(std::string*)val_ptr = std::move(v);
-    val_type = type::Type(type::BasicType::String);
+    val_type = type::UnitType(type::BasicType::String);
 }
-Val::Val(type::Type v) {
-    val_size = sizeof(type::Type);
+Val::Val(type::UnitType v) {
+    val_size = sizeof(type::UnitType);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = type::Type(type::BasicType::Typeid);
+    val_type = type::UnitType(type::BasicType::Typeid);
 }
 
 template<typename T>
-Val::Val(T v, type::Type t) {
+Val::Val(T v, type::UnitType t) {
     val_size = sizeof(T);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
@@ -763,7 +763,7 @@ Val Val::operator! () {
 
 type::BasicType Val::getBasicType() const { return val_type.basic; }
 void* Val::val() { return val_ptr; }
-type::Type Val::getType() const { return val_type; }
+type::UnitType Val::getType() const { return val_type; }
 void Val::freeVal() {
     switch (val_type.basic) {
         case type::Int16: delete (int*)val_ptr; break;

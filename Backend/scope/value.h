@@ -5,7 +5,7 @@
 #ifndef SAKORA_VALUE_H
 #define SAKORA_VALUE_H
 
-#include "../type/type.h"
+#include "../type/basic_type.h"
 #include <cmath>
 #include <cstring>
 
@@ -18,8 +18,8 @@ namespace storage {
         void* val_ptr = nullptr;
         // Size of the value stored in this Val object
         size_t val_size = 0;
-        // Type of the value stored in this Val object
-        type::Type val_type;
+        // UnitType of the value stored in this Val object
+        type::UnitType val_type;
 
     public:
         // Default constructor that creates an empty Val object with no value
@@ -33,11 +33,11 @@ namespace storage {
         Val(double v);
         Val(bool v);
         Val(std::string v);
-        Val(type::Type v);
+        Val(type::UnitType v);
 
         // Constructor to create a Val object with a value of the given type and a polonger to the value
         template<typename T>
-        Val(T v, type::Type t);
+        Val(T v, type::UnitType t);
 
         // Operators to perform arithmetic and comparison operations on Val objects
         Val operator+ (Val v);
@@ -58,7 +58,7 @@ namespace storage {
         // Returns the basic type of the value stored in this Val object (e.g. long, Float, Bool)
         type::BasicType getBasicType() const;
         // Returns the type of the value stored in this Val object (could be a basic type or a user-defined type)
-        type::Type getType() const;
+        type::UnitType getType() const;
         // Returns a pointer to the value stored in this Val object
         void* val();
         // Deallocates the memory used by the value stored in this Val object

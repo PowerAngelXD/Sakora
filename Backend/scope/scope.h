@@ -10,7 +10,7 @@
 using std::get;
 
 namespace storage {
-    // Type alias for a member of a scope (pair of a string and a Val)
+    // UnitType alias for a member of a scope (pair of a string and a Val)
     typedef std::tuple<std::string, Identifier, Val> Member;
 
     // Struct representing a scope
@@ -52,11 +52,11 @@ namespace storage {
 
         // create a member with the given name, value, and type
         template<typename T>
-        void createMemberWithType(std::string name, T val, type::Type t, int ln = -1, int col = -1);
+        void createMemberWithType(std::string name, T val, type::UnitType t, int ln = -1, int col = -1);
 
         // create a member with the given name, value, identifier, and type
         template<typename T>
-        void createMemberCompletely(std::string name, Identifier id, T val, type::Type t, int ln = -1, int col = -1);
+        void createMemberCompletely(std::string name, Identifier id, T val, type::UnitType t, int ln = -1, int col = -1);
 
         // check if the current scope has a member with the given name
         bool findMember(const std::string& name);
