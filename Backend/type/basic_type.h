@@ -17,8 +17,7 @@ namespace type {
         Double,  // double precision floating point number
         Boolean, // boolean value
         String,  // string
-        Typeid,  // typeid
-        Object   // object
+        Typeid  // typeid
     };
 
     enum StorageKind {

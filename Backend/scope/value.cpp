@@ -74,7 +74,7 @@ Val Val::operator+ (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr + *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) + *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr + *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -84,7 +84,7 @@ Val Val::operator+ (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr + *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) + *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr + *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -94,7 +94,7 @@ Val Val::operator+ (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr + *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) + *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr + *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -104,7 +104,7 @@ Val Val::operator+ (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr + static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr + *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr + *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -114,18 +114,18 @@ Val Val::operator+ (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr + static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr + *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr + *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
             switch (v.val_type.basic) {
                     case type::String: return {*(std::string*)this->val_ptr + *(std::string*)v.val_ptr};
-                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Typeid:
         case type::Boolean:
-        case type::Object:
+         
             break;
     }
     return {0};
@@ -139,7 +139,7 @@ Val Val::operator- (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr - *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) - *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr - *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -149,7 +149,7 @@ Val Val::operator- (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr - *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) - *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr - *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -159,7 +159,7 @@ Val Val::operator- (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr - *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) - *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr - *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -169,7 +169,7 @@ Val Val::operator- (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr - static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr - *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr - *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -179,12 +179,12 @@ Val Val::operator- (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr - static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr - *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr - *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -199,7 +199,7 @@ Val Val::operator* (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr * *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) * *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr * *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -209,7 +209,7 @@ Val Val::operator* (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr * *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) * *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr * *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -219,7 +219,7 @@ Val Val::operator* (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr * *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) * *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr * *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -229,7 +229,7 @@ Val Val::operator* (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr * static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr * *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr * *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -239,12 +239,12 @@ Val Val::operator* (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr * static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr * *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr * *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -259,7 +259,7 @@ Val Val::operator/ (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr / *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) / *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr / *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -269,7 +269,7 @@ Val Val::operator/ (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr / *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) / *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr / *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -279,7 +279,7 @@ Val Val::operator/ (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr / *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) / *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr / *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -289,7 +289,7 @@ Val Val::operator/ (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr / static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr / *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr / *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -299,12 +299,12 @@ Val Val::operator/ (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr / static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr / *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr / *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -317,7 +317,7 @@ Val Val::operator% (Val v) {
                 case type::Int16: return {*(int*)this->val_ptr % *(int*)v.val_ptr};
                 case type::Int32: return {*(int*)this->val_ptr % *(long*)v.val_ptr};
                 case type::Int64: return {*(int*)this->val_ptr % *(long long*)v.val_ptr};
-                case type::Float: case type::Double: case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Float: case type::Double: case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -325,7 +325,7 @@ Val Val::operator% (Val v) {
                 case type::Int16: return {*(long*)this->val_ptr % *(int*)v.val_ptr};
                 case type::Int32: return {*(long*)this->val_ptr % *(long*)v.val_ptr};
                 case type::Int64: return {*(long*)this->val_ptr % *(long long*)v.val_ptr};
-                case type::Float: case type::Double: case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Float: case type::Double: case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -333,14 +333,14 @@ Val Val::operator% (Val v) {
                 case type::Int16: return {*(long*)this->val_ptr % *(int*)v.val_ptr};
                 case type::Int32: return {*(long*)this->val_ptr % *(long*)v.val_ptr};
                 case type::Int64: return {*(long*)this->val_ptr % *(long long*)v.val_ptr};
-                case type::Float: case type::Double: case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Float: case type::Double: case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
         case type::Double:
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -356,7 +356,7 @@ Val Val::operator== (Val v) {
                 case type::Float: return {float_equ(static_cast<float>(*(int*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(int*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {*(int*)this->val_ptr == *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -367,7 +367,7 @@ Val Val::operator== (Val v) {
                 case type::Float: return {float_equ(static_cast<float>(*(long*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(long*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {*(long*)this->val_ptr == *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -378,7 +378,7 @@ Val Val::operator== (Val v) {
                 case type::Float: return {float_equ(static_cast<float>(*(long long*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(static_cast<double>(*(long long*)this->val_ptr), *(double*)v.val_ptr))};
                 case type::Boolean: return {*(long long*)this->val_ptr == *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -389,7 +389,7 @@ Val Val::operator== (Val v) {
                 case type::Float: return {float_equ(*(float*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(float*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {float_equ(*(float*)this->val_ptr, *(bool*)v.val_ptr))};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -400,22 +400,22 @@ Val Val::operator== (Val v) {
                 case type::Float: return {float_equ(*(double*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {float_equ(*(double*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {float_equ(*(double*)this->val_ptr, *(bool*)v.val_ptr))};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::String:
             switch (v.val_type.basic) {
                         case type::String: return {*(std::string*)this->val_ptr == *(std::string*)v.val_ptr};
-                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Boolean:
             switch (v.val_type.basic) {
                 case type::Boolean: return {*(bool*)this->val_ptr == *(bool*)v.val_ptr};
-                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::String: case type::Object: case type::Typeid: break;
+                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::String:   case type::Typeid: break;
             }
             break;
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -431,7 +431,7 @@ Val Val::operator!= (Val v) {
                 case type::Float: return {!float_equ(static_cast<float>(*(int*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(int*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {*(int*)this->val_ptr != *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -442,7 +442,7 @@ Val Val::operator!= (Val v) {
                 case type::Float: return {!float_equ(static_cast<float>(*(long*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(long*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {*(long*)this->val_ptr != *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -453,7 +453,7 @@ Val Val::operator!= (Val v) {
                 case type::Float: return {!float_equ(static_cast<float>(*(long long*)this->val_ptr), *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(static_cast<double>(*(long long*)this->val_ptr), *(double*)v.val_ptr))};
                 case type::Boolean: return {*(long long*)this->val_ptr != *(bool*)v.val_ptr};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -464,7 +464,7 @@ Val Val::operator!= (Val v) {
                 case type::Float: return {!float_equ(*(float*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(float*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {!float_equ(*(float*)this->val_ptr, *(bool*)v.val_ptr))};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -475,22 +475,22 @@ Val Val::operator!= (Val v) {
                 case type::Float: return {!float_equ(*(double*)this->val_ptr, *(float*)v.val_ptr))};
                 case type::Double: return {!float_equ(*(double*)this->val_ptr, *(double*)v.val_ptr))};
                 case type::Boolean: return {!float_equ(*(double*)this->val_ptr, *(bool*)v.val_ptr))};
-                case type::String: case type::Object: case type::Typeid: break;
+                case type::String:   case type::Typeid: break;
             }
             break;
         case type::String:
             switch (v.val_type.basic) {
                 case type::String: return {*(std::string*)this->val_ptr != *(std::string*)v.val_ptr};
-                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Boolean:
             switch (v.val_type.basic) {
                 case type::Boolean: return {*(bool*)this->val_ptr != *(bool*)v.val_ptr};
-                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::String: case type::Object: case type::Typeid: break;
+                case type::Int16: case type::Double: case type::Int32: case type::Int64: case type::Float:case type::String:   case type::Typeid: break;
             }
             break;
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -505,7 +505,7 @@ Val Val::operator< (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr < *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) < *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr < *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -515,7 +515,7 @@ Val Val::operator< (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr < *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) < *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr < *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -525,7 +525,7 @@ Val Val::operator< (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr < *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) < *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr < *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -535,7 +535,7 @@ Val Val::operator< (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr < static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr < *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr < *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -545,12 +545,12 @@ Val Val::operator< (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr < static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr < *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr < *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -565,7 +565,7 @@ Val Val::operator> (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr > *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) > *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr > *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -575,7 +575,7 @@ Val Val::operator> (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr > *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) > *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr > *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -585,7 +585,7 @@ Val Val::operator> (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr > *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) > *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr > *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -595,7 +595,7 @@ Val Val::operator> (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr > static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr > *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr > *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -605,12 +605,12 @@ Val Val::operator> (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr > static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr > *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr > *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -625,7 +625,7 @@ Val Val::operator<= (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr <= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) <= *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr <= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -635,7 +635,7 @@ Val Val::operator<= (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr <= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) <= *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr <= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -645,7 +645,7 @@ Val Val::operator<= (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr <= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) <= *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr <= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -655,7 +655,7 @@ Val Val::operator<= (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr <= static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr <= *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr <= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -665,12 +665,12 @@ Val Val::operator<= (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr <= static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr <= *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr <= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -685,7 +685,7 @@ Val Val::operator>= (Val v) {
                 case type::Int64: return {*(int*)this->val_ptr >= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(int*)this->val_ptr) >= *(float*)v.val_ptr};
                 case type::Double: return {*(int*)this->val_ptr >= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int32:
@@ -695,7 +695,7 @@ Val Val::operator>= (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr >= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) >= *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr >= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Int64:
@@ -705,7 +705,7 @@ Val Val::operator>= (Val v) {
                 case type::Int64: return {*(long*)this->val_ptr >= *(long long*)v.val_ptr};
                 case type::Float: return {static_cast<float>(*(long*)this->val_ptr) >= *(float*)v.val_ptr};
                 case type::Double: return {*(long*)this->val_ptr >= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Float:
@@ -715,7 +715,7 @@ Val Val::operator>= (Val v) {
                 case type::Int64: return {*(float*)this->val_ptr >= static_cast<float>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(float*)this->val_ptr >= *(float*)v.val_ptr};
                 case type::Double: return {*(float*)this->val_ptr >= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::Double:
@@ -725,12 +725,12 @@ Val Val::operator>= (Val v) {
                 case type::Int64: return {*(double*)this->val_ptr >= static_cast<double>(*(long long*)v.val_ptr)};
                 case type::Float: return {*(double*)this->val_ptr >= *(float*)v.val_ptr};
                 case type::Double: return {*(double*)this->val_ptr >= *(double*)v.val_ptr};
-                case type::String: case type::Boolean: case type::Object: case type::Typeid: break;
+                case type::String: case type::Boolean:   case type::Typeid: break;
             }
             break;
         case type::String:
         case type::Boolean:
-        case type::Object:
+         
         case type::Typeid:
             break;
     }
@@ -740,7 +740,7 @@ Val Val::operator ||(Val v) {
     switch (this->val_type.basic) {
         case type::Boolean:
             return {*(bool*)this->val_ptr || *(bool*)v.val_ptr};
-        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: case type::Typeid: break;
+        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String:   case type::Typeid: break;
     }
     return {0};
 }
@@ -748,7 +748,7 @@ Val Val::operator &&(Val v) {
     switch (this->val_type.basic) {
         case type::Boolean:
             return {*(bool*)this->val_ptr && *(bool*)v.val_ptr};
-        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: case type::Typeid: break;
+        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String:   case type::Typeid: break;
     }
     return {0};
 }
@@ -756,7 +756,7 @@ Val Val::operator! () {
     switch (this->val_type.basic) {
         case type::Boolean:
             return {!(*(bool*)this->val_ptr)};
-        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String: case type::Object: case type::Typeid: break;
+        case type::Int16: case type::Int32: case type::Int64: case type::Float: case type::Double: case type::String:   case type::Typeid: break;
     }
     return {0};
 }
@@ -773,7 +773,7 @@ void Val::freeVal() {
         case type::Double: delete (double*)val_ptr; break;
         case type::Boolean: delete (bool*)val_ptr; break;
         case type::String: delete (std::string*)val_ptr; break;
-        case type::Object: break;
+          break;
         case type::Typeid: break;
     }
 }
