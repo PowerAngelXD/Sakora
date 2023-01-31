@@ -53,7 +53,7 @@ namespace sakVM_core {
 
         // Creates a new variable with the given identifier, value, and type.
         template<typename ValType>
-        void createValueWithType(std::string ident, ValType val, type::Type type, int ln, int col);
+        void createValueWithType(std::string ident, ValType val, type::UnitType type, int ln, int col);
     };
 
 }

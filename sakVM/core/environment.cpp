@@ -30,6 +30,6 @@ template<typename ValType>
 void Environment::createValue(std::string ident, ValType val, int ln, int col) { space.createMember(ident, val, ln, col); }
 
 template<typename ValType>
-void Environment::createValueWithType(std::string ident, ValType val, type::Type type, int ln, int col) {
+void Environment::createValueWithType(std::string ident, ValType val, type::UnitType type, int ln, int col) {
     space.createMemberWithType(ident, val, type, ln, col);
 }
