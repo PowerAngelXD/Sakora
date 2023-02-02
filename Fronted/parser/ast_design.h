@@ -151,15 +151,6 @@ namespace parser {
         RefFlagOpNode* ref_flag = nullptr;
     };
 
-    struct TupleTypeExprNode {
-        TokenNode* bgn_sym = nullptr;
-        std::vector<TypeExprNode*> elements;
-        std::vector<TokenNode*> seps;
-        TokenNode* end_sym = nullptr;
-
-        ListFlagOpNode* list_flag = nullptr; // is tuple list
-    };
-
     struct FnTypeExprNode {
         TokenNode* mark = nullptr;
         TokenNode* bgn_sym = nullptr;
@@ -173,7 +164,6 @@ namespace parser {
 
     struct TypeExprNode {
         BasicTypeExprNode* basic_type = nullptr;
-        TupleTypeExprNode* tuple_type = nullptr;
         FnTypeExprNode* fn_type = nullptr;
     };
 
