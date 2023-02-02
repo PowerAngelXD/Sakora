@@ -10,14 +10,11 @@
 namespace type {
     // Enumeration of basic data types
     enum BasicType {
-        Int16,   // 16-bit integer
-        Int32,   // 32-bit integer
-        Int64,   // 64-bit integer
-        Float,   // single precision floating point number
-        Double,  // double precision floating point number
+        Integer, // integer-64bit
+        Decimal, // decimal-double
         Boolean, // boolean value
         String,  // string
-        Typeid  // typeid
+        Typeid,  // typeid
     };
 
     enum StorageKind {
@@ -25,25 +22,15 @@ namespace type {
         Val // indicating value is stored as a value
     };
 
-    // Enumeration representing the structure of an object
-    enum Structure {
-        Normal, // normal value
-        List,   // list
-        Struct, // struct
-        StructArray // struct array
-    };
-
     // Struct representing a data type
     struct UnitType {
         BasicType basic;       // basic type of the object
-        Structure st;          // structure of the object
         StorageKind stk;       // storage of the object
 
         // Constructors
         UnitType() = default;                      // default constructor
         UnitType(BasicType b);                     // construct with basic type
-        UnitType(BasicType b, Structure s);        // construct with basic type, ownership, modifier, and structure
-        UnitType(BasicType b, Structure s, StorageKind stok);
+        UnitType(BasicType b, StorageKind stok);
 
         std::string to_string();
     };

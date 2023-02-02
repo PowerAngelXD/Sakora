@@ -6,27 +6,17 @@
 
 using namespace type;
 
-UnitType::UnitType(BasicType b): basic(b), st(Structure::Normal) {}
-UnitType::UnitType(BasicType b, Structure s): basic(b), st(s) {}
-UnitType::UnitType(BasicType b, Structure s, StorageKind stok): basic(b), st(s), stk(stok) {}
+UnitType::UnitType(BasicType b): basic(b) {}
+UnitType::UnitType(BasicType b, StorageKind stok): basic(b), stk(stok) {}
 
 std::string UnitType::to_string() {
     std::string content;
     switch (basic) {
-        case Int16:
-            content = "i16";
+        case Integer:
+            content = "int";
             break;
-        case Int32:
-            content = "i32";
-            break;
-        case Int64:
-            content = "i64";
-            break;
-        case Float:
-            content = "float";
-            break;
-        case Double:
-            content = "double";
+        case Decimal:
+            content = "deci";
             break;
         case Boolean:
             content = "boolean";
