@@ -41,7 +41,6 @@ namespace visitor {
         void visitLogicOp(parser::LogicExprNode::LogicOpOption* node);          void visitLogicExpression(parser::LogicExprNode* node);
         void visitWholeExpression(parser::WholeExprNode* node);
         void visitBasicTypeExpression(parser::BasicTypeExprNode* node);
-        void visitTupleTypeExpression(parser::TupleTypeExprNode* node);
         void visitFnTypeExpression(parser::FnTypeExprNode* node);
         void visitTypeExpression(parser::TypeExprNode* node);
         //
