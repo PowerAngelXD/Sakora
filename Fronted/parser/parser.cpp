@@ -70,26 +70,11 @@ bool Parser::isBasicTypeExprNode() {
     else if (peek().kind == lexer::TokenKind::Ident) return true;
     else return false;
 }
-bool Parser::isTupleTypeExprNode() {
-    auto temp = pos;
-    if (peek().content == "(") {
-        eat();
-        if (isBasicExprNode()) {
-            pos = temp;
-            return true;
-        }
-        else {
-            pos = temp;
-            return false;
-        }
-    }
-    else return false;
-}
 bool Parser::isFnTypeExprNode() {
     return peek().content == "fn";
 }
 bool Parser::isTypeExprNode() {
-    return isBasicExprNode() || isTupleTypeExprNode() || isFnTypeExprNode();
+    return isBasicExprNode() || isFnTypeExprNode();
 }
 
 // parser
@@ -319,26 +304,6 @@ BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
     }
     throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
 }
-TupleTypeExprNode* Parser::parseTupleTypeExprNode() {
-    if (isTupleTypeExprNode()) {
-        auto* node = new TupleTypeExprNode;
-        node->bgn_sym = eat();
-        while (isTypeExprNode()) {
-            node->elements.push_back(parseTypeExprNode());
-            if (peek().content != ",")
-                throw parser_error::UnexpectedTokenError("','", peek().line, peek().column);
-            else if (peek().content == ")") break;
-            else
-                node->seps.push_back(eat());
-        }
-        node->end_sym = eat();
-        if (peek().content == "[]")
-            node->list_flag = new ListFlagOpNode {eat()};
-
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
-}
 FnTypeExprNode* Parser::parseFnTypeExprNode() {
     if (isFnTypeExprNode()) {
         auto* node = new FnTypeExprNode;
@@ -368,10 +333,6 @@ TypeExprNode* Parser::parseTypeExprNode() {
     auto* node = new TypeExprNode;
     if (isBasicExprNode()) {
         node->basic_type = parseBasicTypeExprNode();
-        return node;
-    }
-    else if (isTupleTypeExprNode()) {
-        node->tuple_type = parseTupleTypeExprNode();
         return node;
     }
     else if (isFnTypeExprNode()) {
