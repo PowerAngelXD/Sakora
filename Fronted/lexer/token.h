@@ -17,7 +17,7 @@ namespace lexer {
                                         ',', '.', '?', ':', '|', 
                                         '!', '%', '^', '&', '=', 
                                         '@', ';', '(', ')', '[',
-                                        ']', '{', '}'};
+                                        ']', '{', '}', '<', '>'};
     bool is_symbol_char(char ch);
 
     // Enumeration of token kinds

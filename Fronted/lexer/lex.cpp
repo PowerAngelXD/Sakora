@@ -109,6 +109,22 @@ Token Lexer::makeSymbol() {
         if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "/=", line, column}; }
         else return {TokenKind::Symbol, "/", line, column};
     }
+    else if (chk == '=') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "==", line, column}; }
+        else return {TokenKind::Symbol, "=", line, column};
+    }
+    else if (chk == '!') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "!=", line, column}; }
+        else return {TokenKind::Symbol, "!", line, column};
+    }
+    else if (chk == '<') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, "<=", line, column}; }
+        else return {TokenKind::Symbol, "<", line, column};
+    }
+    else if (chk == '>') {
+        if (source[pos + 1] == '=') { pos ++; return {TokenKind::Symbol, ">=", line, column}; }
+        else return {TokenKind::Symbol, ">", line, column};
+    }
     else if (chk == '(') return {TokenKind::Symbol, "(", line, column};
     else if (chk == '[') {
         if (source[pos + 1] == ']') { pos ++; return {TokenKind::Symbol, "[]", line, column}; }
