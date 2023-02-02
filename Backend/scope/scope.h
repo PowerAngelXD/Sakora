@@ -6,7 +6,7 @@
 #define SAKORA_SCOPE_H
 
 #include "identifier.h"
-#include "../../error/storage_error.h"
+
 using std::get;
 
 namespace storage {
