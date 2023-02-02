@@ -71,8 +71,8 @@ void sakVM::vm_run(size_t layer) {
 }
 
 // Code set
-void sakVM::ins_push_i16(visitor::Code code) { env.push(static_cast<int>(code.val)); }
-void sakVM::ins_push_i32(visitor::Code code) { env.push(static_cast<int>(code.val)); }
+void sakVM::ins_push_i16(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
+void sakVM::ins_push_i32(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
 void sakVM::ins_push_i64(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
 void sakVM::ins_push_float(visitor::Code code) { env.push(static_cast<float>(code.val)); }
 void sakVM::ins_push_double(visitor::Code code) { env.push(static_cast<double>(code.val)); }
