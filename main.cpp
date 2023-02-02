@@ -16,7 +16,7 @@ int main() {
         vm.threads.push_back(vr.out);
         vm.vm_run(0);
 
-        std::cout<<*(int*)vm.env.pop().val()<<std::endl;
+        std::cout<<*(long long*)vm.env.pop().val()<<std::endl;
     }
     catch (parser_error::UnexpectedTokenError& e) {
         e.printError();
