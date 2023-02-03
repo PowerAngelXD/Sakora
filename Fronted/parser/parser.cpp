@@ -57,7 +57,7 @@ bool Parser::isCompareOpNode() {
            peek().content == ">" || peek().content == "<";
 }
 bool Parser::isLogicExprNode() {
-    return isCompareExprNode();
+    return isCompareExprNode() || peek().content == "!";
 }
 bool Parser::isLogicOpNode() {
     return peek().content == "||" || peek().content == "&&" || peek().content == "!";
@@ -247,15 +247,21 @@ CompareExprNode* Parser::parseCompareExprNode() {
         }
         return node;
     }
-    throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
+    throw parser_error::UnexpectedTokenError("Compare Expression", peek().line, peek().column);
 }
 LogicExprNode* Parser::parseLogicExprNode() {
-    if (isMulExprNode()) {
+    if (isLogicExprNode()) {
         auto* node = new LogicExprNode;
-        node->head = parseCompareExprNode();
-        while (isLogicOpNode()) {
+        if (peek().content == "!") {
             node->ops.push_back(parseLogicExprOp());
-            node->factors.push_back(parseCompareExprNode());
+            node->head = parseCompareExprNode();
+        }
+        else {
+            node->head = parseCompareExprNode();
+            while (isLogicOpNode()) {
+                node->ops.push_back(parseLogicExprOp());
+                node->factors.push_back(parseCompareExprNode());
+            }
         }
         return node;
     }
@@ -263,8 +269,8 @@ LogicExprNode* Parser::parseLogicExprNode() {
 }
 WholeExprNode* Parser::parseWholeExprNode() {
     auto* node = new WholeExprNode;
-    if (isAddExprNode()) node->add_expr = parseAddExprNode();
-    else if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
+    if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
+    else if (isAddExprNode()) node->add_expr = parseAddExprNode();
 
     return node;
 }
