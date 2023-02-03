@@ -9,8 +9,8 @@
 
 namespace visitor {
     enum CodeKind {
-        push_float, push_double, push_i16, push_i32, push_i64, push_bool, push_str, push_iden,
-        type_float, type_double, type_i16, type_i32, type_i64, type_bool, type_str, type_typeid,
+        push_int, push_deci, push_bool, push_str, push_iden,
+        type_int, type_deci, type_bool, type_str, type_typeid,
         // calc
         add, sub, mul, div, gmem, mod,
         eq, neq, gt, lt, ge, le, logic_not, logic_and, logic_or,

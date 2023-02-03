@@ -9,12 +9,8 @@ using namespace parser;
 
 std::string visitor::kind_to_string(CodeKind k) {
     switch (k) {
-        case push_float: return "push_float";
-        case push_double: return "push_double";
-        case push_i16: return "push_i16";
-        case push_i32: return "push_i32";
-        case push_i64: return "push_i64";
-        case push_bool: return "push_bool";
+        case push_int: return "push_int";
+        case push_deci: return "push_deci";
         case push_str: return "push_str";
         case push_iden: return "push_iden";
         case add: return "add";
@@ -32,17 +28,9 @@ std::string visitor::kind_to_string(CodeKind k) {
         case logic_not: return "no"; break;
         case logic_and: return "logic_and"; break;
         case logic_or: return "logic_or"; break;
-        case type_float:
+        case type_int:
             break;
-        case type_double:
-            break;
-        case type_i16:
-            break;
-        case type_i32:
-            break;
-        case type_i64:
-            break;
-        case type_bool:
+        case type_deci:
             break;
         case type_str:
             break;
@@ -58,6 +46,10 @@ std::string visitor::kind_to_string(CodeKind k) {
             break;
         case set_struct:
             break;
+        case push_bool:
+            break;
+        case type_bool:
+            break;
     }
     return "null code";
 }
@@ -69,16 +61,10 @@ void Visitor::visitValToken(parser::TokenNode* node) {
     switch (node->token->kind) {
         case lexer::Number:
             if (node->token->content.find('.') != std::string::npos) {
-                if (node->token->content.size() > 10)
-                    out.emplace_back(CodeKind::push_double, std::stod(node->token->content), node->token->line, node->token->column);
-                else
-                    out.emplace_back(CodeKind::push_float, std::stof(node->token->content), node->token->line, node->token->column);
+                out.emplace_back(CodeKind::push_deci, std::stod(node->token->content), node->token->line, node->token->column);
             }
             else {
-                if (node->token->content.size() >= 6)
-                    out.emplace_back(CodeKind::push_i64, static_cast<double>(std::stoi(node->token->content)), node->token->line, node->token->column);
-                else
-                    out.emplace_back(CodeKind::push_i32, static_cast<double>(std::stoi(node->token->content)), node->token->line, node->token->column);
+                out.emplace_back(CodeKind::push_int, static_cast<double>(std::stoi(node->token->content)), node->token->line, node->token->column);
             }
             break;
         case lexer::String:
@@ -178,10 +164,16 @@ void Visitor::visitLogicOp(parser::LogicExprNode::LogicOpOption* node) {
     else if (node->logic_not_op != nullptr) out.emplace_back(CodeKind::logic_not, node->logic_not_op->op->token->line, node->logic_not_op->op->token->column);
 }
 void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
-    visitCompareExpression(node->head);
-    for (size_t i = 0; i < node->ops.size(); i ++) {
-        visitCompareExpression(node->factors[i]);
-        visitLogicOp(node->ops[i]);
+    if (node->ops[0]->logic_not_op != nullptr) {
+        visitCompareExpression(node->head);
+        out.emplace_back(CodeKind::logic_not, node->ops[0]->logic_not_op->op->token->line, node->ops[0]->logic_not_op->op->token->column);
+    }
+    else {
+        visitCompareExpression(node->head);
+        for (size_t i = 0; i < node->ops.size(); i ++) {
+            visitCompareExpression(node->factors[i]);
+            visitLogicOp(node->ops[i]);
+        }
     }
 }
 
@@ -192,16 +184,10 @@ void Visitor::visitWholeExpression(parser::WholeExprNode *node) {
 
 void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
     auto type_content = node->basic_type->token->content;
-    if (type_content == "i32")
-        out.emplace_back(CodeKind::type_i32, node->basic_type->token->line, node->basic_type->token->column);
-    else if (type_content == "i64")
-        out.emplace_back(CodeKind::type_i64, node->basic_type->token->line, node->basic_type->token->column);
-    else if (type_content == "i16")
-        out.emplace_back(CodeKind::type_i16, node->basic_type->token->line, node->basic_type->token->column);
-    else if (type_content == "f32")
-        out.emplace_back(CodeKind::type_float, node->basic_type->token->line, node->basic_type->token->column);
-    else if (type_content == "f64")
-        out.emplace_back(CodeKind::type_double, node->basic_type->token->line, node->basic_type->token->column);
+    if (type_content == "int")
+        out.emplace_back(CodeKind::type_int, node->basic_type->token->line, node->basic_type->token->column);
+    if (type_content == "deci")
+        out.emplace_back(CodeKind::type_deci, node->basic_type->token->line, node->basic_type->token->column);
     else if (type_content == "bool")
         out.emplace_back(CodeKind::type_bool, node->basic_type->token->line, node->basic_type->token->column);
     else if (type_content == "typeid")
