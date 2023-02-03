@@ -17,11 +17,8 @@ void sakVM::vm_run(size_t layer) {
     auto cur_queue = threads[layer];
     for (auto code: cur_queue) {
         switch (code.kind) {
-            case visitor::push_float: ins_push_float(code); break;
-            case visitor::push_double: ins_push_double(code); break;
-            case visitor::push_i16: ins_push_i16(code); break;
-            case visitor::push_i32: ins_push_i32(code); break;
-            case visitor::push_i64: ins_push_i64(code); break;
+            case visitor::push_int: ins_push_int(code); break;
+            case visitor::push_deci: ins_push_deci(code); break;
             case visitor::push_bool: ins_push_bool(code); break;
             case visitor::push_str: ins_push_str(code); break;
             case visitor::push_iden: ins_push_iden(code); break;
@@ -40,16 +37,6 @@ void sakVM::vm_run(size_t layer) {
             case visitor::logic_not: ins_no(); break;
             case visitor::logic_and: ins_logic_and(); break;
             case visitor::logic_or: ins_logic_or(); break;
-            case visitor::type_float:
-                break;
-            case visitor::type_double:
-                break;
-            case visitor::type_i16:
-                break;
-            case visitor::type_i32:
-                break;
-            case visitor::type_i64:
-                break;
             case visitor::type_bool:
                 break;
             case visitor::type_str:
@@ -66,16 +53,17 @@ void sakVM::vm_run(size_t layer) {
                 break;
             case visitor::set_struct:
                 break;
+            case visitor::type_int:
+                break;
+            case visitor::type_deci:
+                break;
         }
     }
 }
 
 // Code set
-void sakVM::ins_push_i16(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
-void sakVM::ins_push_i32(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
-void sakVM::ins_push_i64(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
-void sakVM::ins_push_float(visitor::Code code) { env.push(static_cast<float>(code.val)); }
-void sakVM::ins_push_double(visitor::Code code) { env.push(static_cast<double>(code.val)); }
+void sakVM::ins_push_int(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
+void sakVM::ins_push_deci(visitor::Code code) { env.push(static_cast<double>(code.val)); }
 void sakVM::ins_push_bool(visitor::Code code) { env.push(static_cast<bool>(float_equ(code.val, code.val)))); }
 void sakVM::ins_push_str(visitor::Code code) {
     auto str = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));

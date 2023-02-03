@@ -27,11 +27,8 @@ struct sakVM {
     // Run the code queue at the specified level
     void vm_run(size_t layer);
     // VM instruction set
-    void ins_push_i16(visitor::Code code);
-    void ins_push_i32(visitor::Code code);
-    void ins_push_i64(visitor::Code code);
-    void ins_push_float(visitor::Code code);
-    void ins_push_double(visitor::Code code);
+    void ins_push_int(visitor::Code code);
+    void ins_push_deci(visitor::Code code);
     void ins_push_bool(visitor::Code code);
     void ins_push_str(visitor::Code code);
     void ins_push_iden(visitor::Code code);
