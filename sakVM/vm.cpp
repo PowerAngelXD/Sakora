@@ -57,6 +57,8 @@ void sakVM::vm_run(size_t layer) {
                 break;
             case visitor::type_deci:
                 break;
+            case visitor::push_flag:
+                break;
         }
     }
 }
