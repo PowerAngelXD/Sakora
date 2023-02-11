@@ -28,13 +28,35 @@ hello world
 let a: string = "hello, world!";
 println(a);
 ```
-variable and constants
+variable
 ```rust
 let v1: int = 435; // default: int32
-const let c1: float = 4.5;
 v1 = 6;
 
 let v2 = "hello, world!"; // Typeable derivation
+
+println(v1);
+println(v2);
+```
+function
+```rust
+fn foo(a: int, b: int)->int {
+    return a+b;
+}
+
+println(foo(1, 2));
+
+// Also, you can:
+
+let add1: fn(int, int)->int = fn(a, b) {
+    return a + b;
+}
+
+// or:
+
+let add2: fn(int, int)->int = fn(a: int, b: int)->int {
+    return a + b;
+}
 ```
 
 ## Contributors
