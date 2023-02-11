@@ -50,6 +50,8 @@ std::string visitor::kind_to_string(CodeKind k) {
             break;
         case type_bool:
             break;
+        case push_flag:
+            break;
     }
     return "null code";
 }
