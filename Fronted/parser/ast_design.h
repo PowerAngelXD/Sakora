@@ -122,18 +122,34 @@ namespace parser {
         std::vector<CompareExprNode*> factors;
     };
 
+    struct ListLiteralExprNode {
+        // Array: [1, 2, 3, 4]
+        // Vararrar: mutable [1, 2, 3, 4]
+        TokenNode* mut_mark = nullptr;
+        TokenNode* bgn = nullptr;
+        std::vector<WholeExprNode*> elements;
+        std::vector<TokenNode*> seps;
+        TokenNode* end = nullptr;
+    };
+
+    struct StructLiteralExprNode {
+        struct KeyPair {
+            TokenNode* key = nullptr;
+            RestOpNode* rest = nullptr;
+            WholeExprNode* value = nullptr;
+        };
+
+        TokenNode* bgn = nullptr;
+        std::vector<KeyPair*> pairs;
+        std::vector<TokenNode*> seps;
+        TokenNode* end = nullptr;
+    };
+
     // Can be used as a separate statement
     struct AssignExprNode {
         PrimaryExprNode* lval = nullptr;
         AssignOpNode* op = nullptr;
         WholeExprNode* rval = nullptr;
-    };
-
-    struct ListLiteralExprNode {
-        TokenNode* bgn_sym = nullptr;
-        std::vector<WholeExprNode*> elements;
-        std::vector<TokenNode*> seps;
-        TokenNode* end_sym = nullptr;
     };
 
     /**
@@ -172,6 +188,8 @@ namespace parser {
         AddExprNode* add_expr = nullptr;
         LogicExprNode* logic_expr = nullptr;
         TypeExprNode* type_expr = nullptr;
+        ListLiteralExprNode* list_expr = nullptr;
+        StructFlagOpNode* struct_expr = nullptr;
     };
 
     // StmtDesign
