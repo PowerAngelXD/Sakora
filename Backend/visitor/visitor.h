@@ -5,7 +5,7 @@
 #ifndef SAKORA_VISITOR_H
 #define SAKORA_VISITOR_H
 
-#include "../../Fronted/parser/parser.h"
+#include "../../Frontend/parser/parser.h"
 
 namespace visitor {
     enum CodeKind {
