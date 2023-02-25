@@ -50,7 +50,7 @@ namespace parser {
         AddExprNode* parseAddExprNode();
         CompareExprNode* parseCompareExprNode();
         LogicExprNode* parseLogicExprNode();
-//        ListLiteralExprNode* parseListLiteralExprNode();
+        ListLiteralExprNode* parseListLiteralExprNode();
 //        StructLiteralExprNode* parseStructLiteralExprNode();
 //        AssignExprNode* parseAssignExprNode();
         WholeExprNode* parseWholeExprNode();
