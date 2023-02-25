@@ -363,3 +363,17 @@ TypeExprNode* Parser::parseTypeExprNode() {
     else throw parser_error::UnexpectedTokenError("BasicTypeExpr, TupleTypeExpr or FnTypeExpr", peek().line, peek().column);
 }
 
+ListLiteralExprNode *Parser::parseListLiteralExprNode() {
+    auto* node = new ListLiteralExprNode;
+    node->bgn = eat();
+    while (isWholeExprNode()) {
+        node->elements.push_back(parseWholeExprNode());
+        if (peek().content != ",") break;
+        node->seps.push_back(eat());
+    }
+    if (peek().content != "]")
+        throw parser_error::UnexpectedTokenError("']'", peek().line, peek().column);
+    node->end = eat();
+    return node;
+}
+
