@@ -2,6 +2,11 @@
 ![https://badgen.net/badge/icon/windows?icon=windows&label](https://badgen.net/badge/icon/windows?icon=windows&label)
 ![https://badgen.net/badge/icon/github?icon=github&label](https://badgen.net/badge/icon/github?icon=github&label)
 
+## Attention
+因为作者已经开学，迫于学业压力，本项目可能是一周一更或者两周一更 
+
+Because the author has started school, due to academic pressure, this project may be more than one week or more than two weeks
+
 ## Introduction
 Sakora is an interpretive language based on Yolang and Eytion;  
 In Sakora, you will see the similarities with Yolang and Eytion.  
