@@ -51,8 +51,8 @@ namespace parser {
         CompareExprNode* parseCompareExprNode();
         LogicExprNode* parseLogicExprNode();
         ListLiteralExprNode* parseListLiteralExprNode();
-//        StructLiteralExprNode* parseStructLiteralExprNode();
-//        AssignExprNode* parseAssignExprNode();
+        StructLiteralExprNode* parseStructLiteralExprNode();
+        AssignExprNode* parseAssignExprNode();
         WholeExprNode* parseWholeExprNode();
 
         StructFlagOpNode* parseStructFlagOpNode();
