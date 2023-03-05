@@ -379,7 +379,31 @@ ListLiteralExprNode *Parser::parseListLiteralExprNode() {
 }
 
 StructLiteralExprNode *Parser::parseStructLiteralExprNode() {
-    return nullptr;
+    auto* node = new StructLiteralExprNode;
+    node->bgn =eat();
+    while (true) {
+        auto* tempPair = new StructLiteralExprNode::KeyPair;
+
+        if (peek().kind != lexer::TokenKind::Ident)
+            throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
+        tempPair->key = eat();
+        if (peek().content != ":")
+            throw parser_error::UnexpectedTokenError("':'", peek().line, peek().column);
+        tempPair->rest = new RestOpNode{eat()};
+        if (!isWholeExprNode())
+            throw parser_error::UnexpectedTokenError("WholeExpr", peek().line, peek().column);
+        tempPair->value = parseWholeExprNode();
+
+        node->pairs.push_back(tempPair);
+
+        if (peek().content != ",") break;
+        node->seps.push_back(eat());
+    }
+    if (peek().content != "}")
+        throw parser_error::UnexpectedTokenError("'}'", peek().line, peek().column);
+    node->end = eat();
+
+    return node;
 }
 
 AssignExprNode *Parser::parseAssignExprNode() {
