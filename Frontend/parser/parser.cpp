@@ -365,6 +365,7 @@ TypeExprNode* Parser::parseTypeExprNode() {
 
 ListLiteralExprNode *Parser::parseListLiteralExprNode() {
     auto* node = new ListLiteralExprNode;
+    if (peek().content == "mutable") node->mut_mark = eat();
     node->bgn = eat();
     while (isWholeExprNode()) {
         node->elements.push_back(parseWholeExprNode());
@@ -374,6 +375,25 @@ ListLiteralExprNode *Parser::parseListLiteralExprNode() {
     if (peek().content != "]")
         throw parser_error::UnexpectedTokenError("']'", peek().line, peek().column);
     node->end = eat();
+    return node;
+}
+
+StructLiteralExprNode *Parser::parseStructLiteralExprNode() {
+    return nullptr;
+}
+
+AssignExprNode *Parser::parseAssignExprNode() {
+    auto* node = new AssignExprNode;
+    if (!isPrimExprNode())
+        throw parser_error::UnexpectedTokenError("PrimaryExpr", peek().line, peek().column);
+    node->lval = parsePrimExprNode();
+    if (peek().content != "=")
+        throw parser_error::UnexpectedTokenError("PrimaryExpr", peek().line, peek().column);
+    node->op = new AssignOpNode {eat()};
+    if (!isWholeExprNode())
+        throw parser_error::UnexpectedTokenError("WholeExpr", peek().line, peek().column);
+    node->rval = parseWholeExprNode();
+
     return node;
 }
 
