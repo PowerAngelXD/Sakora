@@ -5,6 +5,7 @@
 #include "value.h"
 
 #include <utility>
+#include <sstream>
 
 using namespace storage;
 
@@ -152,7 +153,15 @@ Val Val::operator/ (Val v) {
     switch (this->val_type.head.unit_type->basic) {
         case type::Integer: {
             switch (v.val_type.head.unit_type->basic) {
-                case type::Integer: return {INT(this->val_ptr) / INT(v.val_ptr)};
+                case type::Integer: {
+                    std::ostringstream oss;
+                    oss<<(double)(INT(this->val_ptr) / INT(v.val_ptr));
+                    if (oss.str().find('.') != std::string::npos) {
+                        return {(double)(INT(this->val_ptr) / INT(v.val_ptr))};
+                    }
+                    else
+                        return {(long long)(INT(this->val_ptr) / INT(v.val_ptr))};
+                }
                 case type::Decimal: return {static_cast<double>(INT(this->val_ptr)) / DECI(v.val_ptr)};
                 default:
                     throw storage_error::UnsupportedOperationError("/@Integer@" + v.val_type.head.unit_type->to_string(), line, column);
