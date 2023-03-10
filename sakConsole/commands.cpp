@@ -43,7 +43,11 @@ void sakConsole::cmdRepl() {
             vm.threads.push_back(vr.out);
             vm.vm_run(0);
 
-            std::cout<<*(long long*)vm.env.pop().val()<<std::endl;
+            auto result = vm.env.pop();
+            if (result.getType().type_content[0].unit_type->basic == type::Integer)
+                std::cout<<*(long long*)result.val()<<std::endl;
+            else
+                std::cout<<*(double*)result.val()<<std::endl;
         }
         catch (parser_error::UnexpectedTokenError& e) {e.printError();}
         catch (parser_error::SyntaxError& e) {e.printError();}
