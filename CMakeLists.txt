@@ -12,7 +12,6 @@ file(GLOB SRC_FILES
         "Frontend/parser/*.h", "Frontend/parser/*.cpp",
         "Backend/visitor/*.h", "Backend/visitor/*.cpp",
         "Backend/type/*.h", "Backend/type/*.cpp",
-        "Backend/type/types/*.h", "Backend/type/types/*.cpp",
         "Backend/scope/*.h", "Backend/scope/*.cpp",
         "Backend/object/*.h", "Backend/object/*.cpp",
         "sakVM/core/*.h", "sakVM/core/*.cpp",
