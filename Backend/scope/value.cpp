@@ -154,13 +154,7 @@ Val Val::operator/ (Val v) {
         case type::Integer: {
             switch (v.val_type.head.unit_type->basic) {
                 case type::Integer: {
-                    std::ostringstream oss;
-                    oss<<(double)(INT(this->val_ptr) / INT(v.val_ptr));
-                    if (oss.str().find('.') != std::string::npos) {
-                        return {(double)(INT(this->val_ptr) / INT(v.val_ptr))};
-                    }
-                    else
-                        return {(long long)(INT(this->val_ptr) / INT(v.val_ptr))};
+                    return {(double)INT(this->val_ptr) / (double)INT(v.val_ptr)};
                 }
                 case type::Decimal: return {static_cast<double>(INT(this->val_ptr)) / DECI(v.val_ptr)};
                 default:
