@@ -59,6 +59,16 @@ namespace parser {
         TypeExprNode* type = nullptr;
     };
 
+    // Special operators
+    struct TypeofExprNode {
+        TokenNode* mark = nullptr;
+        CallOpNode* calling = nullptr;
+    };
+
+    struct FunctionLikeExprNode {
+        TypeofExprNode* typeof_expr = nullptr;
+    };
+
     // Can be used as a separate statement
     struct PrimaryExprNode {
         struct Factor {
@@ -190,6 +200,7 @@ namespace parser {
         TypeExprNode* type_expr = nullptr;
         ListLiteralExprNode* list_expr = nullptr;
         StructFlagOpNode* struct_expr = nullptr;
+        FunctionLikeExprNode* fnlike_expr = nullptr;
     };
 
     // StmtDesign
