@@ -184,6 +184,7 @@ void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
 void Visitor::visitWholeExpression(parser::WholeExprNode *node) {
     if (node->add_expr != nullptr) visitAddExpression(node->add_expr);
     else if (node->logic_expr != nullptr) visitLogicExpression(node->logic_expr);
+    else if (node->list_expr != nullptr) visitListLiteralExpr(node->list_expr);
 }
 
 void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
@@ -213,6 +214,16 @@ void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
         out.emplace_back(CodeKind::set_list, node->basic_type->token->line, node->basic_type->token->column);
     else if (node->ref_flag != nullptr)
         out.emplace_back(CodeKind::set_ref, node->basic_type->token->line, node->basic_type->token->column);
+}
+
+void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
+    for (size_t i = 0; i < node->seps.size(); i ++) {
+        visitWholeExpression(node->elements[i]);
+    }
+    if (node->mut_mark != nullptr)
+        out.emplace_back(CodeKind::set_mutable_list, node->mut_mark->token->line, node->mut_mark->token->column);
+    else
+        out.emplace_back(CodeKind::set_list, node->bgn->token->line, node->bgn->token->column);
 }
 //void Visitor::visitTupleTypeExpression(parser::TupleTypeExprNode* node) {
 //

@@ -15,7 +15,7 @@ namespace visitor {
         // calc
         add, sub, mul, div, gmem, mod,
         eq, neq, gt, lt, ge, le, logic_not, logic_and, logic_or,
-        set_list, set_struct_array, set_ref, set_tuple, set_struct
+        set_list, set_mutable_list, set_struct_array, set_ref, set_tuple, set_struct
     };
     std::string kind_to_string(CodeKind k);
 
@@ -40,6 +40,7 @@ namespace visitor {
         void visitAddOp(parser::AddExprNode::AddOpOption* node);                void visitAddExpression(parser::AddExprNode* node);
         void visitCompareOp(parser::CompareExprNode::CompareOpOption* node);    void visitCompareExpression(parser::CompareExprNode* node);
         void visitLogicOp(parser::LogicExprNode::LogicOpOption* node);          void visitLogicExpression(parser::LogicExprNode* node);
+        void visitListLiteralExpr(parser::ListLiteralExprNode* node);
         void visitWholeExpression(parser::WholeExprNode* node);
         void visitBasicTypeExpression(parser::BasicTypeExprNode* node);
         void visitFnTypeExpression(parser::FnTypeExprNode* node);
