@@ -74,6 +74,8 @@ namespace storage {
         void* val();
         // Deallocates the memory used by the value stored in this Val object
         void freeVal();
+        // Print the value
+        void print();
     };
 
 }

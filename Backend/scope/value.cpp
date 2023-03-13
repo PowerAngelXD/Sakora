@@ -431,3 +431,26 @@ Val Val::operator! () {
             throw storage_error::UnsupportedOperationError("!@" + this->val_type.head.unit_type->to_string(), line, column);
     }
 }
+
+void Val::print() {
+    if (this->val_type.isStructure())
+        throw storage_error::UnsupportedOperationError(storage_error::structure_mode, line, column);
+
+    switch (this->val_type.head.unit_type->basic) {
+        case type::Integer:
+            std::cout<<INT(this->val_ptr)<<std::endl;
+            break;
+        case type::Decimal:
+            std::cout<<DECI(this->val_ptr)<<std::endl;
+            break;
+        case type::Boolean:
+            std::cout<<std::boolalpha<<BOOL(this->val_ptr)<<std::noboolalpha<<std::endl;
+            break;
+        case type::String:
+            std::cout<<STR(this->val_ptr)<<std::endl;
+            break;
+        case type::Typeid:
+            std::cout<<"Typeid"<<std::endl;
+            break;
+    }
+}
