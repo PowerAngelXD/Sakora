@@ -311,6 +311,8 @@ WholeExprNode* Parser::parseWholeExprNode() {
     auto* node = new WholeExprNode;
     if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
     else if (isAddExprNode()) node->add_expr = parseAddExprNode();
+    else if (isListLiteralExprNode()) node->list_expr = parseListLiteralExprNode();
+    else if (isStructLiteralExprNode()) node->struct_expr = parseStructFlagOpNode();
     else if (isFnTypeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
 
     return node;
