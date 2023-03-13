@@ -29,6 +29,9 @@ void sakConsole::cmdRepl() {
         std::cout<<"input >";
         std::getline(std::cin, repl_text);
 
+        if (repl_text == ".quit") break;
+
+
         try {
             lexer::Lexer lex(repl_text);
             lex.generate();
