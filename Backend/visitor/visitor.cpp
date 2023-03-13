@@ -52,6 +52,8 @@ std::string visitor::kind_to_string(CodeKind k) {
             break;
         case push_flag:
             break;
+        case set_mutable_list:
+            break;
     }
     return "null code";
 }
