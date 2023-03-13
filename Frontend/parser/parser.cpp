@@ -30,6 +30,9 @@ bool Parser::isBasicExprNode() {
 bool Parser::isBasicOpNode() {
     return peek().content == ".";
 }
+bool Parser::isCallOpNode() {
+    return peek().content == "(";
+}
 bool Parser::isMulExprNode() {
     return isBasicExprNode();
 }
@@ -63,7 +66,7 @@ bool Parser::isLogicOpNode() {
     return peek().content == "||" || peek().content == "&&" || peek().content == "!";
 }
 bool Parser::isWholeExprNode() {
-    return isAddExprNode() || isLogicExprNode();
+    return isAddExprNode() || isLogicExprNode() || isListLiteralExprNode() || isStructLiteralExprNode() || isFnLikeExprNode();
 }
 bool Parser::isListLiteralExprNode() {
     return peek().content == "[" || (peek().content == "mutable" && peek(1).content == "[");
@@ -87,6 +90,12 @@ bool Parser::isBasicTypeExprNode() {
 }
 bool Parser::isFnTypeExprNode() {
     return peek().content == "fn";
+}
+bool Parser::isFnLikeExprNode() {
+    return isTypeofExprNode();
+}
+bool Parser::isTypeofExprNode() {
+    return peek().content == "typeof";
 }
 bool Parser::isTypeExprNode() {
     return isBasicExprNode() || isFnTypeExprNode();
@@ -282,10 +291,27 @@ LogicExprNode* Parser::parseLogicExprNode() {
     }
     throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
 }
+TypeofExprNode* Parser::parseTypeofExprNode() {
+    auto* node = new TypeofExprNode;
+    node->mark = eat();
+    if (!isCallOpNode())
+        throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
+
+    node->calling = parseCallOpNode();
+
+    return node;
+}
+FunctionLikeExprNode* Parser::parseFunctionLikeExprNode() {
+    auto* node = new FunctionLikeExprNode;
+    if (isTypeofExprNode()) node->typeof_expr = parseTypeofExprNode();
+
+    return node;
+}
 WholeExprNode* Parser::parseWholeExprNode() {
     auto* node = new WholeExprNode;
     if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
     else if (isAddExprNode()) node->add_expr = parseAddExprNode();
+    else if (isFnTypeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
 
     return node;
 }
