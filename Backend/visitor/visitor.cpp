@@ -166,9 +166,11 @@ void Visitor::visitLogicOp(parser::LogicExprNode::LogicOpOption* node) {
     else if (node->logic_not_op != nullptr) out.emplace_back(CodeKind::logic_not, node->logic_not_op->op->token->line, node->logic_not_op->op->token->column);
 }
 void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
-    if (node->ops[0]->logic_not_op != nullptr) {
-        visitCompareExpression(node->head);
-        out.emplace_back(CodeKind::logic_not, node->ops[0]->logic_not_op->op->token->line, node->ops[0]->logic_not_op->op->token->column);
+    if (!node->ops.empty()) {
+        if (node->ops[0]->logic_not_op != nullptr) {
+            visitCompareExpression(node->head);
+            out.emplace_back(CodeKind::logic_not, node->ops[0]->logic_not_op->op->token->line, node->ops[0]->logic_not_op->op->token->column);
+        }
     }
     else {
         visitCompareExpression(node->head);
