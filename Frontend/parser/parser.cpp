@@ -124,7 +124,7 @@ CallOpNode* Parser::parseCallOpNode() {
     if (peek().content == "(") {
         auto* node = new CallOpNode;
         node->left = eat();
-        if (!isWholeExprNode()) {
+        if (isWholeExprNode()) {
             node->factors.push_back(parseWholeExprNode());
             while (peek().content == ",") {
                 node->seps.push_back(new CommaOpNode { eat() });
@@ -310,10 +310,10 @@ FunctionLikeExprNode* Parser::parseFunctionLikeExprNode() {
 WholeExprNode* Parser::parseWholeExprNode() {
     auto* node = new WholeExprNode;
     if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
+    else if (isFnLikeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
     else if (isAddExprNode()) node->add_expr = parseAddExprNode();
     else if (isListLiteralExprNode()) node->list_expr = parseListLiteralExprNode();
     else if (isStructLiteralExprNode()) node->struct_expr = parseStructFlagOpNode();
-    else if (isFnTypeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
 
     return node;
 }
