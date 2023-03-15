@@ -60,7 +60,8 @@ void sakVM::vm_run(size_t layer) {
             case visitor::push_flag: ins_push_flag(code); break;
             case visitor::set_mutable_list:
                 break;
-            case visitor::stfop: ins_typeof(); break;
+            case visitor::stfop:
+                ins_stfop(code); break;
         }
     }
 }
@@ -146,16 +147,18 @@ void sakVM::ins_gmem() {
 
 }
 
-void sakVM::ins_typeof() {
+void sakVM::ins_stfop(visitor::Code code) {
     std::vector<storage::Val> args;
     while (env.peek().getType().head.unit_type->basic != type::Flag) {
         args.push_back(env.pop());
     }
-    env.pop();
+    auto flag = env.pop();
     std::reverse(args.begin(), args.end());
 
     if (args.size() > 1)
         throw parser_error::SyntaxError("Too many parameters for this operation", 1, 1);
 
-    env.push(args[0].getType().head.unit_type->to_string());
+    auto stf = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
+    if (stf == "typeof")
+        env.push(args[0].getType().head.unit_type->to_string());
 }

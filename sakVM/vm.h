@@ -49,7 +49,7 @@ struct sakVM {
     void ins_logic_or();
     void ins_logic_and();
     void ins_no();
-    void ins_typeof();
+    void ins_stfop(visitor::Code code);
 
 };
 
