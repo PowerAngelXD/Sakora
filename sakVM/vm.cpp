@@ -57,10 +57,10 @@ void sakVM::vm_run(size_t layer) {
                 break;
             case visitor::type_deci:
                 break;
-            case visitor::push_flag:
-                break;
+            case visitor::push_flag: ins_push_flag(code); break;
             case visitor::set_mutable_list:
                 break;
+            case visitor::stfop: ins_typeof(); break;
         }
     }
 }
@@ -72,6 +72,11 @@ void sakVM::ins_push_bool(visitor::Code code) { env.push(static_cast<bool>(float
 void sakVM::ins_push_str(visitor::Code code) {
     auto str = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
     env.push(str);
+}
+void sakVM::ins_push_flag(visitor::Code code) {
+    auto flag_content = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
+    auto type = type::Type(type::UnitType(type::Flag));
+    env.push(storage::FlagValue(flag_content));
 }
 void sakVM::ins_push_iden(visitor::Code code) {
     std::cout<<code.val<<std::endl;
@@ -139,4 +144,18 @@ void sakVM::ins_no() {
 }
 void sakVM::ins_gmem() {
 
+}
+
+void sakVM::ins_typeof() {
+    std::vector<storage::Val> args;
+    while (env.peek().getType().head.unit_type->basic != type::Flag) {
+        args.push_back(env.pop());
+    }
+    env.pop();
+    std::reverse(args.begin(), args.end());
+
+    if (args.size() > 1)
+        throw parser_error::SyntaxError("Too many parameters for this operation", 1, 1);
+
+    env.push(args[0].getType().head.unit_type->to_string());
 }

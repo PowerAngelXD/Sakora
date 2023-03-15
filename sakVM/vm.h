@@ -8,6 +8,7 @@
 #include "core/environment.h"
 #include "core/tool.h"
 #include "core/codequeue.h"
+#include <algorithm>
 
 struct sakVM {
     /**
@@ -32,6 +33,7 @@ struct sakVM {
     void ins_push_bool(visitor::Code code);
     void ins_push_str(visitor::Code code);
     void ins_push_iden(visitor::Code code);
+    void ins_push_flag(visitor::Code code);
     void ins_add();
     void ins_sub();
     void ins_mul();
@@ -47,6 +49,7 @@ struct sakVM {
     void ins_logic_or();
     void ins_logic_and();
     void ins_no();
+    void ins_typeof();
 
 };
 
