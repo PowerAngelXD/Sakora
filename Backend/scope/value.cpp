@@ -9,6 +9,8 @@
 
 using namespace storage;
 
+FlagValue::FlagValue(std::string c):content(c) {}
+
 bool storage::doubleEqual(double d1, double d2) {
     return std::abs(d1 - d2) < DBL_EPSILON;
 }
@@ -44,13 +46,19 @@ Val::Val(type::UnitType v) {
     memcpy(val_ptr, &v, val_size);
     val_type = type::UnitType(type::BasicType::Typeid);
 }
+Val::Val(FlagValue v) {
+    val_size = sizeof(FlagValue);
+    val_ptr = (void*)new FlagValue;
+    memcpy(val_ptr, &v, val_size);
+    val_type = type::UnitType(type::BasicType::Flag);
+}
 
 template<typename T>
 Val::Val(T v, type::Type t) {
     val_size = sizeof(T);
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
-    val_type = t;
+    val_type = std::move(t);
 }
 
 type::BasicType Val::getBasicType() const {
@@ -451,6 +459,9 @@ void Val::print() {
             break;
         case type::Typeid:
             std::cout<<"Typeid"<<std::endl;
+            break;
+        case type::Flag:
+            std::cout<<"Flag"<<std::endl;
             break;
     }
 }

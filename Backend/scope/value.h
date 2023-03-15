@@ -20,6 +20,14 @@
 
 
 namespace storage {
+    struct FlagValue {
+        std::string content;
+
+        FlagValue(std::string c);
+        FlagValue()=default;
+    };
+
+
     // Check whether two floating point numbers are equal
     bool doubleEqual(double d1, double d2);
 
@@ -43,6 +51,7 @@ namespace storage {
         Val(bool v);
         Val(std::string v);
         Val(type::UnitType v);
+        Val(FlagValue flag);
 
         // Constructor to create a Val object with a value of the given type and a polonger to the value
         template<typename T>
