@@ -27,6 +27,9 @@ std::string UnitType::to_string() {
         case Typeid:
             content = "typeid";
             break;
+        case Flag:
+            content = "flag";
+            break;
     }
     return content;
 }
