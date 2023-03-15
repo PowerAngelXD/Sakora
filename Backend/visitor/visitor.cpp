@@ -19,41 +19,29 @@ std::string visitor::kind_to_string(CodeKind k) {
         case div: return "div";
         case gmem: return "gmem";
         case mod: return "mod";
-        case eq: return "eq"; break;
-        case neq: return "neq"; break;
-        case gt: return "gt"; break;
-        case lt: return "lt"; break;
-        case ge: return "ge"; break;
-        case le: return "le"; break;
-        case logic_not: return "no"; break;
-        case logic_and: return "logic_and"; break;
-        case logic_or: return "logic_or"; break;
-        case type_int:
-            break;
-        case type_deci:
-            break;
-        case type_str:
-            break;
-        case type_typeid:
-            break;
-        case set_list:
-            break;
-        case set_struct_array:
-            break;
-        case set_ref:
-            break;
-        case set_tuple:
-            break;
-        case set_struct:
-            break;
-        case push_bool:
-            break;
-        case type_bool:
-            break;
-        case push_flag:
-            break;
-        case set_mutable_list:
-            break;
+        case eq: return "eq";
+        case neq: return "neq";
+        case gt: return "gt";
+        case lt: return "lt";
+        case ge: return "ge";
+        case le: return "le";
+        case logic_not: return "logic_not";
+        case logic_and: return "logic_and";
+        case logic_or: return "logic_or";
+        case type_int: return "type_int";
+        case type_deci: return "type_deci";
+        case type_str: return "type_str";
+        case type_typeid: return "type_typeid";
+        case set_list: return "type_list";
+        case set_struct_array: return "type_struct_array";
+        case set_ref: return "type_ref";
+        case set_tuple: return "type_tuple";
+        case set_struct: return "type_struct";
+        case push_bool: return "push_bool";
+        case type_bool: return "type_bool";
+        case push_flag: return "push_int";
+        case set_mutable_list: return "set_mutable_list";
+        case stfop: return "stfop";
     }
     return "null code";
 }
@@ -186,6 +174,7 @@ void Visitor::visitLogicExpression(parser::LogicExprNode* node) {
 void Visitor::visitWholeExpression(parser::WholeExprNode *node) {
     if (node->add_expr != nullptr) visitAddExpression(node->add_expr);
     else if (node->logic_expr != nullptr) visitLogicExpression(node->logic_expr);
+    else if (node->fnlike_expr != nullptr) visitFnLikeExpr(node->fnlike_expr);
     else if (node->list_expr != nullptr) visitListLiteralExpr(node->list_expr);
 }
 
@@ -219,13 +208,33 @@ void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
 }
 
 void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
+    constantPool.emplace_back("ArrayEnd");
+    out.emplace_back(CodeKind::push_flag, constantPool.size() - 1, node->bgn->token->line, node->bgn->token->column);
+
     for (size_t i = 0; i < node->seps.size(); i ++) {
         visitWholeExpression(node->elements[i]);
     }
+
     if (node->mut_mark != nullptr)
         out.emplace_back(CodeKind::set_mutable_list, node->mut_mark->token->line, node->mut_mark->token->column);
     else
         out.emplace_back(CodeKind::set_list, node->bgn->token->line, node->bgn->token->column);
+}
+
+void Visitor::visitTypeofExpr(parser::TypeofExprNode *node) {
+    constantPool.emplace_back("ArrayEnd");
+    out.emplace_back(CodeKind::push_flag, constantPool.size() - 1, node->mark->token->line, node->mark->token->column);
+
+    for (size_t i = 0; i < node->calling->factors.size(); i ++) {
+        visitWholeExpression(node->calling->factors[i]);
+    }
+
+    constantPool.emplace_back("typeof");
+    out.emplace_back(CodeKind::stfop, constantPool.size() - 1, node->mark->token->line, node->mark->token->column);
+}
+
+void Visitor::visitFnLikeExpr(parser::FunctionLikeExprNode *node) {
+    if (node->typeof_expr != nullptr) visitTypeofExpr(node->typeof_expr);
 }
 //void Visitor::visitTupleTypeExpression(parser::TupleTypeExprNode* node) {
 //

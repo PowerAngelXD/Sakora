@@ -13,7 +13,7 @@ namespace visitor {
         type_int, type_deci, type_bool, type_str, type_typeid,
         push_flag,
         // calc
-        add, sub, mul, div, gmem, mod,
+        add, sub, mul, div, gmem, mod, stfop,
         eq, neq, gt, lt, ge, le, logic_not, logic_and, logic_or,
         set_list, set_mutable_list, set_struct_array, set_ref, set_tuple, set_struct
     };
@@ -40,6 +40,8 @@ namespace visitor {
         void visitAddOp(parser::AddExprNode::AddOpOption* node);                void visitAddExpression(parser::AddExprNode* node);
         void visitCompareOp(parser::CompareExprNode::CompareOpOption* node);    void visitCompareExpression(parser::CompareExprNode* node);
         void visitLogicOp(parser::LogicExprNode::LogicOpOption* node);          void visitLogicExpression(parser::LogicExprNode* node);
+        void visitTypeofExpr(parser::TypeofExprNode* node);
+        void visitFnLikeExpr(parser::FunctionLikeExprNode* node);
         void visitListLiteralExpr(parser::ListLiteralExprNode* node);
         void visitWholeExpression(parser::WholeExprNode* node);
         void visitBasicTypeExpression(parser::BasicTypeExprNode* node);
