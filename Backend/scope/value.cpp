@@ -73,7 +73,7 @@ void Val::setLnCol(int ln, int col) {
     line = ln;
     column = col;
 }
-void* Val::val() { return val_ptr; }
+void* Val::get_ptr() { return val_ptr; }
 
 void Val::freeVal() {
 
@@ -464,4 +464,54 @@ void Val::print() {
             std::cout<<"Flag"<<std::endl;
             break;
     }
+}
+
+long long Val::int_val() {
+    if (this->getHeadType()->basic != type::Integer)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return INT(val_ptr);
+}
+
+double Val::deci_val() {
+    if (this->getHeadType()->basic != type::Decimal)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return DECI(val_ptr);
+}
+
+std::string Val::str_val() {
+    if (this->getHeadType()->basic != type::String)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return STR(val_ptr);
+}
+
+bool Val::bool_val() {
+    if (this->getHeadType()->basic != type::Boolean)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return BOOL(val_ptr);
+}
+
+FlagValue Val::flag_val() {
+    if (this->getHeadType()->basic != type::Flag)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return FLAG(val_ptr);
+}
+
+type::Type Val::valtype_val() {
+    if (this->getHeadType()->basic != type::Typeid)
+        throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
+
+    return TYPEID(val_ptr);
+}
+
+bool Val::is_null() {
+    return val_ptr == nullptr;
+}
+
+type::UnitType* Val::getHeadType() const {
+    return val_type.head.unit_type;
 }

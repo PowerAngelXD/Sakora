@@ -17,6 +17,7 @@
 #define STR(val) *(std::string*)val
 #define BOOL(val) *(bool*)val
 #define TYPEID(val) *(type::Type*)val
+#define FLAG(val) *(storage::FlagValue*)val
 
 
 namespace storage {
@@ -76,15 +77,26 @@ namespace storage {
         // Set value line and column
         void setLnCol(int ln, int col);
         // Returns the basic type of the value stored in this Val object (e.g. long, Float, Bool)
-        type::BasicType getBasicType() const;
+        [[nodiscard]] type::BasicType getBasicType() const;
         // Returns the type of the value stored in this Val object (could be a basic type or a user-defined type)
-        type::Type getType() const;
+        [[nodiscard]] type::Type getType() const;
+        // Get the head type
+        [[nodiscard]] type::UnitType* getHeadType() const;
         // Returns a pointer to the value stored in this Val object
-        void* val();
+        void* get_ptr();
         // Deallocates the memory used by the value stored in this Val object
         void freeVal();
         // Print the value
         void print();
+        // Returns a value recommended
+        long long int_val();
+        double deci_val();
+        bool bool_val();
+        std::string str_val();
+        FlagValue flag_val();
+        type::Type valtype_val();
+        // Null check
+        bool is_null();
     };
 
 }
