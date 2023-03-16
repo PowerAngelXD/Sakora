@@ -21,6 +21,7 @@ namespace storage_error {
         void printError() override;
     };
 
+    const std::string get_chosen_type_val_mode = "chosentype";
     const std::string structure_mode = "structure";
     const std::string type_equal_mode = "tyequ";
     struct UnsupportedOperationError: error::ErrorBasic {

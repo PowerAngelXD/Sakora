@@ -37,6 +37,12 @@ void storage_error::UnsupportedOperationError::printError() {
         std::cout<<"    The precondition for any Boolean operation is that both types are the same (Only '==' and '!=' operators has this provision)"<<std::endl;
         std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
     }
+    else if (source == get_chosen_type_val_mode) {
+        ERROR_HEAD_DISPLAY
+        std::cout<<"UnsupportedOperation Error"<<std::endl;
+        std::cout<<"    The returning value's type is illegal(or Unknown)"<<std::endl;
+        std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
+    }
     else {
         std::vector<std::string> contents;
         std::string temp;
