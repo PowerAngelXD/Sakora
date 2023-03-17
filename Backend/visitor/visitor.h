@@ -8,6 +8,18 @@
 #include "../../Frontend/parser/parser.h"
 
 namespace visitor {
+    enum FlagKind {
+        ArrayEnd, LoopEnd
+    };
+
+    struct FlagValue {
+        FlagKind kind;
+
+        FlagValue(FlagKind k);
+        FlagValue()=default;
+    };
+
+
     enum CodeKind {
         push_int, push_deci, push_bool, push_str, push_iden,
         type_int, type_deci, type_bool, type_str, type_typeid,

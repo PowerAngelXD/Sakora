@@ -7,6 +7,8 @@
 using namespace visitor;
 using namespace parser;
 
+FlagValue::FlagValue(FlagKind k): kind(k) {}
+
 std::string visitor::kind_to_string(CodeKind k) {
     switch (k) {
         case push_int: return "push_int";
@@ -208,8 +210,7 @@ void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
 }
 
 void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
-    constantPool.emplace_back("ArrayEnd");
-    out.emplace_back(CodeKind::push_flag, constantPool.size() - 1, node->bgn->token->line, node->bgn->token->column);
+    out.emplace_back(CodeKind::push_flag, FlagKind::ArrayEnd, node->bgn->token->line, node->bgn->token->column);
 
     for (size_t i = 0; i < node->seps.size(); i ++) {
         visitWholeExpression(node->elements[i]);
@@ -222,8 +223,7 @@ void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
 }
 
 void Visitor::visitTypeofExpr(parser::TypeofExprNode *node) {
-    constantPool.emplace_back("ArrayEnd");
-    out.emplace_back(CodeKind::push_flag, constantPool.size() - 1, node->mark->token->line, node->mark->token->column);
+    out.emplace_back(CodeKind::push_flag, FlagKind::ArrayEnd, node->mark->token->line, node->mark->token->column);
 
     for (size_t i = 0; i < node->calling->factors.size(); i ++) {
         visitWholeExpression(node->calling->factors[i]);
