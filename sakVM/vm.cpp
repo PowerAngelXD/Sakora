@@ -80,7 +80,7 @@ void sakVM::ins_push_flag(visitor::Code code) {
     env.push(storage::FlagValue(flag_content));
 }
 void sakVM::ins_push_iden(visitor::Code code) {
-    std::cout<<code.val<<std::endl;
+    env.push( "<Identifier: " + env.getConstant((size_t)(int)code.val) + ">");
 }
 void sakVM::ins_add() {
     auto right = env.pop();
