@@ -17,18 +17,10 @@
 #define STR(val) *(std::string*)val
 #define BOOL(val) *(bool*)val
 #define TYPEID(val) *(type::Type*)val
-#define FLAG(val) *(storage::FlagValue*)val
+#define FLAG(val) *(visitor::FlagValue*)val
 
 
 namespace storage {
-    struct FlagValue {
-        std::string content;
-
-        FlagValue(std::string c);
-        FlagValue()=default;
-    };
-
-
     // Check whether two floating point numbers are equal
     bool doubleEqual(double d1, double d2);
 
@@ -52,7 +44,7 @@ namespace storage {
         Val(bool v);
         Val(std::string v);
         Val(type::UnitType v);
-        Val(FlagValue flag);
+        Val(visitor::FlagValue flag);
 
         // Constructor to create a Val object with a value of the given type and a polonger to the value
         template<typename T>
@@ -93,7 +85,7 @@ namespace storage {
         double deci_val();
         bool bool_val();
         std::string str_val();
-        FlagValue flag_val();
+        visitor::FlagValue flag_val();
         type::Type valtype_val();
         // Null check
         bool is_null();

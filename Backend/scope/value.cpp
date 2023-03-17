@@ -9,8 +9,6 @@
 
 using namespace storage;
 
-FlagValue::FlagValue(std::string c):content(c) {}
-
 bool storage::doubleEqual(double d1, double d2) {
     return std::abs(d1 - d2) < DBL_EPSILON;
 }
@@ -46,9 +44,9 @@ Val::Val(type::UnitType v) {
     memcpy(val_ptr, &v, val_size);
     val_type = type::UnitType(type::BasicType::Typeid);
 }
-Val::Val(FlagValue v) {
-    val_size = sizeof(FlagValue);
-    val_ptr = (void*)new FlagValue;
+Val::Val(visitor::FlagValue v) {
+    val_size = sizeof(visitor::FlagValue);
+    val_ptr = (void*)new visitor::FlagValue;
     memcpy(val_ptr, &v, val_size);
     val_type = type::UnitType(type::BasicType::Flag);
 }
@@ -497,7 +495,7 @@ bool Val::bool_val() {
     return BOOL(val_ptr);
 }
 
-FlagValue Val::flag_val() {
+visitor::FlagValue Val::flag_val() {
     if (this->getHeadType()->basic != type::Flag)
         throw storage_error::UnsupportedOperationError(storage_error::get_chosen_type_val_mode, -1, -1);
 
