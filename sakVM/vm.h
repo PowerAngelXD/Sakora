@@ -34,6 +34,8 @@ struct sakVM {
     void ins_push_str(visitor::Code code);
     void ins_push_iden(visitor::Code code);
     void ins_push_flag(visitor::Code code);
+    void ins_set_list();
+    void ins_set_mutable_list();
     void ins_add();
     void ins_sub();
     void ins_mul();

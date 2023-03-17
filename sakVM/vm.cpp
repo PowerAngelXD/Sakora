@@ -43,8 +43,7 @@ void sakVM::vm_run(size_t layer) {
                 break;
             case visitor::type_typeid:
                 break;
-            case visitor::set_list:
-                break;
+            case visitor::set_list: ins_set_list(); break;
             case visitor::set_struct_array:
                 break;
             case visitor::set_ref:
@@ -58,10 +57,8 @@ void sakVM::vm_run(size_t layer) {
             case visitor::type_deci:
                 break;
             case visitor::push_flag: ins_push_flag(code); break;
-            case visitor::set_mutable_list:
-                break;
-            case visitor::stfop:
-                ins_stfop(code); break;
+            case visitor::set_mutable_list: ins_set_mutable_list(); break;
+            case visitor::stfop: ins_stfop(code); break;
         }
     }
 }
@@ -75,12 +72,34 @@ void sakVM::ins_push_str(visitor::Code code) {
     env.push(str);
 }
 void sakVM::ins_push_flag(visitor::Code code) {
-    auto flag_content = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
-    auto type = type::Type(type::UnitType(type::Flag));
-    env.push(storage::FlagValue(flag_content));
+    env.push(visitor::FlagValue((visitor::FlagKind)code.val));
 }
 void sakVM::ins_push_iden(visitor::Code code) {
     env.push( "<Identifier: " + env.getConstant((size_t)(int)code.val) + ">");
+}
+void sakVM::ins_set_list() {
+    std::vector<storage::Val> args;
+    while (true) {
+        if (env.peek().getHeadType()->basic == type::Flag) {
+            if (env.peek().flag_val().kind == visitor::ArrayEnd)
+                break;
+        }
+        args.push_back(env.pop());
+    }
+    auto flag = env.pop();
+    std::reverse(args.begin(), args.end());
+}
+void sakVM::ins_set_mutable_list() {
+    std::vector<storage::Val> args;
+    while (true) {
+        if (env.peek().getHeadType()->basic == type::Flag) {
+            if (env.peek().flag_val().kind == visitor::ArrayEnd)
+                break;
+        }
+        args.push_back(env.pop());
+    }
+    auto flag = env.pop();
+    std::reverse(args.begin(), args.end());
 }
 void sakVM::ins_add() {
     auto right = env.pop();
@@ -149,7 +168,11 @@ void sakVM::ins_gmem() {
 
 void sakVM::ins_stfop(visitor::Code code) {
     std::vector<storage::Val> args;
-    while (env.peek().getType().head.unit_type->basic != type::Flag) {
+    while (true) {
+        if (env.peek().getHeadType()->basic == type::Flag) {
+            if (env.peek().flag_val().kind == visitor::ArrayEnd)
+                break;
+        }
         args.push_back(env.pop());
     }
     auto flag = env.pop();
