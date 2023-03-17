@@ -25,7 +25,7 @@ TokenNode* Parser::eat() {
 // checker
 
 bool Parser::isBasicExprNode() {
-    return peek().kind != lexer::TokenKind::NullToken;
+    return peek().kind != lexer::NullToken && peek().content != "[";
 }
 bool Parser::isBasicOpNode() {
     return peek().content == ".";
@@ -311,9 +311,10 @@ WholeExprNode* Parser::parseWholeExprNode() {
     auto* node = new WholeExprNode;
     if (isLogicExprNode()) node->logic_expr = parseLogicExprNode();
     else if (isFnLikeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
-    else if (isAddExprNode()) node->add_expr = parseAddExprNode();
     else if (isListLiteralExprNode()) node->list_expr = parseListLiteralExprNode();
     else if (isStructLiteralExprNode()) node->struct_expr = parseStructFlagOpNode();
+
+    else node->add_expr = parseAddExprNode();
 
     return node;
 }
