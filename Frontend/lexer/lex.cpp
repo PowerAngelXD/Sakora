@@ -142,8 +142,11 @@ Token Lexer::makeSymbol() {
     else if (chk == ']') return {TokenKind::Symbol, "]", line, column};
     else if (chk == '{') return {TokenKind::Symbol, "{", line, column};
     else if (chk == '}') return {TokenKind::Symbol, "}", line, column};
+    else if (chk == ',') return {TokenKind::Symbol, ",", line, column};
     else {
-        throw lexer_error::IllegalSymbolError(std::to_string(chk), line, column);
+        std::string temp_str;
+        temp_str.push_back(chk);
+        throw lexer_error::IllegalSymbolError(temp_str, line, column);
     }
 }
 
