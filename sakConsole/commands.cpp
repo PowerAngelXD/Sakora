@@ -47,7 +47,7 @@ void sakConsole::cmdRepl() {
             vm.vm_run(0);
 
             auto result = vm.env.pop();
-            result.print();
+            result.print(true);
         }
         catch (parser_error::UnexpectedTokenError& e) {e.printError();}
         catch (parser_error::SyntaxError& e) {e.printError();}
