@@ -440,7 +440,7 @@ Val Val::operator! () {
     }
 }
 
-void Val::print() {
+void Val::print(bool is_repr) {
     if (this->val_type.isStructure())
         throw storage_error::UnsupportedOperationError(storage_error::structure_mode, line, column);
 
@@ -455,7 +455,10 @@ void Val::print() {
             std::cout<<std::boolalpha<<BOOL(this->val_ptr)<<std::noboolalpha<<std::endl;
             break;
         case type::String:
-            std::cout<<STR(this->val_ptr)<<std::endl;
+            if (!is_repr)
+                std::cout<<STR(this->val_ptr)<<std::endl;
+            else
+                std::cout<<"\""<<STR(this->val_ptr)<<"\""<<std::endl;
             break;
         case type::Typeid:
             std::cout<<"Typeid"<<std::endl;

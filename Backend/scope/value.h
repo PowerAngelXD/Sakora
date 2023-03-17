@@ -87,7 +87,7 @@ namespace storage {
         // Deallocates the memory used by the value stored in this Val object
         void freeVal();
         // Print the value
-        void print();
+        void print(bool is_repr);
         // Returns a value recommended
         long long int_val();
         double deci_val();
