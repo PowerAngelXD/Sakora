@@ -212,7 +212,7 @@ void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
 void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
     out.emplace_back(CodeKind::push_flag, FlagKind::ArrayEnd, node->bgn->token->line, node->bgn->token->column);
 
-    for (size_t i = 0; i < node->seps.size(); i ++) {
+    for (size_t i = 0; i < node->elements.size(); i ++) {
         visitWholeExpression(node->elements[i]);
     }
 
