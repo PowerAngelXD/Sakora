@@ -4,6 +4,16 @@
 
 #include "type.h"
 
+type::TSOption type::optBuilder(StructureKind st) {
+    return TSOption {new StructureKind(st), nullptr};
+}
+type::TSOption type::optBuilder(UnitType ut) {
+    return TSOption {nullptr, new UnitType(ut)};
+}
+type::TSOption type::optBuilder(BasicType bt) {
+    return optBuilder(UnitType(bt));
+}
+
 type::Type::Type(UnitType unit_type) {
     type_content.push_back({nullptr, new UnitType(unit_type)});
     head = type_content[0];

@@ -21,6 +21,10 @@ namespace type {
         StructureKind* s_kind = nullptr;
         UnitType* unit_type = nullptr;
     };
+    TSOption optBuilder(StructureKind st);
+    TSOption optBuilder(UnitType ut);
+    TSOption optBuilder(BasicType bt);
+
 
     struct Type {
         std::vector<TSOption> type_content;
