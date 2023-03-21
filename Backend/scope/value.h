@@ -45,6 +45,7 @@ namespace storage {
         Val(std::string v);
         Val(type::UnitType v);
         Val(visitor::FlagValue flag);
+        Val(std::vector<Val> list);
 
         // Constructor to create a Val object with a value of the given type and a polonger to the value
         template<typename T>

@@ -13,7 +13,18 @@ bool storage::doubleEqual(double d1, double d2) {
     return std::abs(d1 - d2) < DBL_EPSILON;
 }
 
+Val::Val(std::vector<Val> list) {
+    val_size = sizeof(std::vector<Val>);
+    val_ptr = new std::vector<Val>;
+    *(std::vector<Val>*)val_ptr = list;
 
+    type::Type t = {type::optBuilder(type::Array)};
+    for(const auto & i : list) {
+        t.type_content.push_back(type::optBuilder(i.getHeadType()->basic));
+    }
+
+    val_type = t;
+}
 Val::Val(long long v) {
     val_size = sizeof(long long);
     val_ptr = (void *) new decltype(v);
@@ -53,7 +64,7 @@ Val::Val(visitor::FlagValue v) {
 
 template<typename T>
 Val::Val(T v, type::Type t) {
-    val_size = sizeof(T);
+    val_size = sizeof(decltype(v));
     val_ptr = (void*)new decltype(v);
     memcpy(val_ptr, &v, val_size);
     val_type = std::move(t);
@@ -439,27 +450,60 @@ Val Val::operator! () {
 }
 
 void Val::print(bool is_repr) {
-    if (this->val_type.isStructure())
-        throw storage_error::UnsupportedOperationError(storage_error::structure_mode, line, column);
+    if (this->val_type.isStructure()) {
+        switch (*this->val_type.head.s_kind) {
+            case type::Struct:
+                break;
+            case type::Array: {
+                std::cout<<"[";
+                for (size_t i = 0; i < this->val_type.type_content.size() - 1; i ++) {
+                    (*(std::vector<Val>*)this->val_ptr)[i].print(true);
+                    if (i == this->val_type.type_content.size() - 2) {}
+                    else
+                        std::cout<<",";
+                }
+                std::cout<<"]"<<std::endl;
+                return;
+            }
+            case type::VarArray:
+                break;
+            case type::Impl:
+                break;
+            case type::Fn:
+                break;
+        }
+    }
 
     switch (this->val_type.head.unit_type->basic) {
         case type::Integer:
-            std::cout<<INT(this->val_ptr)<<std::endl;
+            if (is_repr)
+                std::cout<<INT(this->val_ptr);
+            else
+                std::cout<<INT(this->val_ptr)<<std::endl;
             break;
         case type::Decimal:
-            std::cout<<DECI(this->val_ptr)<<std::endl;
+            if (is_repr)
+                std::cout<<DECI(this->val_ptr);
+            else
+                std::cout<<DECI(this->val_ptr)<<std::endl;
             break;
         case type::Boolean:
-            std::cout<<std::boolalpha<<BOOL(this->val_ptr)<<std::noboolalpha<<std::endl;
+            if (is_repr)
+                std::cout<<std::boolalpha<<BOOL(this->val_ptr)<<std::noboolalpha;
+            else
+                std::cout<<std::boolalpha<<BOOL(this->val_ptr)<<std::noboolalpha<<std::endl;
             break;
         case type::String:
-            if (!is_repr)
-                std::cout<<STR(this->val_ptr)<<std::endl;
+            if (is_repr)
+                std::cout<<STR(this->val_ptr);
             else
                 std::cout<<"\""<<STR(this->val_ptr)<<"\""<<std::endl;
             break;
         case type::Typeid:
-            std::cout<<"Typeid"<<std::endl;
+            if (is_repr)
+                std::cout<<"Typeid";
+            else
+                std::cout<<"Typeid"<<std::endl;
             break;
         case type::Flag:
             std::cout<<"Flag"<<std::endl;
