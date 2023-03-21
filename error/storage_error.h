@@ -29,6 +29,13 @@ namespace storage_error {
 
         void printError() override;
     };
+
+    const std::string diftypes_in_list = "diftypes_in_list";
+    struct IllegalTypeDescriptionError: error::ErrorBasic {
+        IllegalTypeDescriptionError(std::string src, int ln, int col);
+
+        void printError() override;
+    };
 }
 
 #endif //SAKORA_STORAGE_ERROR_H

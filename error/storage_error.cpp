@@ -63,3 +63,14 @@ void storage_error::UnsupportedOperationError::printError() {
         std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
     }
 }
+
+storage_error::IllegalTypeDescriptionError::IllegalTypeDescriptionError(std::string src, int ln, int col) : ErrorBasic(src, ln, col) {}
+
+void storage_error::IllegalTypeDescriptionError::printError() {
+    ERROR_HEAD_DISPLAY
+    std::cout<<"IllegalTypeDescription Error"<<std::endl;
+    if (source == diftypes_in_list) {
+        std::cout<<"The element types within a list must be consistent"<<std::endl;
+    }
+    std::cout<<"At line: "<<line<<"; column: "<<column<<std::endl;
+}
