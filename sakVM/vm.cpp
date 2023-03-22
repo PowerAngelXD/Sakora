@@ -95,26 +95,27 @@ void sakVM::ins_set_list() {
     }
     auto flag = env.pop();
     std::reverse(list.begin(), list.end());
-
-    type::Type t = {type::optBuilder(type::Array)};
-    for(size_t i; i < list.size(); i ++) {
-        t.type_content.push_back(type::optBuilder(list[i].getHeadType()->basic));
-    }
-
     env.push(list);
-    auto l = *(std::vector<storage::Val>*)env.peek().get_ptr();
 }
 void sakVM::ins_set_mutable_list() {
-    std::vector<storage::Val> args;
+    std::vector<storage::Val> list;
+    storage::Val head;
     while (true) {
         if (env.peek().getHeadType()->basic == type::Flag) {
             if (env.peek().flag_val().kind == visitor::ArrayEnd)
                 break;
         }
-        args.push_back(env.pop());
+
+        list.push_back(env.pop());
+        head = list[0];
+
+        if ((env.peek().getHeadType()->basic != head.getHeadType()->basic) &&
+            env.peek().getHeadType()->basic != type::Flag)
+            throw storage_error::IllegalTypeDescriptionError(storage_error::diftypes_in_list, 0, 0);
     }
     auto flag = env.pop();
-    std::reverse(args.begin(), args.end());
+    std::reverse(list.begin(), list.end());
+    env.push(storage::Val(list, true));
 }
 void sakVM::ins_add() {
     auto right = env.pop();
