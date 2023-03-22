@@ -62,14 +62,6 @@ Val::Val(visitor::FlagValue v) {
     val_type = type::UnitType(type::BasicType::Flag);
 }
 
-template<typename T>
-Val::Val(T v, type::Type t) {
-    val_size = sizeof(decltype(v));
-    val_ptr = (void*)new decltype(v);
-    memcpy(val_ptr, &v, val_size);
-    val_type = std::move(t);
-}
-
 type::BasicType Val::getBasicType() const {
     if (!val_type.isStructure())
         return val_type.head.unit_type->basic;
@@ -455,7 +447,7 @@ void Val::print(bool is_repr) {
             case type::Struct:
                 break;
             case type::Array: {
-                std::cout<<"[";
+                std::cout<<"array: [";
                 for (size_t i = 0; i < this->val_type.type_content.size() - 1; i ++) {
                     (*(std::vector<Val>*)this->val_ptr)[i].print(true);
                     if (i == this->val_type.type_content.size() - 2) {}

@@ -47,10 +47,6 @@ namespace storage {
         Val(visitor::FlagValue flag);
         Val(std::vector<Val> list);
 
-        // Constructor to create a Val object with a value of the given type and a polonger to the value
-        template<typename T>
-        Val(T v, type::Type t);
-
         // Operators to perform arithmetic and comparison operations on Val objects
         Val operator+ (Val v);
         Val operator- (Val v);
