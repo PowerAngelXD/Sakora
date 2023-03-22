@@ -45,7 +45,7 @@ namespace storage {
         Val(std::string v);
         Val(type::UnitType v);
         Val(visitor::FlagValue flag);
-        Val(std::vector<Val> list);
+        Val(const std::vector<Val>& list, bool is_mutable = false);
 
         // Operators to perform arithmetic and comparison operations on Val objects
         Val operator+ (Val v);

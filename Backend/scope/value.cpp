@@ -13,12 +13,12 @@ bool storage::doubleEqual(double d1, double d2) {
     return std::abs(d1 - d2) < DBL_EPSILON;
 }
 
-Val::Val(std::vector<Val> list) {
+Val::Val(const std::vector<Val>& list, bool is_mutable) {
     val_size = sizeof(std::vector<Val>);
     val_ptr = new std::vector<Val>;
     *(std::vector<Val>*)val_ptr = list;
 
-    type::Type t = {type::optBuilder(type::Array)};
+    type::Type t = {is_mutable?type::optBuilder(type::VarArray): type::optBuilder(type::Array)};
     for(const auto & i : list) {
         t.type_content.push_back(type::optBuilder(i.getHeadType()->basic));
     }
@@ -458,7 +458,15 @@ void Val::print(bool is_repr) {
                 return;
             }
             case type::VarArray:
-                break;
+                std::cout<<"mutable array: [";
+                for (size_t i = 0; i < this->val_type.type_content.size() - 1; i ++) {
+                    (*(std::vector<Val>*)this->val_ptr)[i].print(true);
+                    if (i == this->val_type.type_content.size() - 2) {}
+                    else
+                        std::cout<<",";
+                }
+                std::cout<<"]"<<std::endl;
+                return;
             case type::Impl:
                 break;
             case type::Fn:
