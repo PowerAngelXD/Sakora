@@ -441,7 +441,7 @@ Val Val::operator! () {
     }
 }
 
-void Val::print(bool is_repr) {
+void Val::debugPrint(bool is_repr) {
     if (this->val_type.isStructure()) {
         switch (*this->val_type.head.s_kind) {
             case type::Struct:
@@ -449,10 +449,10 @@ void Val::print(bool is_repr) {
             case type::Array: {
                 std::cout<<"array: [";
                 for (size_t i = 0; i < this->val_type.type_content.size() - 1; i ++) {
-                    (*(std::vector<Val>*)this->val_ptr)[i].print(true);
+                    (*(std::vector<Val> *) this->val_ptr)[i].debugPrint(true);
                     if (i == this->val_type.type_content.size() - 2) {}
                     else
-                        std::cout<<",";
+                        std::cout<<", ";
                 }
                 std::cout<<"]"<<std::endl;
                 return;
@@ -460,10 +460,10 @@ void Val::print(bool is_repr) {
             case type::VarArray:
                 std::cout<<"mutable array: [";
                 for (size_t i = 0; i < this->val_type.type_content.size() - 1; i ++) {
-                    (*(std::vector<Val>*)this->val_ptr)[i].print(true);
-                    if (i == this->val_type.type_content.size() - 2) {}
+                    (*(std::vector<Val> *) this->val_ptr)[i].debugPrint(true);
+                    if (i == this->val_type.type_content.size() - 2) continue;
                     else
-                        std::cout<<",";
+                        std::cout<<", ";
                 }
                 std::cout<<"]"<<std::endl;
                 return;
@@ -495,7 +495,7 @@ void Val::print(bool is_repr) {
             break;
         case type::String:
             if (is_repr)
-                std::cout<<STR(this->val_ptr);
+                std::cout<<"\""<<STR(this->val_ptr)<<"\"";
             else
                 std::cout<<"\""<<STR(this->val_ptr)<<"\""<<std::endl;
             break;
