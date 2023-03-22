@@ -25,7 +25,7 @@ TokenNode* Parser::eat() {
 // checker
 
 bool Parser::isBasicExprNode() {
-    return peek().kind != lexer::NullToken && peek().content != "[";
+    return peek().kind != lexer::NullToken && peek().content != "[" && peek().kind != lexer::Keyword;
 }
 bool Parser::isBasicOpNode() {
     return peek().content == ".";
