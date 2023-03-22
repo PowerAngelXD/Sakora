@@ -57,5 +57,6 @@ void sakConsole::cmdRepl() {
         catch (storage_error::UnsupportedOperationError& e) {e.printError();}
         catch (storage_error::UnknownIdentifierError& e) {e.printError();}
         catch (storage_error::DuplicateIdentifierError& e) {e.printError();}
+        catch (storage_error::IllegalTypeDescriptionError& e) {e.printError();}
     }
 }
