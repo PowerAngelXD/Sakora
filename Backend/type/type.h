@@ -37,6 +37,8 @@ namespace type {
         [[nodiscard]] bool isStructure() const;
         bool operator== (Type t);
         bool operator!= (Type t);
+
+        std::string to_string();
     };
 }
 

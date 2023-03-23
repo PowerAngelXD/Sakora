@@ -40,3 +40,33 @@ bool type::Type::operator== (Type t) {
 bool type::Type::operator!= (Type t) {
     return !this->operator==(t);
 }
+
+std::string type::Type::to_string() {
+    std::string content;
+    if (this->isStructure()) {
+        switch (*this->head.s_kind) {
+            case Struct:
+                break;
+            case Array: {
+                content += this->type_content[1].unit_type->to_string();
+                content += "[]";
+                break;
+            }
+            case VarArray: {
+                content += "mutable ";
+                content += this->type_content[1].unit_type->to_string();
+                content += "[]";
+                break;
+            }
+            case Impl:
+                break;
+            case Fn:
+                break;
+        }
+    }
+    else {
+        content = this->head.unit_type->to_string();
+    }
+
+    return content;
+}
