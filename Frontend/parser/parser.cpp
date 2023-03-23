@@ -333,19 +333,9 @@ StructFlagOpNode* Parser::parseStructFlagOpNode() {
 BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
     if (isBasicTypeExprNode()) {
         auto* node = new BasicTypeExprNode;
-        if (peek().content == "struct")
-            node->struct_flag = parseStructFlagOpNode();
-
-        if (peek().kind == lexer::TokenKind::Ident)
-            node->basic_type = eat();
-        else
-            throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
 
         if (peek().content == "[]") {
-            if (node->struct_flag != nullptr)
-                throw parser_error::SyntaxError("An identifier '" + node->basic_type->token->content + "' cannot be declared as an array type. Identifier '" + node->basic_type->token->content + "' is not a type", peek().line, peek().column);
-            else
-                node->list_flag = new ListFlagOpNode {eat()};
+            node->list_flag = new ListFlagOpNode {eat()};
         }
         else if (peek().content == "&")
             node->ref_flag = new RefFlagOpNode {eat()};
