@@ -185,9 +185,11 @@ void sakVM::ins_gmem() {
 void sakVM::ins_stfop(visitor::Code code) {
     std::vector<storage::Val> args;
     while (true) {
-        if (env.peek().getHeadType()->basic == type::Flag) {
-            if (env.peek().flag_val().kind == visitor::ArrayEnd)
-                break;
+        if (env.peek().getType().head.unit_type != nullptr) {
+            if (env.peek().getHeadType()->basic == type::Flag) {
+                if (env.peek().flag_val().kind == visitor::ArrayEnd)
+                    break;
+            }
         }
         args.push_back(env.pop());
     }
@@ -198,6 +200,7 @@ void sakVM::ins_stfop(visitor::Code code) {
         throw parser_error::SyntaxError("Too many parameters for this operation", 1, 1);
 
     auto stf = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
-    if (stf == "typeof")
-        env.push(args[0].getType().head.unit_type->to_string());
+    if (stf == "typeof") {
+        env.push(args[0].getType().to_string());
+    }
 }
