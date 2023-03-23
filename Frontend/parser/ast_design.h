@@ -30,7 +30,12 @@ namespace parser {
     struct LogicOrOpNode { TokenNode* op = nullptr; };   struct LogicAndOpNode { TokenNode* op = nullptr; };
     struct LogicNotOpNode { TokenNode* op = nullptr; };  struct GmemOpNode { TokenNode* op = nullptr; };
     struct CommaOpNode { TokenNode* op = nullptr; };     struct AssignOpNode {TokenNode* op = nullptr; };
-    struct RestOpNode { TokenNode* op = nullptr; };      struct ListFlagOpNode { TokenNode* op = nullptr; };
+    struct RestOpNode { TokenNode* op = nullptr; };
+    struct ListFlagOpNode {
+        TokenNode* left = nullptr;
+        TokenNode* ref = nullptr;
+        TokenNode* right = nullptr;
+    };
     struct StructFlagOpNode {
         TokenNode* op = nullptr;
         ListFlagOpNode* list_flag = nullptr;
@@ -165,14 +170,20 @@ namespace parser {
     /**
      * Type literal expression
      * Example:
-     * int32[] -> List of type int32
-     * (int32, string, boolean) -> A tuple with element types of int32, string and boolean
+     * int[] -> List of type int
+     * (int, string, boolean) -> A tuple with element types of int, string and boolean
      * struct MyStruct -> A structure named MyStruct
-     * fn(int32, int32)->int32  ->  A function with a return value of int32 and two parameters of int32
+     * fn(int, int)->int  ->  A function with a return value of int and two parameters of int
      */
-    struct BasicTypeExprNode {
-        StructFlagOpNode* struct_flag = nullptr;
+    struct UnitTypeExprNode {
         TokenNode* basic_type = nullptr;
+
+        StructFlagOpNode* struct_op = nullptr;
+    };
+
+    struct BasicTypeExprNode {
+        UnitTypeExprNode* unit = nullptr;
+
         ListFlagOpNode* list_flag = nullptr;
         RefFlagOpNode* ref_flag = nullptr;
     };
@@ -208,9 +219,9 @@ namespace parser {
     struct LetStmtNode {
         struct InitFactor {
             TokenNode* ident = nullptr;
-            RestOpNode* type_restrict = nullptr;
+            RestOpNode* type_restrict = nullptr; // ':'
             TypeExprNode* type = nullptr;
-            AssignOpNode* assign_op = nullptr;
+            AssignOpNode* assign_op = nullptr;   // '='
             WholeExprNode* value = nullptr;
         };
         TokenNode* mark = nullptr;
