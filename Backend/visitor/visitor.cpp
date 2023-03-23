@@ -181,32 +181,34 @@ void Visitor::visitWholeExpression(parser::WholeExprNode *node) {
 }
 
 void Visitor::visitBasicTypeExpression(parser::BasicTypeExprNode* node) {
-    auto type_content = node->basic_type->token->content;
+    auto type_content = node->unit->basic_type->token->content;
+    int line = node->unit->basic_type->token->line;
+    int column = node->unit->basic_type->token->column;
     if (type_content == "int")
-        out.emplace_back(CodeKind::type_int, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::type_int, line, column);
     if (type_content == "deci")
-        out.emplace_back(CodeKind::type_deci, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::type_deci, line, column);
     else if (type_content == "bool")
-        out.emplace_back(CodeKind::type_bool, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::type_bool, line, column);
     else if (type_content == "typeid")
-        out.emplace_back(CodeKind::type_typeid, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::type_typeid, line, column);
     else if (type_content == "str")
-        out.emplace_back(CodeKind::type_str, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::type_str, line, column);
     else {
         constantPool.push_back(type_content);
-        out.emplace_back(CodeKind::push_str, constantPool.size() - 1, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::push_str, constantPool.size() - 1, line, column);
     }
 
-    if (node->struct_flag != nullptr) {
-        if (node->struct_flag->list_flag != nullptr)
-            out.emplace_back(CodeKind::set_struct_array, node->basic_type->token->line, node->basic_type->token->column);
+    if (node->unit->struct_op != nullptr) {
+        if (node->list_flag != nullptr)
+            out.emplace_back(CodeKind::set_struct_array, line, column);
         else
-            out.emplace_back(CodeKind::set_struct, node->basic_type->token->line, node->basic_type->token->column);
+            out.emplace_back(CodeKind::set_struct, line, column);
     }
     else if (node->list_flag != nullptr)
-        out.emplace_back(CodeKind::set_list, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::set_list, line, column);
     else if (node->ref_flag != nullptr)
-        out.emplace_back(CodeKind::set_ref, node->basic_type->token->line, node->basic_type->token->column);
+        out.emplace_back(CodeKind::set_ref, line, column);
 }
 
 void Visitor::visitListLiteralExpr(parser::ListLiteralExprNode *node) {
@@ -236,12 +238,11 @@ void Visitor::visitTypeofExpr(parser::TypeofExprNode *node) {
 void Visitor::visitFnLikeExpr(parser::FunctionLikeExprNode *node) {
     if (node->typeof_expr != nullptr) visitTypeofExpr(node->typeof_expr);
 }
-//void Visitor::visitTupleTypeExpression(parser::TupleTypeExprNode* node) {
 //
-//}
 //void Visitor::visitFnTypeExpression(parser::FnTypeExprNode* node) {
 //
 //}
+//
 //void Visitor::visitTypeExpression(parser::TypeExprNode* node) {
 //
 //}
