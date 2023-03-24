@@ -238,7 +238,7 @@ void Visitor::visitTypeofExpr(parser::TypeofExprNode *node) {
 void Visitor::visitFnLikeExpr(parser::FunctionLikeExprNode *node) {
     if (node->typeof_expr != nullptr) visitTypeofExpr(node->typeof_expr);
 }
-//
+
 //void Visitor::visitFnTypeExpression(parser::FnTypeExprNode* node) {
 //
 //}
