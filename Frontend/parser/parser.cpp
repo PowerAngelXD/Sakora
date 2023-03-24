@@ -83,10 +83,13 @@ bool Parser::isAssignExprNode() {
     }
     return false;
 }
-bool Parser::isBasicTypeExprNode() {
+bool Parser::isUnitTypeExprNode() {
     if (peek().content == "struct"&& peek(1).kind == lexer::TokenKind::Ident) return true;
     else if (peek().kind == lexer::TokenKind::Ident) return true;
     else return false;
+}
+bool Parser::isBasicTypeExprNode() {
+    return isUnitTypeExprNode();
 }
 bool Parser::isFnTypeExprNode() {
     return peek().content == "fn";
@@ -313,6 +316,7 @@ WholeExprNode* Parser::parseWholeExprNode() {
     else if (isFnLikeExprNode()) node->fnlike_expr = parseFunctionLikeExprNode();
     else if (isListLiteralExprNode()) node->list_expr = parseListLiteralExprNode();
     else if (isStructLiteralExprNode()) node->struct_expr = parseStructFlagOpNode();
+    else if (isTypeExprNode()) node->type_expr = parseTypeExprNode();
 
     else node->add_expr = parseAddExprNode();
 
@@ -330,19 +334,38 @@ StructFlagOpNode* Parser::parseStructFlagOpNode() {
     throw parser_error::UnexpectedTokenError("'struct'", peek().line, peek().column);
 }
 
+UnitTypeExprNode* Parser::parseUnitTypeExprNode() {
+    if (!isBasicExprNode())
+        throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
+
+    auto* node = new UnitTypeExprNode;
+
+    if (peek().content == "struct")
+        node->struct_op = new StructFlagOpNode{eat()};
+
+    node->basic_type = eat();
+
+    return node;
+}
+
 BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
-    if (isBasicTypeExprNode()) {
-        auto* node = new BasicTypeExprNode;
+    if (!isBasicTypeExprNode())
+        throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
 
-        if (peek().content == "[]") {
-            node->list_flag = new ListFlagOpNode {eat()};
-        }
-        else if (peek().content == "&")
-            node->ref_flag = new RefFlagOpNode {eat()};
+    auto* node = new BasicTypeExprNode;
 
-        return node;
+    if (!isUnitTypeExprNode())
+        throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
+
+    node->unit = parseUnitTypeExprNode();
+
+    if (peek().content == "[]") {
+        node->list_flag = new ListFlagOpNode {eat()};
     }
-    throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
+    else if (peek().content == "&")
+        node->ref_flag = new RefFlagOpNode {eat()};
+
+    return node;
 }
 FnTypeExprNode* Parser::parseFnTypeExprNode() {
     if (isFnTypeExprNode()) {
