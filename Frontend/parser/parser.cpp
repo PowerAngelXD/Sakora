@@ -68,6 +68,9 @@ bool Parser::isLogicOpNode() {
 bool Parser::isWholeExprNode() {
     return isAddExprNode() || isLogicExprNode() || isListLiteralExprNode() || isStructLiteralExprNode() || isFnLikeExprNode();
 }
+bool Parser::isListFlagOpNode() {
+    return peek().content == "[";
+}
 bool Parser::isListLiteralExprNode() {
     return peek().content == "[" || (peek().content == "mutable" && peek(1).content == "[");
 }
@@ -186,113 +189,110 @@ LogicExprNode::LogicOpOption* Parser::parseLogicExprOp() {
 }
 
 PrimaryExprNode* Parser::parsePrimExprNode() {
-    if (isPrimExprNode()) {
-        auto* node = new PrimaryExprNode;
-        auto* factor = new PrimaryExprNode::Factor;
-        
-        auto makeFactor = [&]() {
-            factor = new PrimaryExprNode::Factor;
-            if (peek().content == "(") {
-                factor->left = eat();
-                if (isWholeExprNode()) factor->expr = parseWholeExprNode();
-                else {
-                    throw parser_error::UnexpectedTokenError("Whole Expression", peek().line, peek().column);
-                }
-                if (peek().content == ")") factor->right = eat();
-                else {
-                    throw parser_error::UnexpectedTokenError("')'", peek().line, peek().column);
-                }
-            }
+    if (!isPrimExprNode())
+        throw parser_error::UnexpectedTokenError("Primary Expression", peek().line, peek().column);
+
+    auto* node = new PrimaryExprNode;
+    auto* factor = new PrimaryExprNode::Factor;
+
+    auto makeFactor = [&]() {
+        factor = new PrimaryExprNode::Factor;
+        if (peek().content == "(") {
+            factor->left = eat();
+            if (isWholeExprNode()) factor->expr = parseWholeExprNode();
             else {
-                factor->head = parseBasicExprNode();
+                throw parser_error::UnexpectedTokenError("Whole Expression", peek().line, peek().column);
             }
-            return factor;
-        };
-
-        node->head = makeFactor();
-        while (peek().content == ".") {
-            node->ops.push_back(new GmemOpNode { eat() });
-            node->factors.push_back(makeFactor());
-        }
-
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("Primary Expression", peek().line, peek().column);
-}
-BasicExprNode* Parser::parseBasicExprNode() {
-    if (isBasicExprNode()) {
-        auto* node = new BasicExprNode;
-        auto* opt = new BasicExprNode::CallingOpOption;
-        node->factor = eat();
-        
-        while (peek().content == "(" || peek().content == "[") {
-            if (peek().content == "(") {
-                opt->call_op = parseCallOpNode();
-                node->ops.push_back(opt);
+            if (peek().content == ")") factor->right = eat();
+            else {
+                throw parser_error::UnexpectedTokenError("')'", peek().line, peek().column);
             }
-            else if (peek().content == "[") {
-                opt->index_op = parseIndexOpNode();
-                node->ops.push_back(opt);
-            }
-        }
-
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("Basic Expression", peek().line, peek().column);
-}
-MulExprNode* Parser::parseMulExprNode() {
-    if (isMulExprNode()) {
-        auto* node = new MulExprNode;
-        node->head = parsePrimExprNode();
-        while (isMulOpNode()) {
-            node->ops.push_back(parseMulExprOp());
-            node->factors.push_back(parsePrimExprNode());
-        }
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
-}
-AddExprNode* Parser::parseAddExprNode() {
-    if (isAddExprNode()) {
-        auto* node = new AddExprNode;
-        node->head = parseMulExprNode();
-        while (isAddOpNode()) {
-            node->ops.push_back(parseAddExprOp());
-            node->factors.push_back(parseMulExprNode());
-        }
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("Add Expression", peek().line, peek().column);
-}
-CompareExprNode* Parser::parseCompareExprNode() {
-    if (isCompareExprNode()) {
-        auto* node = new CompareExprNode;
-        node->head = parseAddExprNode();
-        while (isCompareOpNode()) {
-            node->ops.push_back(parseCompareExprOp());
-            node->factors.push_back(parseAddExprNode());
-        }
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("Compare Expression", peek().line, peek().column);
-}
-LogicExprNode* Parser::parseLogicExprNode() {
-    if (isLogicExprNode()) {
-        auto* node = new LogicExprNode;
-        if (peek().content == "!") {
-            node->ops.push_back(parseLogicExprOp());
-            node->head = parseCompareExprNode();
         }
         else {
-            node->head = parseCompareExprNode();
-            while (isLogicOpNode()) {
-                node->ops.push_back(parseLogicExprOp());
-                node->factors.push_back(parseCompareExprNode());
-            }
+            factor->head = parseBasicExprNode();
         }
-        return node;
+        return factor;
+    };
+    node->head = makeFactor();
+    while (peek().content == ".") {
+        node->ops.push_back(new GmemOpNode { eat() });
+        node->factors.push_back(makeFactor());
     }
-    throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
+
+    return node;
+}
+BasicExprNode* Parser::parseBasicExprNode() {
+    if (!isBasicExprNode())
+        throw parser_error::UnexpectedTokenError("Basic Expression", peek().line, peek().column);
+
+    auto* node = new BasicExprNode;
+    auto* opt = new BasicExprNode::CallingOpOption;
+    node->factor = eat();
+
+    while (peek().content == "(" || peek().content == "[") {
+        if (peek().content == "(") {
+            opt->call_op = parseCallOpNode();
+            node->ops.push_back(opt);
+        }
+        else if (peek().content == "[") {
+            opt->index_op = parseIndexOpNode();
+            node->ops.push_back(opt);
+        }
+    }
+    return node;
+}
+MulExprNode* Parser::parseMulExprNode() {
+    if (!isMulExprNode())
+        throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
+
+    auto* node = new MulExprNode;
+    node->head = parsePrimExprNode();
+    while (isMulOpNode()) {
+        node->ops.push_back(parseMulExprOp());
+        node->factors.push_back(parsePrimExprNode());
+    }
+    return node;
+}
+AddExprNode* Parser::parseAddExprNode() {
+    if (!isAddExprNode())
+        throw parser_error::UnexpectedTokenError("Add Expression", peek().line, peek().column);
+
+    auto* node = new AddExprNode;
+    node->head = parseMulExprNode();
+    while (isAddOpNode()) {
+        node->ops.push_back(parseAddExprOp());
+        node->factors.push_back(parseMulExprNode());
+    }
+    return node;
+}
+CompareExprNode* Parser::parseCompareExprNode() {
+    if (!isCompareExprNode())
+        throw parser_error::UnexpectedTokenError("Compare Expression", peek().line, peek().column);
+
+    auto* node = new CompareExprNode;
+    node->head = parseAddExprNode();
+    while (isCompareOpNode()) {
+        node->ops.push_back(parseCompareExprOp());
+        node->factors.push_back(parseAddExprNode());
+    }
+    return node;
+}
+LogicExprNode* Parser::parseLogicExprNode() {
+    if (!isLogicExprNode())
+        throw parser_error::UnexpectedTokenError("Mul Expression", peek().line, peek().column);
+    auto* node = new LogicExprNode;
+    if (peek().content == "!") {
+        node->ops.push_back(parseLogicExprOp());
+        node->head = parseCompareExprNode();
+    }
+    else {
+        node->head = parseCompareExprNode();
+        while (isLogicOpNode()) {
+            node->ops.push_back(parseLogicExprOp());
+            node->factors.push_back(parseCompareExprNode());
+        }
+    }
+    return node;
 }
 TypeofExprNode* Parser::parseTypeofExprNode() {
     auto* node = new TypeofExprNode;
@@ -324,14 +324,14 @@ WholeExprNode* Parser::parseWholeExprNode() {
 }
 
 StructFlagOpNode* Parser::parseStructFlagOpNode() {
-    if (peek().content == "struct") {
-        auto* node = new StructFlagOpNode;
-        node->op = eat();
-        if (peek().content == "[]")
-            node->list_flag = new ListFlagOpNode{eat()};
-        return node;
-    }
-    throw parser_error::UnexpectedTokenError("'struct'", peek().line, peek().column);
+    if (peek().content != "struct")
+        throw parser_error::UnexpectedTokenError("'struct'", peek().line, peek().column);
+
+    auto *node = new StructFlagOpNode;
+    node->op = eat();
+    if (peek().content == "[]")
+        node->list_flag = new ListFlagOpNode{eat()};
+    return node;
 }
 
 UnitTypeExprNode* Parser::parseUnitTypeExprNode() {
@@ -461,5 +461,17 @@ AssignExprNode *Parser::parseAssignExprNode() {
     node->rval = parseWholeExprNode();
 
     return node;
+}
+
+ListFlagOpNode *Parser::parseListFlagOpNode() {
+    if (!isListFlagOpNode())
+        throw parser_error::UnexpectedTokenError("'[]'", peek().line, peek().column);
+
+    auto* node = new ListFlagOpNode;
+
+    node->left = eat();
+    if (peek().content == "&") node->ref = eat();
+    if (peek().content != "]")
+        throw parser_error::UnexpectedTokenError("']'", peek().line, peek().column);
 }
 

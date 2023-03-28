@@ -33,7 +33,7 @@ namespace parser {
         bool isLogicExprNode(); bool isLogicOpNode();
         bool isWholeExprNode();
         bool isUnitTypeExprNode(); bool isBasicTypeExprNode();
-        bool isFnTypeExprNode(); bool isTypeExprNode();
+        bool isListFlagOpNode(); bool isFnTypeExprNode(); bool isTypeExprNode();
         bool isListLiteralExprNode();
         bool isStructLiteralExprNode();
         bool isAssignExprNode();
@@ -60,6 +60,7 @@ namespace parser {
         FunctionLikeExprNode* parseFunctionLikeExprNode();
         WholeExprNode* parseWholeExprNode();
 
+        ListFlagOpNode* parseListFlagOpNode();
         StructFlagOpNode* parseStructFlagOpNode();
         UnitTypeExprNode* parseUnitTypeExprNode();
         BasicTypeExprNode* parseBasicTypeExprNode();
