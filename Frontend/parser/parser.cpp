@@ -490,9 +490,6 @@ LetStmtNode* Parser::parseLetStmtNode() {
     auto* node = new LetStmtNode;
     node->mark = eat();
     // producer
-    auto isFactor = [&]() -> bool {
-        return peek().kind == lexer::Ident;
-    };
     auto produceInitFactor = [&]() -> LetStmtNode::InitFactor* {
         if (peek().kind != lexer::Ident)
             throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
