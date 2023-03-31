@@ -23,6 +23,8 @@ namespace parser {
         lexer::Token peek(size_t offset = 0);
         lexer::Token* seek();
         TokenNode* eat();
+
+        // Expression
         // checker
         bool isBasicExprNode(); bool isBasicOpNode();
         #define isPrimExprNode isBasicExprNode
@@ -66,6 +68,13 @@ namespace parser {
         BasicTypeExprNode* parseBasicTypeExprNode();
         FnTypeExprNode* parseFnTypeExprNode();
         TypeExprNode* parseTypeExprNode();
+
+
+        // Stmts
+        // checker
+        bool isLetStmtNode();
+
+        LetStmtNode* parseLetStmtNode();
     };
 }
 
