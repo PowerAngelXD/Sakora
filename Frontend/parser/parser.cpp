@@ -473,6 +473,8 @@ ListFlagOpNode *Parser::parseListFlagOpNode() {
     if (peek().content == "&") node->ref = eat();
     if (peek().content != "]")
         throw parser_error::UnexpectedTokenError("']'", peek().line, peek().column);
+
+    return node;
 }
 
 
