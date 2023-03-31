@@ -530,7 +530,7 @@ LetStmtNode* Parser::parseLetStmtNode() {
 
     if (peek().content != ";")
         throw parser_error::UnexpectedTokenError("';'", peek().line, peek().column);
-    node->end_mark;
+    node->end_mark = eat();
 
     return node;
 }
