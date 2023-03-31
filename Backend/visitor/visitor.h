@@ -9,7 +9,8 @@
 
 namespace visitor {
     enum FlagKind {
-        ArrayEnd, LoopEnd
+        ArrayEnd, LoopEnd, ArgsEnd,
+        FnTypeSign
     };
 
     struct FlagValue {
@@ -27,7 +28,8 @@ namespace visitor {
         // calc
         add, sub, mul, div, gmem, mod, stfop,
         eq, neq, gt, lt, ge, le, logic_not, logic_and, logic_or,
-        set_list, set_mutable_list, set_struct_array, set_ref, set_tuple, set_struct
+        set_list, set_mutable_list, set_struct_array, set_ref, set_tuple, set_struct,
+        set_fn_type
     };
     std::string kind_to_string(CodeKind k);
 
