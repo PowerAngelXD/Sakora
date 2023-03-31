@@ -44,6 +44,7 @@ std::string visitor::kind_to_string(CodeKind k) {
         case push_flag: return "push_int";
         case set_mutable_list: return "set_mutable_list";
         case stfop: return "stfop";
+        case set_fn_type: return "set_fn_type";
     }
     return "null code";
 }

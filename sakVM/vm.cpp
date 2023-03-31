@@ -59,6 +59,8 @@ void sakVM::vm_run(size_t layer) {
             case visitor::push_flag: ins_push_flag(code); break;
             case visitor::set_mutable_list: ins_set_mutable_list(); break;
             case visitor::stfop: ins_stfop(code); break;
+            case visitor::set_fn_type:
+                break;
         }
     }
 }
