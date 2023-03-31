@@ -239,10 +239,23 @@ void Visitor::visitFnLikeExpr(parser::FunctionLikeExprNode *node) {
     if (node->typeof_expr != nullptr) visitTypeofExpr(node->typeof_expr);
 }
 
-//void Visitor::visitFnTypeExpression(parser::FnTypeExprNode* node) {
-//
-//}
-//
-//void Visitor::visitTypeExpression(parser::TypeExprNode* node) {
-//
-//}
+void Visitor::visitFnTypeExpression(parser::FnTypeExprNode* node) {
+    // fn int(int, int)
+    out.emplace_back(CodeKind::push_flag, FlagKind::ArgsEnd, node->mark->token->line, node->mark->token->column);
+
+    for (size_t i = 0; i < node->elements.size(); i ++) {
+        if (node->elements[i]->basic_type != nullptr)
+            visitBasicTypeExpression(node->elements[i]->basic_type);
+        else
+            visitFnTypeExpression(node->elements[i]->fn_type);
+    }
+
+    visitBasicTypeExpression(node->ret_type->basic_type);
+
+    out.emplace_back(CodeKind::set_fn_type, FlagKind::FnTypeSign, node->mark->token->line, node->mark->token->column);
+}
+
+void Visitor::visitTypeExpression(parser::TypeExprNode* node) {
+    if (node->basic_type != nullptr) visitBasicTypeExpression(node->basic_type);
+    else if (node->fn_type != nullptr) visitFnTypeExpression(node->fn_type);
+}
