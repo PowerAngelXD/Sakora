@@ -475,3 +475,63 @@ ListFlagOpNode *Parser::parseListFlagOpNode() {
         throw parser_error::UnexpectedTokenError("']'", peek().line, peek().column);
 }
 
+
+// Statement
+
+
+bool Parser::isLetStmtNode() {
+    return peek().content == "let";
+}
+
+LetStmtNode* Parser::parseLetStmtNode() {
+    if (!isLetStmtNode())
+        throw parser_error::UnexpectedTokenError("'let'", peek().line, peek().column);
+
+    auto* node = new LetStmtNode;
+    node->mark = eat();
+    // producer
+    auto isFactor = [&]() -> bool {
+        return peek().kind == lexer::Ident;
+    };
+    auto produceInitFactor = [&]() -> LetStmtNode::InitFactor* {
+        if (peek().kind != lexer::Ident)
+            throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
+
+        auto factor = new LetStmtNode::InitFactor;
+        factor->ident = eat();
+
+        if (peek().content != ":")
+            throw parser_error::UnexpectedTokenError("':'", peek().line, peek().column);
+        factor->type_restrict = new RestOpNode{eat()};
+
+        if (!isTypeExprNode())
+            throw parser_error::UnexpectedTokenError("TypeExpression", peek().line, peek().column);
+        factor->type = parseTypeExprNode();
+
+        // Optional
+        if (peek().content == "=") {
+            factor->assign_op = new AssignOpNode{eat()};
+            if (isWholeExprNode()) {
+                factor->value = parseWholeExprNode();
+            }
+            else
+                throw parser_error::UnexpectedTokenError("WholeExpression", peek().line, peek().column);
+        }
+
+        return factor;
+    };
+    //
+    node->inits.push_back(produceInitFactor());
+
+    while (peek().content == ",") {
+        node->seps.push_back(eat());
+        node->inits.push_back(produceInitFactor());
+    }
+
+    if (peek().content != ";")
+        throw parser_error::UnexpectedTokenError("';'", peek().line, peek().column);
+    node->end_mark;
+
+    return node;
+}
+
