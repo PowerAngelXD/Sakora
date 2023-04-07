@@ -307,7 +307,6 @@ TypeofExprNode* Parser::parseTypeofExprNode() {
 FunctionLikeExprNode* Parser::parseFunctionLikeExprNode() {
     auto* node = new FunctionLikeExprNode;
     if (isTypeofExprNode()) node->typeof_expr = parseTypeofExprNode();
-
     return node;
 }
 WholeExprNode* Parser::parseWholeExprNode() {
