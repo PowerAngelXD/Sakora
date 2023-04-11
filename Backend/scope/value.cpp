@@ -471,6 +471,8 @@ void Val::debugPrint(bool is_repr) {
                 break;
             case type::Fn:
                 break;
+            case type::Normal:
+                break;
         }
     }
 
@@ -507,6 +509,8 @@ void Val::debugPrint(bool is_repr) {
             break;
         case type::Flag:
             std::cout<<"Flag"<<std::endl;
+            break;
+        case type::Void:
             break;
     }
 }
