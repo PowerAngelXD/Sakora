@@ -104,7 +104,7 @@ bool Parser::isTypeofExprNode() {
     return peek().content == "typeof";
 }
 bool Parser::isTypeExprNode() {
-    return isBasicExprNode() || isFnTypeExprNode();
+    return peek().kind == lexer::Keyword || isFnTypeExprNode();
 }
 
 // parser
