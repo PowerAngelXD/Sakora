@@ -29,7 +29,7 @@ namespace storage {
         // construct with identifier
         Scope(std::string i);
         // Get members and can access and modify
-        Val &getMem(std::string id, int ln = -1, int col = -1);
+        MemberObject& getMem(std::string id, int ln = -1, int col = -1);
     };
 
     // Class representing a space (collection of scopes)

@@ -11,9 +11,9 @@ using namespace storage;
 //Scope
 Scope::Scope(std::string i): ident(std::move(i)) {}
 
-Val & Scope::getMem(std::string id, int ln, int col) {
+MemberObject& Scope::getMem(std::string id, int ln, int col) {
     for (size_t i =0; i < members.size(); i ++) {
-        if (get<0>(members[i]) == id) return get<2>(members[i]);
+        if (members[i].ident_text == id) return members[i];
     }
     throw storage_error::UnknownIdentifierError(id, ln, col);
 }
@@ -71,7 +71,7 @@ void Space::deleteMember(const std::string& name, int ln, int col) {
     for (auto scope: space) {
         for (size_t i = 0; i < scope.members.size(); i ++) {
             auto mem = scope.members[i];
-            if (get<0>(mem) == name) scope.members.erase(scope.members.begin() + static_cast<int>(i));
+            if (mem.ident_text == name) scope.members.erase(scope.members.begin() + static_cast<int>(i));
         }
     }
     throw storage_error::UnknownIdentifierError(name, ln, col);
@@ -80,7 +80,7 @@ Val& Space::getVal(const std::string& name, int ln, int col) {
     for (auto scope: space) {
         for (size_t i = 0; i < scope.members.size(); i ++) {
             auto mem = scope.members[i];
-            if (get<0>(mem) == name) return scope.getMem(name);
+            if (mem.ident_text == name) return scope.getMem(name, ln, col).value;
         }
     }
     throw storage_error::UnknownIdentifierError(name, ln, col);
@@ -88,7 +88,7 @@ Val& Space::getVal(const std::string& name, int ln, int col) {
 bool Space::findMember(const std::string& name) {
     for (const auto& scope: space) {
         for (auto mem : scope.members) {
-            if (get<0>(mem) == name) return true;
+            if (mem.ident_text == name) return true;
         }
     }
     return false;
