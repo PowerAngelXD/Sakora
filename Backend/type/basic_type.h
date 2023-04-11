@@ -15,6 +15,7 @@ namespace type {
         Boolean, // boolean value
         String,  // string
         Typeid,  // typeid
+        Void,    // void
         Flag,
     };
 

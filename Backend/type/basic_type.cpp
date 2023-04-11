@@ -30,6 +30,9 @@ std::string UnitType::to_string() {
         case Flag:
             content = "flag";
             break;
+        case Void:
+            content = "void";
+            break;
     }
     return content;
 }
