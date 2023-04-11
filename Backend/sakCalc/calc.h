@@ -2,12 +2,12 @@
 // Created by BALL on 2022/12/31.
 //
 
-#ifndef SAKORA_VM_H
-#define SAKORA_VM_H
+#ifndef SAKORA_CALC_H
+#define SAKORA_CALC_H
 
-#include "core/environment.h"
-#include "core/tool.h"
-#include "core/codequeue.h"
+#include "../env/environment.h"
+#include "../env/tool.h"
+#include "../env/codequeue.h"
 #include <algorithm>
 
 struct sakVM {
@@ -56,4 +56,4 @@ struct sakVM {
 };
 
 
-#endif //SAKORA_VM_H
+#endif //SAKORA_CALC_H
