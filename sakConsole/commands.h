@@ -6,7 +6,7 @@
 #define SAKORA_COMMANDS_H
 
 #include "../Backend/scope/value.h"
-#include "../sakVM/vm.h"
+#include "../Backend/sakCalc/calc.h"
 
 namespace sakConsole {
     static std::string helpText = "Unknown Content";
