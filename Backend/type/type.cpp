@@ -58,9 +58,7 @@ std::string type::Type::to_string() {
                 content += "[]";
                 break;
             }
-            case Impl:
-                break;
-            case Fn:
+            default:
                 break;
         }
     }

@@ -14,6 +14,7 @@ namespace type {
         VarArray,
         Impl,
         Fn,
+        Normal
     };
 
     // Type-Structure Option
