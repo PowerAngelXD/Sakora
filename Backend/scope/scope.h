@@ -11,14 +11,18 @@ using std::get;
 
 namespace storage {
     // UnitType alias for a member of a scope (pair of a string and a Val)
-    typedef std::tuple<std::string, Identifier, Val> Member;
+    struct MemberObject {
+        std::string ident_text;
+        Identifier ident;
+        Val value;
+    };
 
     // Struct representing a scope
     struct Scope {
         // identifier of the scope
         std::string ident;
         // map of members (string to Val)
-        std::vector<Member> members;
+        std::vector<MemberObject> members;
 
         // Constructors
         Scope() = default;
