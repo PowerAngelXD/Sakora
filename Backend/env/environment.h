@@ -5,7 +5,7 @@
 #ifndef SAKORA_ENVIRONMENT_H
 #define SAKORA_ENVIRONMENT_H
 
-#include "../../Backend/object/object.h"
+#include "../object/object.h"
 #include <stack>
 
 namespace sakVM_core {
