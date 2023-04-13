@@ -10,7 +10,7 @@
 #include "../env/codequeue.h"
 #include <algorithm>
 
-struct sakVM {
+struct sakCalc {
     /**
      * Naming conventions:
      * vm_xxx: Operation on VM
@@ -21,12 +21,12 @@ struct sakVM {
     // Environment of the VM
     sakVM_core::Environment env;
 
-    sakVM(std::vector<std::string> cp, int ln, int col);
+    sakCalc(std::vector<std::string> cp, int ln, int col);
 
     // Initialization operation for VM
-    void vm_init(std::vector<std::string> cp, int ln, int col);
+    void calc_init(std::vector<std::string> cp, int ln, int col);
     // Run the code queue at the specified level
-    void vm_run(size_t layer);
+    void calc_run(size_t layer);
     // VM instruction set
     void ins_push_int(visitor::Code code);
     void ins_push_deci(visitor::Code code);
@@ -52,7 +52,6 @@ struct sakVM {
     void ins_logic_and();
     void ins_no();
     void ins_stfop(visitor::Code code);
-
 };
 
 
