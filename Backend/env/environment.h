@@ -21,9 +21,9 @@ namespace sakVM_core {
         // Constant pool
         std::vector<std::string> constantPool;
         // The current line in the source code.
-        int line;
+        int line {};
         // The current column in the source code.
-        int column;
+        int column {};
     public:
         Environment()=default;
         // Constructs a new environment with the given line and column information.
