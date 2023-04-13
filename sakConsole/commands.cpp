@@ -42,9 +42,9 @@ void sakConsole::cmdRepl() {
             visitor::Visitor vr;
             vr.visitWholeExpression(node);
 
-            sakVM vm(vr.constantPool, vr.out[0].ln, vr.out[0].col);
+            sakCalc vm(vr.constantPool, vr.out[0].ln, vr.out[0].col);
             vm.threads.push_back(vr.out);
-            vm.vm_run(0);
+            vm.calc_run(0);
 
             auto result = vm.env.pop();
             result.debugPrint(false);
