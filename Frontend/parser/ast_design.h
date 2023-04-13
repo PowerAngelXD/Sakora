@@ -15,6 +15,7 @@ namespace parser {
     struct TypeExprNode;
     struct WholeExprNode;
     struct AddExprNode;
+    struct ProgramSectionNode;
     //
 
     // ExprDesign
@@ -238,8 +239,31 @@ namespace parser {
         TokenNode* end_mark = nullptr;
     };
 
+    // ProgramObject, or SubProgram
+    typedef std::vector<ProgramSectionNode> ProgramObject;
+
+    struct BlockStmtNode {
+        TokenNode* bgn = nullptr;
+        ProgramObject* sub_program = nullptr;
+        TokenNode* end = nullptr;
+    };
+
     struct IfStmtNode {
         TokenNode* mark = nullptr;
+
+        TokenNode* bgn = nullptr;
+        LogicExprNode* condition = nullptr;
+        TokenNode* end = nullptr;
+
+        BlockStmtNode* body = nullptr;
+    };
+
+    // ProgramSystem Design
+
+    struct ProgramSectionNode {
+        LetStmtNode* letstmt = nullptr;
+        ExprStmtNode* exprstmt = nullptr;
+        IfStmtNode* ifstmt = nullptr;
     };
 }
 
