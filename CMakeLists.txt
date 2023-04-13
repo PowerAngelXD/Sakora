@@ -15,7 +15,8 @@ file(GLOB SRC_FILES
         "Backend/scope/*.h", "Backend/scope/*.cpp",
         "Backend/object/*.h", "Backend/object/*.cpp",
         "Backend/env/*.h", "Backend/env/*.cpp",
-        "Backend/sakCalc/*.h", "Backend/sakCalc/*.cpp"
+        "Backend/sakCalc/*.h", "Backend/sakCalc/*.cpp",
+        "Runner/*.h", "Runner/*.cpp"
         )
 
         
