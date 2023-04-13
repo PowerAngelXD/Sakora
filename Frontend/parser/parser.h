@@ -9,11 +9,6 @@
 #include "../../error/parser_error.h"
 
 namespace parser {
-    enum Marker {
-        head = 0, ops = 1, factors = 2,
-        mark = 0
-    };
-
     class Parser {
         std::vector<lexer::Token> token_group;
         size_t pos = 0;
@@ -72,9 +67,21 @@ namespace parser {
 
         // Stmts
         // checker
-        bool isLetStmtNode();
+        bool isLetStmtNode(); bool isExprStmtNode(); bool isIfStmtNode();
+        bool isBlockStmtNode();
 
         LetStmtNode* parseLetStmtNode();
+        ExprStmtNode* parseExprStmtNode();
+        IfStmtNode* parseIfStmtNode();
+        BlockStmtNode* parseBlockStmtNode();
+
+
+        // Whole Parser
+        bool isProgramSection();
+        bool isProgram();
+
+        ProgramSectionNode* generateSection();
+        ProgramObject* generateProgramObject();
     };
 }
 

@@ -483,6 +483,15 @@ ListFlagOpNode *Parser::parseListFlagOpNode() {
 bool Parser::isLetStmtNode() {
     return peek().content == "let";
 }
+bool Parser::isExprStmtNode() {
+    return isPrimExprNode();
+}
+bool Parser::isIfStmtNode() {
+    return peek().content == "if";
+}
+bool Parser::isBlockStmtNode() {
+    return peek().content == "{";
+}
 
 LetStmtNode* Parser::parseLetStmtNode() {
     if (!isLetStmtNode())
@@ -531,5 +540,76 @@ LetStmtNode* Parser::parseLetStmtNode() {
     node->end_mark = eat();
 
     return node;
+}
+ExprStmtNode* Parser::parseExprStmtNode() {
+    if (!isExprStmtNode())
+        throw parser_error::UnexpectedTokenError("Primary Expression", peek().line, peek().column);
+
+    auto* node = new ExprStmtNode;
+    if (isAssignExprNode()) node->assign_expr = parseAssignExprNode();
+    else if (isPrimExprNode()) node->prim_expr = parsePrimExprNode();
+
+    if (peek().content != ";")
+        throw parser_error::UnexpectedTokenError("';'", peek().line, peek().column);
+    node->end_mark = eat();
+
+    return node;
+}
+BlockStmtNode* Parser::parseBlockStmtNode() {
+    if (!isBlockStmtNode())
+        throw parser_error::UnexpectedTokenError("'{'", peek().line, peek().column);
+
+    auto* node = new BlockStmtNode;
+    node->bgn = eat();
+
+    // body is nullable
+    if (isProgramSection()) node->sub_program = generateProgramObject();
+
+    if (peek().content != "}")
+        throw parser_error::UnexpectedTokenError("'}'", peek().line, peek().column);
+    node->end = eat();
+
+    return node;
+}
+IfStmtNode* Parser::parseIfStmtNode() {
+    if (!isIfStmtNode())
+        throw parser_error::UnexpectedTokenError("'if'", peek().line, peek().column);
+
+    auto* node = new IfStmtNode;
+    node->mark = eat();
+
+    if (peek().content != "(")
+        throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
+    node->bgn = eat();
+
+    if (!isLogicExprNode())
+        throw parser_error::UnexpectedTokenError("Logic Expression", peek().line, peek().column);
+    node->condition = parseLogicExprNode();
+
+    if (peek().content != ")")
+        throw parser_error::UnexpectedTokenError("')'", peek().line, peek().column);
+    node->end = eat();
+
+    if (!isBlockStmtNode())
+        throw parser_error::UnexpectedTokenError("'{'", peek().line, peek().column);
+    node->body = parseBlockStmtNode();
+
+    return node;
+}
+
+// Program
+
+bool Parser::isProgramSection() {
+    return isLetStmtNode();
+}
+bool Parser::isProgram() {
+    // TODO
+}
+
+ProgramSectionNode* Parser::generateSection() {
+    // TODO
+}
+ProgramObject* Parser::generateProgramObject() {
+    // TODO
 }
 
