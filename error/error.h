@@ -11,8 +11,8 @@
 #define ERROR_HEAD_DISPLAY std::cout<<"An exception is thrown when the program is running:"<<std::endl;
 
 namespace error {
-class ErrorBasic: public std::exception {
-protected:
+    class ErrorBasic: public std::exception {
+    protected:
         std::string source;
         int line = 0, column = 0;
     public:
