@@ -87,8 +87,8 @@ bool Parser::isAssignExprNode() {
     return false;
 }
 bool Parser::isUnitTypeExprNode() {
-    if (peek().content == "struct"&& peek(1).kind == lexer::TokenKind::Ident) return true;
-    else if (peek().kind == lexer::TokenKind::Ident) return true;
+    if (peek().content == "struct"&& peek(1).kind == lexer::TokenKind::Keyword) return true;
+    else if (peek().kind == lexer::TokenKind::Keyword) return true;
     else return false;
 }
 bool Parser::isBasicTypeExprNode() {
@@ -104,7 +104,7 @@ bool Parser::isTypeofExprNode() {
     return peek().content == "typeof";
 }
 bool Parser::isTypeExprNode() {
-    return peek().kind == lexer::Keyword || isFnTypeExprNode();
+    return isUnitTypeExprNode() || isFnTypeExprNode();
 }
 
 // parser
@@ -334,7 +334,7 @@ StructFlagOpNode* Parser::parseStructFlagOpNode() {
 }
 
 UnitTypeExprNode* Parser::parseUnitTypeExprNode() {
-    if (!isBasicExprNode())
+    if (!isUnitTypeExprNode())
         throw parser_error::UnexpectedTokenError("'struct' or a type name", peek().line, peek().column);
 
     auto* node = new UnitTypeExprNode;
@@ -367,41 +367,44 @@ BasicTypeExprNode* Parser::parseBasicTypeExprNode() {
     return node;
 }
 FnTypeExprNode* Parser::parseFnTypeExprNode() {
-    if (isFnTypeExprNode()) {
-        auto* node = new FnTypeExprNode;
-        if (peek().content != "(")
-            throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
-        node->bgn_sym = eat();
-        while (isTypeExprNode()) {
-            node->elements.push_back(parseTypeExprNode());
-            if (peek().content != ",")
-                throw parser_error::UnexpectedTokenError("','", peek().line, peek().column);
-            else if (peek().content == ")") break;
-            else
-                node->seps.push_back(eat());
-        }
-        node->end_sym = eat();
+    if (!isFnTypeExprNode())
+        throw parser_error::UnexpectedTokenError("'fn'", peek().line, peek().column);
 
-        if (peek().content != "->")
-            throw parser_error::UnexpectedTokenError("'->'", peek().line, peek().column);
-        node->ret_pointer = eat();
-        if (!isTypeExprNode())
-            throw parser_error::UnexpectedTokenError("TypeExpr", peek().line, peek().column);
-        node->ret_type = parseTypeExprNode();
+    auto* node = new FnTypeExprNode;
+    if (peek().content != "(")
+        throw parser_error::UnexpectedTokenError("'('", peek().line, peek().column);
+    node->bgn_sym = eat();
+    while (isTypeExprNode()) {
+        node->elements.push_back(parseTypeExprNode());
+        if (peek().content != ",")
+            throw parser_error::UnexpectedTokenError("','", peek().line, peek().column);
+        else if (peek().content == ")") break;
+        else
+            node->seps.push_back(eat());
     }
-    throw parser_error::UnexpectedTokenError("'fn'", peek().line, peek().column);
+    node->end_sym = eat();
+    if (peek().content != "->")
+        throw parser_error::UnexpectedTokenError("'->'", peek().line, peek().column);
+    node->ret_pointer = eat();
+    if (!isTypeExprNode())
+        throw parser_error::UnexpectedTokenError("TypeExpr", peek().line, peek().column);
+    node->ret_type = parseTypeExprNode();
+
+    return node;
 }
 TypeExprNode* Parser::parseTypeExprNode() {
+    if (!isTypeExprNode())
+        throw parser_error::UnexpectedTokenError("BasicTypeExpr, TupleTypeExpr or FnTypeExpr", peek().line, peek().column);
+
     auto* node = new TypeExprNode;
-    if (isBasicExprNode()) {
+    if (isUnitTypeExprNode()) {
         node->basic_type = parseBasicTypeExprNode();
         return node;
     }
-    else if (isFnTypeExprNode()) {
+    else {
         node->fn_type = parseFnTypeExprNode();
         return node;
     }
-    else throw parser_error::UnexpectedTokenError("BasicTypeExpr, TupleTypeExpr or FnTypeExpr", peek().line, peek().column);
 }
 
 ListLiteralExprNode *Parser::parseListLiteralExprNode() {
@@ -493,46 +496,44 @@ bool Parser::isBlockStmtNode() {
     return peek().content == "{";
 }
 
+LetStmtNode::InitFactor* produceFactor(parser::Parser* p) {
+    if (p->peek().kind != lexer::Ident)
+        throw parser_error::UnexpectedTokenError("Identifier", p->peek().line, p->peek().column);
+
+    auto factor = new LetStmtNode::InitFactor;
+    factor->ident = p->eat();
+
+    if (p->peek().content == ":") {
+        factor->type_restrict = new RestOpNode{p->eat()};
+        if (!p->isTypeExprNode())
+            throw parser_error::UnexpectedTokenError("TypeExpression", p->peek().line, p->peek().column);
+        factor->type = p->parseTypeExprNode();
+    }
+
+    // Optional
+    if (p->peek().content == "=") {
+        factor->assign_op = new AssignOpNode{p->eat()};
+        if (p->isWholeExprNode()) {
+            factor->value = p->parseWholeExprNode();
+        }
+        else
+            throw parser_error::UnexpectedTokenError("WholeExpression", p->peek().line, p->peek().column);
+    }
+
+    return factor;
+}
 LetStmtNode* Parser::parseLetStmtNode() {
     if (!isLetStmtNode())
         throw parser_error::UnexpectedTokenError("'let'", peek().line, peek().column);
 
     auto* node = new LetStmtNode;
     node->mark = eat();
-    // producer
-    auto produceInitFactor = [&]() -> LetStmtNode::InitFactor* {
-        if (peek().kind != lexer::Ident)
-            throw parser_error::UnexpectedTokenError("Identifier", peek().line, peek().column);
 
-        auto factor = new LetStmtNode::InitFactor;
-        factor->ident = eat();
-
-        if (peek().content != ":")
-            throw parser_error::UnexpectedTokenError("':'", peek().line, peek().column);
-        factor->type_restrict = new RestOpNode{eat()};
-
-        if (!isTypeExprNode())
-            throw parser_error::UnexpectedTokenError("TypeExpression", peek().line, peek().column);
-        factor->type = parseTypeExprNode();
-
-        // Optional
-        if (peek().content == "=") {
-            factor->assign_op = new AssignOpNode{eat()};
-            if (isWholeExprNode()) {
-                factor->value = parseWholeExprNode();
-            }
-            else
-                throw parser_error::UnexpectedTokenError("WholeExpression", peek().line, peek().column);
-        }
-
-        return factor;
-    };
-    //
-    node->inits.push_back(produceInitFactor());
+    node->inits.push_back(produceFactor(this));
 
     while (peek().content == ",") {
         node->seps.push_back(eat());
-        node->inits.push_back(produceInitFactor());
+        node->inits.push_back(produceFactor(this));
     }
 
     if (peek().content != ";")
@@ -603,13 +604,29 @@ bool Parser::isProgramSection() {
     return isLetStmtNode();
 }
 bool Parser::isProgram() {
-    // TODO
+    return isProgramSection();
 }
 
 ProgramSectionNode* Parser::generateSection() {
-    // TODO
+    if (!isProgramSection())
+        throw parser_error::UnexpectedTokenError("A statement", peek().line, peek().column);
+
+    auto* node = new ProgramSectionNode;
+
+    if (isLetStmtNode()) node->letstmt = parseLetStmtNode();
+    else if (isExprStmtNode()) node->exprstmt = parseExprStmtNode();
+    else if (isIfStmtNode()) node->ifstmt = parseIfStmtNode();
+    else if (isBlockStmtNode()) node->blockstmt = parseBlockStmtNode();
+
+    return node;
 }
 ProgramObject* Parser::generateProgramObject() {
-    // TODO
+    ProgramObject* pgm = new ProgramObject;
+
+    while (peek().kind != lexer::Eof) {
+        pgm->push_back(generateSection());
+    }
+
+    return pgm;
 }
 
