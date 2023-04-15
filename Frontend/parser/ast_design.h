@@ -21,38 +21,131 @@ namespace parser {
     // ExprDesign
     struct TokenNode {
         lexer::Token* token = nullptr;
+
+        std::string to_string();
     };
-    
-    struct AddOpNode { TokenNode* op = nullptr; };       struct EqOpNode { TokenNode* op = nullptr; };
-    struct SubOpNode { TokenNode* op = nullptr; };       struct NeqOpNode { TokenNode* op = nullptr; };
-    struct MulOpNode { TokenNode* op = nullptr; };       struct GtOpNode { TokenNode* op = nullptr; };
-    struct DivOpNode { TokenNode* op = nullptr; };       struct LtOpNode { TokenNode* op = nullptr; };
-    struct GeOpNode { TokenNode* op = nullptr; };        struct LeOpNode { TokenNode* op = nullptr; };
-    struct LogicOrOpNode { TokenNode* op = nullptr; };   struct LogicAndOpNode { TokenNode* op = nullptr; };
-    struct LogicNotOpNode { TokenNode* op = nullptr; };  struct GmemOpNode { TokenNode* op = nullptr; };
-    struct CommaOpNode { TokenNode* op = nullptr; };     struct AssignOpNode {TokenNode* op = nullptr; };
-    struct RestOpNode { TokenNode* op = nullptr; };
+
+    // Operators
+    struct AddOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct EqOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct SubOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct NeqOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct MulOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct GtOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct DivOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct LtOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct GeOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct LeOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct LogicOrOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct LogicAndOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct LogicNotOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct GmemOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct CommaOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct AssignOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
+    struct RestOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
     struct ListFlagOpNode {
         TokenNode* left = nullptr;
         TokenNode* ref = nullptr;
         TokenNode* right = nullptr;
+
+        std::string to_string();
     };
     struct StructFlagOpNode {
         TokenNode* op = nullptr;
         ListFlagOpNode* list_flag = nullptr;
+
+        std::string to_string();
     };
-    struct RefFlagOpNode { TokenNode* op = nullptr; };
+    struct RefFlagOpNode {
+        TokenNode* op = nullptr;
+
+        std::string to_string();
+    };
     struct IndexOpNode {
         TokenNode* left = nullptr;
         AddExprNode* index = nullptr;
         TokenNode* right = nullptr;
+
+        std::string to_string();
     };
     struct CallOpNode {
         TokenNode* left = nullptr;
         std::vector<WholeExprNode*> factors;
         std::vector<CommaOpNode*> seps;
         TokenNode* right = nullptr;
+
+        std::string to_string();
     };
+    //
+
     struct BasicExprNode {
         struct CallingOpOption {
             IndexOpNode* index_op = nullptr;
@@ -63,16 +156,22 @@ namespace parser {
         std::vector<CallingOpOption*> ops;
 
         TypeExprNode* type = nullptr;
+
+        std::string to_string();
     };
 
     // Special operators
     struct TypeofExprNode {
         TokenNode* mark = nullptr;
         CallOpNode* calling = nullptr;
+
+        std::string to_string();
     };
 
     struct FunctionLikeExprNode {
         TypeofExprNode* typeof_expr = nullptr;
+
+        std::string to_string();
     };
 
     // Can be used as a separate statement
@@ -87,6 +186,8 @@ namespace parser {
         Factor* head = nullptr;
         std::vector<Factor*> factors;
         std::vector<GmemOpNode*> ops;
+
+        std::string to_string();
     };
 
     struct MulExprNode {
@@ -98,6 +199,8 @@ namespace parser {
         PrimaryExprNode* head = nullptr;
         std::vector<MulOpOption*> ops;
         std::vector<PrimaryExprNode*> factors;
+
+        std::string to_string();
     };
 
     struct AddExprNode {
@@ -109,6 +212,8 @@ namespace parser {
         MulExprNode* head = nullptr;
         std::vector<AddOpOption *> ops;
         std::vector<MulExprNode*> factors;
+
+        std::string to_string();
     };
 
     struct CompareExprNode {
@@ -124,6 +229,8 @@ namespace parser {
         AddExprNode* head = nullptr;
         std::vector<CompareOpOption*> ops;
         std::vector<AddExprNode*> factors;
+
+        std::string to_string();
     };
 
     struct LogicExprNode {
@@ -136,6 +243,8 @@ namespace parser {
         CompareExprNode* head = nullptr;
         std::vector<LogicOpOption*> ops;
         std::vector<CompareExprNode*> factors;
+
+        std::string to_string();
     };
 
     struct ListLiteralExprNode {
@@ -146,6 +255,8 @@ namespace parser {
         std::vector<WholeExprNode*> elements;
         std::vector<TokenNode*> seps;
         TokenNode* end = nullptr;
+
+        std::string to_string();
     };
 
     struct StructLiteralExprNode {
@@ -159,6 +270,8 @@ namespace parser {
         std::vector<KeyPair*> pairs;
         std::vector<TokenNode*> seps;
         TokenNode* end = nullptr;
+
+        std::string to_string();
     };
 
     // Can be used as a separate statement
@@ -166,6 +279,8 @@ namespace parser {
         PrimaryExprNode* lval = nullptr;
         AssignOpNode* op = nullptr;
         WholeExprNode* rval = nullptr;
+
+        std::string to_string();
     };
 
     /**
@@ -180,6 +295,8 @@ namespace parser {
         TokenNode* basic_type = nullptr;
 
         StructFlagOpNode* struct_op = nullptr;
+
+        std::string to_string();
     };
 
     struct BasicTypeExprNode {
@@ -187,6 +304,8 @@ namespace parser {
 
         ListFlagOpNode* list_flag = nullptr;
         RefFlagOpNode* ref_flag = nullptr;
+
+        std::string to_string();
     };
 
     struct FnTypeExprNode {
@@ -198,11 +317,15 @@ namespace parser {
 
         TokenNode* ret_pointer = nullptr;
         TypeExprNode* ret_type = nullptr;
+
+        std::string to_string();
     };
 
     struct TypeExprNode {
         BasicTypeExprNode* basic_type = nullptr;
         FnTypeExprNode* fn_type = nullptr;
+
+        std::string to_string();
     };
 
 
@@ -213,6 +336,8 @@ namespace parser {
         ListLiteralExprNode* list_expr = nullptr;
         StructFlagOpNode* struct_expr = nullptr;
         FunctionLikeExprNode* fnlike_expr = nullptr;
+
+        std::string to_string();
     };
 
     // StmtDesign
@@ -229,6 +354,8 @@ namespace parser {
         std::vector<InitFactor*> inits;
         std::vector<TokenNode*> seps;
         TokenNode* end_mark = nullptr;
+
+        std::string to_string();
     };
 
     // Those special expressions that can be used as separate statements will become a branch of this statement
@@ -237,15 +364,19 @@ namespace parser {
         PrimaryExprNode* prim_expr = nullptr;
 
         TokenNode* end_mark = nullptr;
+
+        std::string to_string();
     };
 
     // ProgramObject, or SubProgram
-    typedef std::vector<ProgramSectionNode> ProgramObject;
+    typedef std::vector<ProgramSectionNode*> ProgramObject;
 
     struct BlockStmtNode {
         TokenNode* bgn = nullptr;
         ProgramObject* sub_program = nullptr;
         TokenNode* end = nullptr;
+
+        std::string to_string();
     };
 
     struct IfStmtNode {
@@ -256,6 +387,8 @@ namespace parser {
         TokenNode* end = nullptr;
 
         BlockStmtNode* body = nullptr;
+
+        std::string to_string();
     };
 
     // ProgramSystem Design
@@ -264,6 +397,9 @@ namespace parser {
         LetStmtNode* letstmt = nullptr;
         ExprStmtNode* exprstmt = nullptr;
         IfStmtNode* ifstmt = nullptr;
+        BlockStmtNode* blockstmt = nullptr;
+
+        std::string to_string();
     };
 }
 
