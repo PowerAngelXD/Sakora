@@ -49,14 +49,7 @@ void sakConsole::cmdRepl() {
             auto result = vm.env.pop();
             result.debugPrint(false);
         }
-        catch (parser_error::UnexpectedTokenError& e) {e.printError();}
-        catch (parser_error::SyntaxError& e) {e.printError();}
-        catch (lexer_error::IllegalSymbolError& e) {e.printError();}
-        catch (lexer_error::StringUnCloseError& e) {e.printError();}
-        catch (lexer_error::NotCorrectNumberError& e) {e.printError();}
-        catch (storage_error::UnsupportedOperationError& e) {e.printError();}
-        catch (storage_error::UnknownIdentifierError& e) {e.printError();}
-        catch (storage_error::DuplicateIdentifierError& e) {e.printError();}
-        catch (storage_error::IllegalTypeDescriptionError& e) {e.printError();}
+        SAK_PARSER_ERROR_CATCH
+        SAK_STORAGE_ERROR_CATCH
     }
 }
