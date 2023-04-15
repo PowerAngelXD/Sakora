@@ -143,6 +143,8 @@ Token Lexer::makeSymbol() {
     else if (chk == '{') return {TokenKind::Symbol, "{", line, column};
     else if (chk == '}') return {TokenKind::Symbol, "}", line, column};
     else if (chk == ',') return {TokenKind::Symbol, ",", line, column};
+    else if (chk == ';') return {TokenKind::Symbol, ";", line, column};
+    else if (chk == ':') return {TokenKind::Symbol, ":", line, column};
     else {
         std::string temp_str;
         temp_str.push_back(chk);
