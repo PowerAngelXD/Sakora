@@ -182,6 +182,8 @@ namespace parser {
             TokenNode* left = nullptr;
             WholeExprNode* expr = nullptr;
             TokenNode* right = nullptr;
+
+            std::string to_string();
         };
         Factor* head = nullptr;
         std::vector<Factor*> factors;

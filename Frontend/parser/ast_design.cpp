@@ -108,8 +108,8 @@ std::string parser::CallOpNode::to_string() {
     return ret;
 }
 
-// Expr
 
+// Expr
 std::string parser::BasicExprNode::to_string() {
     std::string ret = "{BasicExprNode, ";
     if (this->type != nullptr)
@@ -126,8 +126,91 @@ std::string parser::BasicExprNode::to_string() {
             ret += ", ";
         }
     }
+    return ret;
 }
 
 std::string parser::TypeofExprNode::to_string() {
     return "{TypeOfExprNode, " + this->calling->to_string() + "}";
+}
+
+std::string parser::FunctionLikeExprNode::to_string() {
+    if (typeof_expr != nullptr ) return typeof_expr->to_string();
+    else  return "null";
+}
+
+std::string parser::PrimaryExprNode::Factor::to_string() {
+    return std::string();
+}
+
+std::string parser::PrimaryExprNode::to_string() {
+    std::string ret = "{PrimaryExprNode";
+    return std::string();
+}
+
+std::string parser::MulExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::AddExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::CompareExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::LogicExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::ListLiteralExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::StructLiteralExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::AssignExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::UnitTypeExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::BasicTypeExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::FnTypeExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::TypeExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::WholeExprNode::to_string() {
+    return std::string();
+}
+
+std::string parser::LetStmtNode::to_string() {
+    return std::string();
+}
+
+std::string parser::ExprStmtNode::to_string() {
+    return std::string();
+}
+
+std::string parser::BlockStmtNode::to_string() {
+    return std::string();
+}
+
+std::string parser::IfStmtNode::to_string() {
+    return std::string();
+}
+
+std::string parser::ProgramSectionNode::to_string() {
+    return std::string();
 }
