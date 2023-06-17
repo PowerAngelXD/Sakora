@@ -16,7 +16,6 @@ file(GLOB SRC_FILES
         "Backend/object/*.h", "Backend/object/*.cpp",
         "Backend/env/*.h", "Backend/env/*.cpp",
         "Backend/sakVM/*.h", "Backend/sakVM/*.cpp",
-        "Runner/*.h", "Runner/*.cpp",
         "Test/*.h", "Test/*.cpp"
         )
 
