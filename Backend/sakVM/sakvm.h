@@ -2,15 +2,15 @@
 // Created by BALL on 2022/12/31.
 //
 
-#ifndef SAKORA_CALC_H
-#define SAKORA_CALC_H
+#ifndef SAKORA_SAKVM_H
+#define SAKORA_SAKVM_H
 
 #include "../env/environment.h"
 #include "../env/tool.h"
 #include "../env/codequeue.h"
 #include <algorithm>
 
-struct sakCalc {
+struct saKVM {
     /**
      * Naming conventions:
      * vm_xxx: Operation on VM
@@ -21,12 +21,12 @@ struct sakCalc {
     // Environment of the VM
     sakVM_core::Environment env;
 
-    sakCalc(std::vector<std::string> cp, int ln, int col);
+    saKVM(std::vector<std::string> cp, int ln, int col);
 
     // Initialization operation for VM
-    void calc_init(std::vector<std::string> cp, int ln, int col);
+    void init(std::vector<std::string> cp, int ln, int col);
     // Run the code queue at the specified level
-    void calc_run(size_t layer);
+    void run(size_t layer);
     // VM instruction set
     void ins_push_int(visitor::Code code);
     void ins_push_deci(visitor::Code code);
@@ -55,4 +55,4 @@ struct sakCalc {
 };
 
 
-#endif //SAKORA_CALC_H
+#endif //SAKORA_SAKVM_H

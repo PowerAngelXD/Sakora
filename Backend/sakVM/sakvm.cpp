@@ -2,18 +2,18 @@
 // Created by BALL on 2022/12/31.
 //
 
-#include "calc.h"
+#include "sakvm.h"
 
 #include <utility>
 
 // VM
-sakCalc::sakCalc(std::vector<std::string> cp, int ln, int col): env(std::move(cp), ln, col) {};
+saKVM::saKVM(std::vector<std::string> cp, int ln, int col): env(std::move(cp), ln, col) {};
 
-void sakCalc::calc_init(std::vector<std::string> cp, int ln, int col) {
+void saKVM::init(std::vector<std::string> cp, int ln, int col) {
     env = sakVM_core::Environment(std::move(cp), ln, col);
 }
 
-void sakCalc::calc_run(size_t layer) {
+void saKVM::run(size_t layer) {
     auto cur_queue = threads[layer];
     for (auto code: cur_queue) {
         switch (code.kind) {
@@ -66,20 +66,20 @@ void sakCalc::calc_run(size_t layer) {
 }
 
 // Code set
-void sakCalc::ins_push_int(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
-void sakCalc::ins_push_deci(visitor::Code code) { env.push(static_cast<double>(code.val)); }
-void sakCalc::ins_push_bool(visitor::Code code) { env.push(static_cast<bool>(float_equ(code.val, code.val)))); }
-void sakCalc::ins_push_str(visitor::Code code) {
+void saKVM::ins_push_int(visitor::Code code) { env.push(static_cast<long long>(code.val)); }
+void saKVM::ins_push_deci(visitor::Code code) { env.push(static_cast<double>(code.val)); }
+void saKVM::ins_push_bool(visitor::Code code) { env.push(static_cast<bool>(float_equ(code.val, code.val)))); }
+void saKVM::ins_push_str(visitor::Code code) {
     auto str = env.getConstant(static_cast<size_t>(static_cast<int>(code.val)));
     env.push(str);
 }
-void sakCalc::ins_push_flag(visitor::Code code) {
+void saKVM::ins_push_flag(visitor::Code code) {
     env.push(visitor::FlagValue((visitor::FlagKind)code.val));
 }
-void sakCalc::ins_push_iden(visitor::Code code) {
+void saKVM::ins_push_iden(visitor::Code code) {
     env.push( "<Identifier: " + env.getConstant((size_t)(int)code.val) + ">");
 }
-void sakCalc::ins_set_list() {
+void saKVM::ins_set_list() {
     std::vector<storage::Val> list;
     storage::Val head;
     while (true) {
@@ -99,7 +99,7 @@ void sakCalc::ins_set_list() {
     std::reverse(list.begin(), list.end());
     env.push(list);
 }
-void sakCalc::ins_set_mutable_list() {
+void saKVM::ins_set_mutable_list() {
     std::vector<storage::Val> list;
     storage::Val head;
     while (true) {
@@ -119,72 +119,72 @@ void sakCalc::ins_set_mutable_list() {
     std::reverse(list.begin(), list.end());
     env.push(storage::Val(list, true));
 }
-void sakCalc::ins_add() {
+void saKVM::ins_add() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left + right);
 }
-void sakCalc::ins_sub() {
+void saKVM::ins_sub() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left - right);
 }
-void sakCalc::ins_mul() {
+void saKVM::ins_mul() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left * right);
 }
-void sakCalc::ins_div() {
+void saKVM::ins_div() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left / right);
 }
-void sakCalc::ins_mod() {
+void saKVM::ins_mod() {
     auto right = env.pop();
     auto left = env.pop();
     env.push(left % right);
 }
-void sakCalc::ins_gt() {
+void saKVM::ins_gt() {
     auto right = env.pop(), left = env.pop();
     env.push(left > right);
 }
-void sakCalc::ins_lt() {
+void saKVM::ins_lt() {
     auto right = env.pop(), left = env.pop();
     env.push(left < right);
 }
-void sakCalc::ins_ge() {
+void saKVM::ins_ge() {
     auto right = env.pop(), left = env.pop();
     env.push(left >= right);
 }
-void sakCalc::ins_le() {
+void saKVM::ins_le() {
     auto right = env.pop(), left = env.pop();
     env.push(left <= right);
 }
-void sakCalc::ins_eq() {
+void saKVM::ins_eq() {
     auto right = env.pop(), left = env.pop();
     env.push(left == right);
 }
-void sakCalc::ins_neq() {
+void saKVM::ins_neq() {
     auto right = env.pop(), left = env.pop();
     env.push(left != right);
 }
-void sakCalc::ins_logic_or() {
+void saKVM::ins_logic_or() {
     auto right = env.pop(), left = env.pop();
     env.push(left || right);
 }
-void sakCalc::ins_logic_and() {
+void saKVM::ins_logic_and() {
     auto right = env.pop(), left = env.pop();
     env.push(left && right);
 }
-void sakCalc::ins_no() {
+void saKVM::ins_no() {
     auto left = env.pop();
     env.push(!left);
 }
-void sakCalc::ins_gmem() {
+void saKVM::ins_gmem() {
 
 }
 
-void sakCalc::ins_stfop(visitor::Code code) {
+void saKVM::ins_stfop(visitor::Code code) {
     std::vector<storage::Val> args;
     while (true) {
         if (env.peek().getType().head.unit_type != nullptr) {
